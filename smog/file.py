@@ -407,12 +407,26 @@ class FileStat(object):
 
         return src.name, dest.name
 
-    def hash(self):
-        return _get_file_hash(self.name)
+    def hash(self, hashfunc=None):
+        return _get_file_hash(self.name, hashfunc=hashfunc)
 
 
-def _get_file_hash(fnam, blk_size=DEFAULT_BLOCK_SIZE):
-    hm = hashlib.sha512()
+class Hash(object):
+    def __init__(self, hashfunc=None):
+        if hashfunc is None:
+            hashfunc = "sha512"
+        self.hm = hashlib.new(hashfunc)
+
+    def update(self, data):
+        self.hm.update(data)
+
+    def hexdigest(self):
+        digest = self.hm.hexdigest()
+        return digest
+
+
+def _get_file_hash(fnam, blk_size=DEFAULT_BLOCK_SIZE, hashfunc=None):
+    hm = Hash(hashfunc)
     with open(fnam, "rb") as f:
         while True:
             buf = f.read(blk_size)
