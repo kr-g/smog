@@ -6,7 +6,15 @@ import time
 from datetime import datetime, date
 from datetime import time as dt_time
 
-from .file import FileStat
+try:
+    from .file import FileStat
+except:
+    from file import FileStat
+
+
+def build_timed_path_fnam_t(tm, fnam):
+    dt = datetime.fromtimestamp(tm)
+    return build_timed_path_fnam(dt, fnam)
 
 
 def build_timed_path_fnam(dt, fnam):

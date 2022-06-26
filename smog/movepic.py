@@ -2,6 +2,9 @@ import time
 
 from .examine import i_examine_pic as examine_pic
 from .organize import organize_move_pic
+from .file1name import make_unique_filename
+
+# from .mediadb import MediaDB, Media, MediaPath, create_id
 
 
 def move_pics(base, dest_repo, mkcopy=True, debug=True):
