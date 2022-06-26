@@ -109,6 +109,9 @@ class FileStat(object):
     def is_file(self):
         return stat.S_ISREG(self.mode())
 
+    def is_link(self):
+        return os.path.islink(self.name)
+
     def is_dir(self):
         return stat.S_ISDIR(self.mode())
 
