@@ -126,7 +126,8 @@ class MediaDB(object):
         self.engine = open_db(self.db_spec)
         self.meta = create_db_meta(self.engine)
 
-        self.session = Session(self.engine)
+        self.session = None
+        self.begin()
 
     #
 
@@ -140,8 +141,19 @@ class MediaDB(object):
         if auto_commit:
             return self.commit()
 
+    def begin(self):
+        try:
+            if self.session:
+                self.session.close()
+        except Exception as ex:
+            print("sqlalchemy", ex)
+        self.session = Session(self.engine)
+
     def commit(self):
         self.session.commit()
+
+    def rollback(self):
+        self.begin()
 
     #
 
@@ -261,14 +273,15 @@ if __name__ == "__main__":
 
     settrun.val = int(settrun.val) + 1
 
+    auto_commit = False
+
     if to_insert:
 
         sett.val = int(sett.val) + 1
 
-        db.add_([media, mp, sett, settrun])
+        db.add_([media, mp, sett, settrun], auto_commit=auto_commit)
     else:
         print("nothing to do")
-        db.add_(settrun)
+        db.add_(settrun, auto_commit=auto_commit)
 
-    # session.delete(media)
     db.commit()
