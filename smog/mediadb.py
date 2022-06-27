@@ -174,14 +174,6 @@ class MediaDB(object):
         sett = qry.one_or_none()
         return sett
 
-    # todo, remove
-
-    def add_media(self, media, auto_commit=True):
-        return self.add_(media, auto_commit=auto_commit)
-
-    def del_media(self, media, auto_commit=True):
-        return self.del_(media, auto_commit=auto_commit)
-
     #
 
     def qry_media_id(self, id):
