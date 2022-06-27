@@ -48,6 +48,12 @@ MEDIA_TYPE_LEN = 1 << 5
 DB_DEFAULT_PATH = "~"
 
 
+class Setting(Base):
+    __tablename__ = "setting"
+    key = Column(String(32), primary_key=True)
+    val = Column(String(256), nullable=True)
+
+
 class Media(Base):
     __tablename__ = "media"
 
@@ -76,6 +82,12 @@ class MediaPath(Base):
         "Media",
         back_populates="paths",
     )
+
+
+def create_new_with_id(cls_):
+    obj = cls_()
+    obj.id = create_id()
+    return obj
 
 
 def get_db_path(path=None):
@@ -116,10 +128,53 @@ class MediaDB(object):
 
         self.session = Session(self.engine)
 
+    #
+
+    def add_(self, recs, auto_commit=True):
+        self.session.add_all(recs if type(recs) is list else [recs])
+        if auto_commit:
+            return self.commit()
+
+    def del_(self, recs, auto_commit=True):
+        self.session.delete_all(recs if type(recs) is list else [recs])
+        if auto_commit:
+            return self.commit()
+
+    def commit(self):
+        self.session.commit()
+
+    #
+
+    def norm_repo_path(self, fnam):
+        if fnam.startswith(self.repo_path):
+            return fnam[len(self.repo_path) + 1 :]
+        return fnam
+
+    def norm_base_path(self, fnam):
+        if fnam.startswith(self.base_path):
+            return fnam[len(self.base_path) + 1 :]
+        return fnam
+
+    #
+
+    def qry_setting(self, key):
+        qry = self.session.query(Setting).where(Setting.key.is_(key))
+        sett = qry.one_or_none()
+        return sett
+
+    # todo, remove
+
+    def add_media(self, media, auto_commit=True):
+        return self.add_(media, auto_commit=auto_commit)
+
+    def del_media(self, media, auto_commit=True):
+        return self.del_(media, auto_commit=auto_commit)
+
+    #
+
     def qry_media_id(self, id):
         qry = self.session.query(Media).where(Media.id.is_(id))
-        recs = qry.all()
-        media = recs[0] if len(recs) == 1 else None
+        media = qry.one_or_none()
         return media
 
     def qry_media_hash(self, hash):
@@ -146,29 +201,6 @@ class MediaDB(object):
         media = recs[0].media if len(recs) == 1 else None
         return media
 
-    def add_media(self, media, auto_commit=True):
-        self.session.add(media)
-        if auto_commit:
-            self.commit()
-
-    def del_media(self, media, auto_commit=True):
-        self.session.delete(media)
-        if auto_commit:
-            self.commit()
-
-    def commit(self):
-        self.session.commit()
-
-    def norm_repo_path(self, fnam):
-        if fnam.startswith(self.repo_path):
-            return fnam[len(self.repo_path) + 1 :]
-        return fnam
-
-    def norm_base_path(self, fnam):
-        if fnam.startswith(self.base_path):
-            return fnam[len(self.base_path) + 1 :]
-        return fnam
-
 
 #
 #
@@ -192,8 +224,7 @@ if __name__ == "__main__":
 
     if media is None:
         print("add media")
-        media = Media()
-        media.id = create_id()
+        media = create_new_with_id(Media)
         media.hash = f.hash()
         media.mime = mimetypes.types_map.get(ext, None)
         # todo
@@ -207,16 +238,37 @@ if __name__ == "__main__":
 
     if not already_exists:
         print("add path")
-        mp = MediaPath()
-        mp.id = create_id()
+        mp = create_new_with_id(MediaPath)
         mp.path = db.norm_base_path(f.name)
         mp.media = media
         to_insert = True
 
+    sett = db.qry_setting("UPDATED")
+    if sett is None:
+        sett = Setting()
+        sett.key = "UPDATED"
+        sett.val = 0
+    else:
+        print(sett.key, sett.val)
+
+    settrun = db.qry_setting("RUN")
+    if settrun is None:
+        settrun = Setting()
+        settrun.key = "RUN"
+        settrun.val = 0
+    else:
+        print(settrun.key, settrun.val)
+
+    settrun.val = int(settrun.val) + 1
+
     if to_insert:
-        db.add_media(media)
+
+        sett.val = int(sett.val) + 1
+
+        db.add_([media, mp, sett, settrun])
     else:
         print("nothing to do")
+        db.add_(settrun)
 
     # session.delete(media)
     db.commit()
