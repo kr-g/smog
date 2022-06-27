@@ -7,6 +7,8 @@ import argparse
 from .file import FileStat
 from .movepic import move_pics
 
+VERSION = "v0.0.2-a"
+
 
 def get_default_pic_folder():
     flds = ["~/Bilder", "~/Pictures"]
