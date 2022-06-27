@@ -39,8 +39,10 @@ setuptools.setup(
     url=f"https://github.com/kr-g/{projectname}",
     packages=setuptools.find_packages(),
     license="MIT",
-    keywords="media organizer",
-    install_requires=[],
+    keywords="media organizer pictures",
+    install_requires=[
+        "SQLAlchemy",
+    ],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Operating System :: POSIX :: Linux",
