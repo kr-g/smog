@@ -71,3 +71,9 @@ smog itself can be installed with
 
 [`LICENSE`](https://github.com/kr-g/smog/blob/main/LICENSE.md)
 
+
+## other licenses
+
+- [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
+- [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
+
