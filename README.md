@@ -34,6 +34,14 @@ get cmd-line parameter with
     phyton3 -m smog --help
 
 
+# additional refered documentation
+
+for expert reading 
+
+- [XMP](https://github.com/adobe/xmp-docs) 
+- 
+
+
 # platform
 
 tested on python3, and linux
