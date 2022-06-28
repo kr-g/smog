@@ -1,6 +1,14 @@
 
+Check
+[`CHANGELOG`](https://github.com/kr-g/smog/blob/main/CHANGELOG.md)
+for latest ongoing, or upcoming news.
+
+
 # BACKLOG
 
+- XMP evaluation
+  - https://pypi.org/project/python-xmp-toolkit/
+    - https://github.com/python-xmp-toolkit/python-xmp-toolkit
 - 
 
 

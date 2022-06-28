@@ -42,6 +42,7 @@ setuptools.setup(
     keywords="media organizer pictures",
     install_requires=[
         "SQLAlchemy",
+        # "python-xmp-toolkit", # todo
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
