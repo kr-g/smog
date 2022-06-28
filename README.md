@@ -38,7 +38,8 @@ get cmd-line parameter with
 
 for expert reading 
 
-- [XMP](https://github.com/adobe/xmp-docs) 
+- [XMP](https://en.wikipedia.org/wiki/Extensible_Metadata_Platform)
+  - [adobe specfification](https://github.com/adobe/xmp-docs) 
 - 
 
 
