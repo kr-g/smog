@@ -1,3 +1,6 @@
+# xmp specifications from adobe
+# https://github.com/adobe/xmp-docs
+
 import itertools
 import mimetypes
 
@@ -17,11 +20,14 @@ _mimes = set(
 
 _candidates = list(map(lambda x: mimetypes.guess_all_extensions(x), _mimes))
 _candidates += [
-    [
-        ".pdf",
-    ],
+    [".pdf", ".odf"],
     # XMPSpecificationPart3.pdf
     [
+        ".AI",
+        ".PS",
+        ".EPS",
+        ".INDD",
+        ".INDT",
         ".DNG",
         ".CRW",
         ".ERF",
