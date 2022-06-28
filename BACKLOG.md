@@ -9,6 +9,7 @@ for latest ongoing, or upcoming news.
 - XMP evaluation
   - https://pypi.org/project/python-xmp-toolkit/
     - https://github.com/python-xmp-toolkit/python-xmp-toolkit
+      - https://libopenraw.freedesktop.org/exempi/
 - 
 
 
