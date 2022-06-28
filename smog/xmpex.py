@@ -36,30 +36,3 @@ def xmp_tags(xmp_c):
     for k, v in xmp_c.items():
         rc.extend([(_k, _v) for _k, _v in v.items()])
     return rc
-
-
-if __name__ == "__main__":
-    import os, json
-
-    fnam = "~/Bilder/20220521.jpeg"
-    fnam = "~/Bilder/VID_20220625_130945.mp4"
-    fnam = "~/Dokumente/Jakarta EE White Paper.pdf"
-    fnam = os.path.expanduser(fnam)
-
-    xmpmeta = xmp_meta(fnam)
-    xmpxml = str(xmpmeta)
-
-    # using utility function
-    xmp = xmp_dict(fnam)
-    # dc = xmp[consts.XMP_NS_XMPMeta]
-
-    xmp_c = cleanup_xmp_dict(xmp)
-    tags = xmp_tags(xmp_c)
-
-    print(xmpxml)
-
-    jso = json.dumps(xmp_c, indent=4)
-    print(jso)
-
-    for i in tags:
-        print(i)
