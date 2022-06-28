@@ -7,11 +7,11 @@ from .file1name import make_unique_filename
 # from .mediadb import MediaDB, Media, MediaPath, create_id
 
 
-def move_pics(base, dest_repo, mkcopy=True, debug=True):
+def move_pics(base, dest_repo, pattern=None, mkcopy=True, debug=True):
 
     no_files = 0
 
-    for media in examine_pic(base, recursive=True):
+    for media in examine_pic(base, pattern=pattern, recursive=True):
 
         no_files = no_files + 1
 

@@ -92,7 +92,7 @@ def main_func(mkcopy=True):
         print("in place processing not supported")
         sys.exit(1)
 
-    return move_pics(fbase.name, frepo, debug=args.debug)
+    return move_pics(fbase.name, frepo, pattern=None, debug=args.debug)
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ from .media import Media
 def ifile(
     fpath,
     ext=None,
+    pattern=None,
     recursive=False,
 ):
 
@@ -22,7 +23,7 @@ def ifile(
     else:
         ext = None
 
-    for f in fbase.iglob(recursive=recursive, prefetch=True):
+    for f in fbase.iglob(pattern=pattern, recursive=recursive, prefetch=True):
 
         if not f.is_file():
             continue
@@ -48,12 +49,13 @@ def set_tm_data(r, tm, guess_date=False):
 
 def i_examine_pic(
     fpath,
+    pattern=None,
     recursive=False,
 ):
 
     files = ifile(
         fpath,
-        [
+        ext=[
             "jpg",
             "jpeg",
             "jpe",
@@ -62,6 +64,7 @@ def i_examine_pic(
             "tiff",
             "png",
         ],
+        pattern=pattern,
         recursive=recursive,
     )
 
