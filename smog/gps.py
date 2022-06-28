@@ -1,5 +1,7 @@
 from functools import reduce
 
+# works with PIL exif tags
+
 
 def _convert_degree(value):
     divs = [1.0, 60.0, 3600.0]

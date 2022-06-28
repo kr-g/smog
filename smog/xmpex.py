@@ -2,9 +2,20 @@ from libxmp import XMPFiles, consts
 from libxmp.utils import file_to_dict
 
 
-def cleanup_xmp(xmpmeta):
+def xmp_meta(fnam):
+    xmpfile = XMPFiles(file_path=fnam, open_forupdate=False)
+    xmpmeta = xmpfile.get_xmp()
+    return xmpmeta
+
+
+def xmp_dict(fnam):
+    xmp = file_to_dict(fnam)
+    return xmp
+
+
+def cleanup_xmp_dict(xmp):
     rc = {}
-    for ns_k, ns_v in xmpmeta.items():
+    for ns_k, ns_v in xmp.items():
         ns = {}
         for k, v, _ in ns_v:
             if k in ns:
@@ -29,16 +40,14 @@ if __name__ == "__main__":
     fnam = "~/Bilder/20220521.jpeg"
     fnam = os.path.expanduser(fnam)
 
-    xmpfile = XMPFiles(file_path=fnam, open_forupdate=False)
-
-    xmpmeta = xmpfile.get_xmp()
+    xmpmeta = xmp_meta(fnam)
     xmpxml = str(xmpmeta)
 
     # using utility function
-    xmp = file_to_dict(fnam)
+    xmp = xmp_dict(fnam)
     # dc = xmp[consts.XMP_NS_XMPMeta]
 
-    xmp_c = cleanup_xmp(xmp)
+    xmp_c = cleanup_xmp_dict(xmp)
     tags = xmp_tags(xmp_c)
 
     print(xmpxml)
