@@ -107,14 +107,17 @@ def main_func(mkcopy=True):
     xmp_parser = subparsers.add_parser("xmp", help="xmp help")
     xmp_parser.set_defaults(func=xmp_func)
 
-    xmp_parser.add_argument(
+    xmptypes = xmp_parser.add_argument_group("known files")
+    xmptypes.add_argument(
         "-types",
         dest="xmp_filetypes",
         action="store_true",
         default=False,
         help="list known xmp file extensions",
     )
-    xmp_parser.add_argument(
+
+    xmpmeta = xmp_parser.add_argument_group("xmp meta")
+    xmpmeta.add_argument(
         "-list",
         type=str,
         dest="xmp_file",
@@ -123,7 +126,7 @@ def main_func(mkcopy=True):
         default=None,
     )
 
-    xmp_show_opts = xmp_parser.add_mutually_exclusive_group()
+    xmp_show_opts = xmpmeta.add_mutually_exclusive_group()
     xmp_show_opts.add_argument(
         "-xml",
         dest="xmp_xml",
