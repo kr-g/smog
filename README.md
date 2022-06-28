@@ -34,7 +34,7 @@ get cmd-line parameter with
     phyton3 -m smog --help
 
 
-# additional refered documentation
+# additional reference documentation
 
 for expert reading 
 
