@@ -38,7 +38,8 @@ if __name__ == "__main__":
     import os, json
 
     fnam = "~/Bilder/20220521.jpeg"
-    fname = "~/Bilder/VID_20220625_130945.mp4"
+    fnam = "~/Bilder/VID_20220625_130945.mp4"
+    fnam = "~/Dokumente/Jakarta EE White Paper.pdf"
     fnam = os.path.expanduser(fnam)
 
     xmpmeta = xmp_meta(fnam)
