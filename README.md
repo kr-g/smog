@@ -55,7 +55,7 @@ alpha state, use on your own risk!
 
 # installation
 
-smog requires following other modules. 
+smog requires following modules. 
 
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
 - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
