@@ -21,7 +21,7 @@ import glob
 
 import hashlib
 
-DEFAULT_BLOCK_SIZE = 2 ** 16
+DEFAULT_BLOCK_SIZE = 2**16
 
 
 class PushDir(object):
