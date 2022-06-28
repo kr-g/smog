@@ -43,4 +43,6 @@ def organize_move_processed_file(src, base, rel_store):
             _base,
         )
 
-    return fsrc.name, fstore.name
+    clash = fstore.exists()
+
+    return fsrc.name, fstore.name, clash
