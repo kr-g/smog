@@ -10,6 +10,7 @@ from .file1name import make_unique_filename
 def move_pics(base, dest_repo, pattern=None, mkcopy=True, debug=True):
 
     no_files = 0
+    no_files_proc = 0
 
     for media in examine_pic(base, pattern=pattern, recursive=True):
 
@@ -34,6 +35,7 @@ def move_pics(base, dest_repo, pattern=None, mkcopy=True, debug=True):
             s, d = src.move(dest.name, dryrun=not True, mkcopy=mkcopy)
             if mkcopy:
                 dest.touch_ux((tm, tm))
+            no_files_proc += 1
         else:
             same = src.hash() == dest.hash()
             if not same:
@@ -43,4 +45,4 @@ def move_pics(base, dest_repo, pattern=None, mkcopy=True, debug=True):
                     dest.name,
                 )
 
-    return no_files
+    return no_files, no_files_proc, no_files_double

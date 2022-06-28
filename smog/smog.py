@@ -58,6 +58,7 @@ def main_func(mkcopy=True):
         prog="smog",
         usage="python3 -m %(prog)s [options]",
         description="simple media organizer",
+        epilog="for more information refer to https://github.com/kr-g/smog",
     )
     parser.add_argument(
         "-v",
@@ -166,7 +167,8 @@ def main_func(mkcopy=True):
         print("in place processing not supported")
         sys.exit(1)
 
-    return move_pics(fbase.name, frepo, pattern=None, debug=args.debug)
+    rc = move_pics(fbase.name, frepo, pattern=None, debug=args.debug)
+    debug and print("files total/ processed", rc)
 
 
 if __name__ == "__main__":
