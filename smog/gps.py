@@ -1,4 +1,4 @@
-from functools import reduce
+# from functools import reduce
 
 # works with PIL exif tags
 
