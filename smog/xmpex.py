@@ -25,14 +25,15 @@ def cleanup_xmp_dict(xmp):
             if k in ns:
                 raise Exception("malformated input")
             ns[k] = v
-        # if ns_k in rc:
-        #    raise Exception("malformated input")
         rc[ns_k] = ns
     return rc
 
 
+import itertools
+
+
 def xmp_tags(xmp_c):
     rc = []
-    for k, v in xmp_c.items():
-        rc.extend([(_k, _v) for _k, _v in v.items()])
+    for v in xmp_c.values():
+        rc.extend(v.items())
     return rc
