@@ -55,8 +55,17 @@ alpha state, use on your own risk!
 
 # installation
 
+smog requires following other modules. 
+
+- [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
+- [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
+
+
+smog itself can be installed with
+
     phyton3 -m pip install smog
     
+
 
 # license
 
