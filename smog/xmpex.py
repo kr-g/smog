@@ -1,3 +1,7 @@
+# xmp specifications from adobe
+# https://github.com/adobe/xmp-docs
+
+
 from libxmp import XMPFiles, consts
 from libxmp.utils import file_to_dict
 
