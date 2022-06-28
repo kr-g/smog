@@ -45,4 +45,4 @@ def move_pics(base, dest_repo, pattern=None, mkcopy=True, debug=True):
                     dest.name,
                 )
 
-    return no_files, no_files_proc, no_files_double
+    return no_files, no_files_proc
