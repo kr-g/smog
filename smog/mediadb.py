@@ -1,130 +1,35 @@
 import os
 import glob
 import json
-import uuid
 import time
 
 try:
+    from .dbconf import DBConf, SqliteConf
+    from .dbschema import Base, Setting, Media, MediaPath
     from .file import FileStat, Hash
     from .organize import build_timed_path_fnam_t
 except:
+    from dbconf import DBConf, SqliteConf
+    from dbschema import Base, Setting, Media, MediaPath
     from file import FileStat, Hash
     from organize import build_timed_path_fnam_t
 
 import mimetypes
 
-from sqlalchemy import Column, ForeignKey
-
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy import Float
-from sqlalchemy import Boolean
-
-from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy import delete
 
 
-def create_id():
-    return uuid.uuid4().hex
-
-
-_a_id = create_id()
-LEN_ID = len(_a_id)
-
-Base = declarative_base()
-
-HASH_LEN = (512 >> 3) << 1
-
-FNAM_LEN = os.pathconf("/", "PC_NAME_MAX")
-OS_PATH_LEN = os.pathconf("/", "PC_PATH_MAX")
-
-MEDIA_PATH_LEN = len(build_timed_path_fnam_t(time.time(), ""))
-MEDIA_PATH_LEN = MEDIA_PATH_LEN + FNAM_LEN
-
-MEDIA_TYPE_LEN = 1 << 5
-
-DB_DEFAULT_PATH = "~"
-
-
-class Setting(Base):
-    __tablename__ = "setting"
-    key = Column(String(32), primary_key=True)
-    val = Column(String(256), nullable=True)
-
-
-class Media(Base):
-    __tablename__ = "media"
-
-    id = Column(String(LEN_ID), primary_key=True)
-
-    hash = Column(String(HASH_LEN), index=True, nullable=False)
-    repopath = Column(String(MEDIA_PATH_LEN), index=True, nullable=False)
-    mime = Column(String(MEDIA_TYPE_LEN), nullable=True)
-
-    paths = relationship(
-        "MediaPath",
-        back_populates="media",
-        cascade="all, delete",
-    )
-
-
-class MediaPath(Base):
-    __tablename__ = "media_path"
-
-    id = Column(String(LEN_ID), primary_key=True)
-
-    path = Column(String(OS_PATH_LEN), index=True, nullable=False)
-
-    media_id = Column(String(LEN_ID), ForeignKey("media.id"))
-    media = relationship(
-        "Media",
-        back_populates="paths",
-    )
-
-
-def create_new_with_id(cls_):
-    obj = cls_()
-    obj.id = create_id()
-    return obj
-
-
-def get_db_path(path=None):
-    if path is None:
-        path = DB_DEFAULT_PATH
-    db_path = FileStat(path).join(["media.db"])
-    return db_path.name
-
-
-def get_db_spec(db_path):
-    db_path = "sqlite://" + os.sep + db_path
-    print("db_path", db_path)
-    return db_path
-
-
-def open_db(db_spec, echo=False):
-    engine = create_engine(db_spec, echo=echo)
-    return engine
-
-
-def create_db_meta(engine):
-    meta = Base.metadata.create_all(engine)
-    return meta
-
-
 class MediaDB(object):
-    def __init__(self, db_path, repo_path, base_path):
-        self.db_path = FileStat(db_path).name
+    def __init__(self, db_conf, repo_path, base_path):
+
+        self.db_conf = db_conf
 
         self.repo_path = FileStat(repo_path).name
         self.base_path = FileStat(base_path).name
 
-        self.db_file = get_db_path(db_path)
-        self.db_spec = get_db_spec(self.db_file)
-
-        self.engine = open_db(self.db_spec)
-        self.meta = create_db_meta(self.engine)
+        self.engine = self.db_conf.open_db()
+        self.meta = self.db_conf.create_db_meta(Base)
 
         self.session = None
         self.begin()
@@ -220,7 +125,9 @@ if __name__ == "__main__":
 
     hash_ = f.hash()
 
-    db = MediaDB(".", repo_path, default_path)
+    dbconf = SqliteConf("media.db", path=".")
+
+    db = MediaDB(dbconf, repo_path, default_path)
 
     to_insert = False
 
@@ -228,7 +135,7 @@ if __name__ == "__main__":
 
     if media is None:
         print("add media")
-        media = create_new_with_id(Media)
+        media = SqliteConf.create_new_with_id(Media)
         media.hash = f.hash()
         media.mime = mimetypes.types_map.get(ext, None)
         # todo
@@ -242,7 +149,7 @@ if __name__ == "__main__":
 
     if not already_exists:
         print("add path")
-        mp = create_new_with_id(MediaPath)
+        mp = SqliteConf.create_new_with_id(MediaPath)
         mp.path = db.norm_base_path(f.name)
         mp.media = media
         to_insert = True
