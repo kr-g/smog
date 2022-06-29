@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
     hash_ = f.hash()
 
-    dbconf = SqliteConf("media.db", path=".")
+    dbconf = SqliteConf("smog.db", path="..")
 
     db = MediaDB(dbconf)
 
