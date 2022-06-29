@@ -43,6 +43,16 @@ class MediaDB(object):
         if auto_commit:
             return self.commit()
 
+    #
+
+    def upsert(self, recs, auto_commit=False):
+        return self.add_(recs=recs, auto_commit=auto_commit)
+
+    def remove(self, recs, auto_commit=False):
+        return self.remove(recs=recs, auto_commit=auto_commit)
+
+    #
+
     def begin(self):
         try:
             if self.session:
@@ -180,9 +190,9 @@ if __name__ == "__main__":
 
         sett.val = int(sett.val) + 1
 
-        db.add_([media, mp, sett, settrun], auto_commit=auto_commit)
+        db.upsert([media, mp, sett, settrun], auto_commit=auto_commit)
     else:
         print("nothing to do")
-        db.add_(settrun, auto_commit=auto_commit)
+        db.upsert(settrun, auto_commit=auto_commit)
 
     db.commit()
