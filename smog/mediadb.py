@@ -5,9 +5,7 @@ except:
     from dbconf import DBConf
     from dbschema import Base, Setting, Media, MediaPath
 
-
 from sqlalchemy.orm import Session
-from sqlalchemy import delete
 
 
 class MediaDB(object):
