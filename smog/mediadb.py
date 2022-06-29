@@ -18,12 +18,9 @@ from sqlalchemy import delete
 
 
 class MediaDB(object):
-    def __init__(self, db_conf, repo_path, base_path):
+    def __init__(self, db_conf):
 
         self.db_conf = db_conf
-
-        self.repo_path = FileStat(repo_path).name
-        self.base_path = FileStat(base_path).name
 
         self.engine = self.db_conf.open_db()
         self.meta = self.db_conf.create_db_meta(Base)
@@ -66,18 +63,6 @@ class MediaDB(object):
 
     def rollback(self):
         self.begin()
-
-    #
-
-    def norm_repo_path(self, fnam):
-        if fnam.startswith(self.repo_path):
-            return fnam[len(self.repo_path) + 1 :]
-        return fnam
-
-    def norm_base_path(self, fnam):
-        if fnam.startswith(self.base_path):
-            return fnam[len(self.base_path) + 1 :]
-        return fnam
 
     #
 
@@ -126,10 +111,13 @@ if __name__ == "__main__":
 
     import mimetypes
     from dbconf import SqliteConf
+    from context import Context
     from organize import build_timed_path_fnam_t
 
     default_path = "~/Bilder"
     repo_path = "~/media-repo"
+
+    ctx = Context(default_path, repo_path, None, None)
 
     f = FileStat(default_path).join(["20220521.jpeg"])
 
@@ -139,7 +127,7 @@ if __name__ == "__main__":
 
     dbconf = SqliteConf("media.db", path=".")
 
-    db = MediaDB(dbconf, repo_path, default_path)
+    db = MediaDB(dbconf)
 
     to_insert = False
 
@@ -151,18 +139,18 @@ if __name__ == "__main__":
         media.hash = f.hash()
         media.mime = mimetypes.types_map.get(ext, None)
         # todo
-        media.repopath = db.norm_repo_path(f.name)
+        media.repopath = f.name  # ctx.norm_repo_path(f.name)
         to_insert = True
 
     # todo
-    fpath = db.norm_base_path(f.name)
+    fpath = ctx.norm_base_path(f.name)
 
     already_exists = any(filter(lambda x: x.path == fpath, media.paths))
 
     if not already_exists:
         print("add path")
         mp = SqliteConf.create_new_with_id(MediaPath)
-        mp.path = db.norm_base_path(f.name)
+        mp.path = ctx.norm_base_path(f.name)
         mp.media = media
         to_insert = True
 

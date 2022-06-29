@@ -1,3 +1,9 @@
+try:
+    from .file import FileStat
+except:
+    from file import FileStat
+
+
 class Context(object):
     def __init__(
         self,
@@ -10,9 +16,9 @@ class Context(object):
         recursive=True,
         excludedirs=None,
     ):
-        self.srcdir = srcdir
-        self.repodir = repodir
-        self.procdir = procdir
+        self.srcdir = FileStat(srcdir).name
+        self.repodir = FileStat(repodir).name
+        self.procdir = FileStat(procdir).name if procdir else None
 
         self.pattern = pattern
 
@@ -28,6 +34,16 @@ class Context(object):
         )
 
         self.dbmeta = dbmeta
+
+    def norm_repo_path(self, fnam):
+        if not fnam.startswith(self.repodir):
+            raise Exception("not on repo dir")
+        return fnam[len(self.repodir) + 1 :]
+
+    def norm_base_path(self, fnam):
+        if not fnam.startswith(self.srcdir):
+            raise Exception("not on src dir")
+        return fnam[len(self.srcdir) + 1 :]
 
 
 class CtxRunner(object):
