@@ -101,6 +101,30 @@ def main_func(mkcopy=True):
         default=dest_repo.name,
     )
 
+    proc_dir = FileStat(base).join(["proc-media"])
+
+    parser.add_argument(
+        "-proc",
+        type=str,
+        dest="proc_dir",
+        action="store",
+        metavar="PROC_DIR",
+        help="processed file folder. subfolder of INPUT_DIR. (default: %(default)s)",
+        default=proc_dir.name,
+    )
+
+    parser.add_argument(
+        "-exclude-folder",
+        "-no-scan",
+        type=str,
+        dest="exclude_dirs",
+        action="store",
+        nargs="*",
+        metavar="EXCLUDE_DIR",
+        help="exclude folder from scan.",
+        default=None,
+    )
+
     subparsers = parser.add_subparsers(help="sub-command --help")
 
     xmp_parser = subparsers.add_parser("xmp", help="xmp help")
