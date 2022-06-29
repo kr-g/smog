@@ -1,16 +1,9 @@
-import os
-import glob
-import json
-import time
-
 try:
     from .dbconf import DBConf
     from .dbschema import Base, Setting, Media, MediaPath
-    from .file import FileStat, Hash
 except:
     from dbconf import DBConf
     from dbschema import Base, Setting, Media, MediaPath
-    from file import FileStat, Hash
 
 
 from sqlalchemy.orm import Session
@@ -113,6 +106,7 @@ if __name__ == "__main__":
     from dbconf import SqliteConf
     from context import Context
     from organize import build_timed_path_fnam_t
+    from file import FileStat, Hash
 
     default_path = "~/Bilder"
     repo_path = "~/media-repo"

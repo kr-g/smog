@@ -2,7 +2,8 @@
 # https://github.com/adobe/xmp-docs
 
 
-from libxmp import XMPFiles, consts
+from libxmp import XMPFiles
+from libxmp import consts as XMPConst
 from libxmp.utils import file_to_dict
 
 
@@ -27,9 +28,6 @@ def cleanup_xmp_dict(xmp):
             ns[k] = v
         rc[ns_k] = ns
     return rc
-
-
-import itertools
 
 
 def xmp_tags(xmp_c):

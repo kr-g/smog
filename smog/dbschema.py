@@ -11,10 +11,11 @@ except:
 
 from sqlalchemy import Column, ForeignKey
 
-from sqlalchemy import Integer
 from sqlalchemy import String
-from sqlalchemy import Float
-from sqlalchemy import Boolean
+
+# from sqlalchemy import Boolean
+# from sqlalchemy import Integer
+# from sqlalchemy import Float
 
 from sqlalchemy.orm import declarative_base, relationship
 

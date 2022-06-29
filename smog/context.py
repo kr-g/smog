@@ -57,16 +57,16 @@ class CtxRunner(object):
         self.errproc = []
         self.errout = []
 
-    def config_run(self, proc, output, errprochndl=None, errouthndl=None):
+    def config_run(self, proc, output, errhndl=None, errouthndl=None):
         self.proc = proc
         self.output = output
-        self.errhndl = errhandl if errhndl else self.errproc_handler
+        self.errhndl = errhndl if errhndl else self.errproc_handler
         self.errouthndl = errouthndl if errouthndl else self.errout_handler
 
     def run(self):
         for inp in self.input_iter():
 
-            rc, err, ex = do_proc(inp)
+            rc, err, ex = self.do_proc(inp)
             if ex:
                 print(ex)
             if err:
@@ -74,7 +74,7 @@ class CtxRunner(object):
             if err or ex:
                 continue
 
-            rc, err, ex = do_output(inp)
+            rc, err, ex = self.do_output(inp)
             if ex:
                 print(ex)
             if err:

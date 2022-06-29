@@ -13,9 +13,6 @@ import time
 
 import tempfile
 
-
-import warnings
-
 from collections import namedtuple
 import glob
 
