@@ -4,17 +4,14 @@ import json
 import time
 
 try:
-    from .dbconf import DBConf, SqliteConf
+    from .dbconf import DBConf
     from .dbschema import Base, Setting, Media, MediaPath
     from .file import FileStat, Hash
-    from .organize import build_timed_path_fnam_t
 except:
-    from dbconf import DBConf, SqliteConf
+    from dbconf import DBConf
     from dbschema import Base, Setting, Media, MediaPath
     from file import FileStat, Hash
-    from organize import build_timed_path_fnam_t
 
-import mimetypes
 
 from sqlalchemy.orm import Session
 from sqlalchemy import delete
@@ -116,6 +113,11 @@ class MediaDB(object):
 #
 
 if __name__ == "__main__":
+
+    import mimetypes
+    from dbconf import SqliteConf
+    from organize import build_timed_path_fnam_t
+
     default_path = "~/Bilder"
     repo_path = "~/media-repo"
 
