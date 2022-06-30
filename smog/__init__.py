@@ -1,1 +1,1 @@
-from .smog import VERSION
+
