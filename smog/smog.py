@@ -20,6 +20,10 @@ from .xmpex import get_tags, xmp_dict, cleanup_xmp_dict, xmp_tags
 from .timeguess import tm_guess_from_fnam
 from .gps import get_lat_lon
 
+from .organize import build_timed_path_fnam
+from .file1name import make_unique_filename
+
+from datetime import datetime as dt
 from dateutil.parser import isoparse
 
 
@@ -278,6 +282,31 @@ class CtxListFileTimeMeth(CtxProcessor):
         return c, err
 
 
+class CtxOrganizeRepoPath(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        ts = dt(*c.ProcTime_tm[0:6])
+        fnam = inp.basename()
+
+        dest_rel = build_timed_path_fnam(ts, fnam)
+        c.REPO_DEST_ORG = dest_rel
+
+        dest_repo = FileStat(self.ctx.repodir).join([dest_rel])
+        dest_fnam = dest_repo.name
+        c.REPO_COPY = True
+
+        if dest_repo.exists():
+            if dest_repo.hash() == inp.hash():
+                self.ctx.vprint("identical", inp.name, dest_repo.name)
+                c.REPO_COPY = False
+            else:
+                dest_fnam = make_unique_filename(dest_repo.name)
+
+        c.REPO_DEST_FNAM = dest_fnam
+
+        return c, err
+
+
 def scan_func(args):
 
     pipe = CtxPipe(args.ctx)
@@ -302,6 +331,7 @@ def scan_func(args):
     pipe.add(CtxListFileNameTimeMeth())
     pipe.add(CtxListFileTimeMeth())
 
+    pipe.add(CtxOrganizeRepoPath())
     #
     # pipe.add(CtxStop())
     # add other processors here
