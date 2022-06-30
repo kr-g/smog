@@ -142,7 +142,6 @@ def scan_func(args):
         try:
             pipe.process()
         except StopIteration:
-            args.ctx.vprint("done", noitems)
             break
 
     args.ctx.print("total files scanned", args.ctx.NO_FILES)
