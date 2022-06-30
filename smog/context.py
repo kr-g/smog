@@ -50,7 +50,10 @@ class Context(object):
 
 
 class CtxProcessor(object):
-    def process(self, ctx, inp, err):
+    def reset(self, ctx):
+        self.ctx = ctx
+
+    def process(self, inp, err):
         raise NotImplementedError()
 
 
@@ -62,8 +65,12 @@ class CtxPipe(object):
     def add(self, ctx_proc):
         self.chain.append(ctx_proc)
 
+    def reset(self):
+        for cproc in self.chain:
+            cproc.reset(ctx)
+
     def process(self, inp=None):
         for cproc in self.chain:
-            inp, err = cproc.process(self.ctx, inp, err)
+            inp, err = cproc.process(inp, err)
             if inp is None and err is None:
                 break
