@@ -37,8 +37,19 @@ class Context(object):
 
         self.dbmeta = dbmeta
 
-        self.verbose = verbose
-        self.debug = debug
+        self._verbose = verbose
+        self._debug = debug
+
+    # output management
+
+    def print(self, *args, **kwargs):
+        print(*args, **kwargs)
+
+    def vprint(self, *args):
+        self._verbose and print(*args)
+
+    def dprint(self, *args):
+        self._debug and print(*args)
 
     # static
     def mksubpath(fnam, path):
