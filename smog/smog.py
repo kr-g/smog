@@ -100,6 +100,7 @@ class CtxExamine(CtxProcessor):
     def reset(self, ctx):
         super().reset(ctx)
         self.iter = ifile(self.ctx.srcdir, recursive=self.ctx.recursive)
+        self.ctx.NO_FILES = 0
 
     def process(self, inp, err):
         if inp or err:
@@ -116,6 +117,12 @@ class CtxExcludeFolder(CtxProcessor):
             if inp.name.startswith(f + FileStat.sep):
                 self.ctx.dprint("filtered", inp)
                 return None, None
+        return c, err
+
+
+class CtxProcFile(CtxProcessor):
+    def process(self, c, err):
+        self.ctx.NO_FILES += 1
         return c, err
 
 
@@ -321,7 +328,8 @@ def scan_func(args):
     pipe.add(CtxExamine())
     #
     pipe.add(CtxExcludeFolder())
-
+    pipe.add(CtxProcFile())
+    #
     pipe.add(CtxFile_datetime())
     pipe.add(CtxFileName_datetime())
 
@@ -360,6 +368,8 @@ def scan_func(args):
         except StopIteration:
             args.ctx.vprint("done", noitems)
             break
+
+    args.ctx.print("total files scanned", args.ctx.NO_FILES)
 
 
 #
