@@ -10,7 +10,47 @@ from .xmptype import dump_guessed
 from .xmpex import xmp_meta
 from .xmpex import xmp_dict, cleanup_xmp_dict, xmp_tags
 
+from .context import Context, CtxPipe, CtxTerm
+from .dbconf import SqliteConf
+from .mediadb import MediaDB
+
+from .examine import CtxExamine
+
+#
+
 VERSION = "v0.0.2-a"
+
+
+#
+
+args = None
+debug = False
+verbose = False
+
+
+def dprint(*args, **kwargs):
+    global debug
+    debug and print("DEBUG", *args, **kwargs)
+
+
+def vprint(*args, **kwargs):
+    global verbose
+    verbose and print(*args, **kwargs)
+
+
+def wprint(*args, **kwargs):
+    print("WARNING", *args, **kwargs)
+
+
+def eprint(*args, **kwargs):
+    print("ERROR", *args, **kwargs)
+
+
+def print_err(*args, **kwargs):
+    eprint(*args, **kwargs)
+
+
+#
 
 
 def get_default_pic_folder():
@@ -22,7 +62,42 @@ def get_default_pic_folder():
     return FileStat().name
 
 
-debug = False
+def is_folder_or_die(f):
+    if f.exists() and not f.is_dir():
+        eprint("not a folder", f.name)
+        sys.exit(1)
+
+
+#
+
+
+def scan_func(args):
+
+    pipe = CtxPipe(args.ctx)
+    # keep this first
+    pipe.add(CtxExamine())
+    #
+
+    # add other processors here
+    #
+    None
+    # keep this last, otherwise it might run forever
+    pipe.add(CtxTerm())
+
+    pipe.reset()
+
+    noitems = 0
+
+    while True:
+        try:
+            pipe.process()
+            noitems += 1
+        except StopIteration:
+            args.ctx.vprint("done", noitems)
+            break
+
+
+#
 
 
 def xmp_func(args):
@@ -50,7 +125,7 @@ def xmp_func(args):
 
 def main_func(mkcopy=True):
 
-    global debug
+    global debug, verbose
 
     parser = argparse.ArgumentParser(
         prog="smog",
@@ -59,12 +134,15 @@ def main_func(mkcopy=True):
         epilog="for more information refer to https://github.com/kr-g/smog",
     )
     parser.add_argument(
-        "-v",
-        "--version",
-        dest="show_version",
+        "--version", "-v", action="version", version=f"%(prog)s {VERSION}"
+    )
+    parser.add_argument(
+        "--verbose",
+        "-V",
+        dest="verbose",
         action="store_true",
-        help="show version info and exit",
-        default=False,
+        help="show more info (default: %(default)s)",
+        default=verbose,
     )
     parser.add_argument(
         "-debug",
@@ -83,7 +161,7 @@ def main_func(mkcopy=True):
         type=str,
         dest="base",
         action="store",
-        metavar="INPUT_DIR",
+        metavar="SRC_DIR",
         help="folder to scan (default: %(default)s)",
         default=base,
     )
@@ -109,7 +187,7 @@ def main_func(mkcopy=True):
         dest="proc_dir",
         action="store",
         metavar="PROC_DIR",
-        help="processed file folder. subfolder of INPUT_DIR. (default: %(default)s)",
+        help="processed file folder. subfolder of SRC_DIR. (default: %(default)s)",
         default=proc_dir.name,
     )
 
@@ -121,13 +199,20 @@ def main_func(mkcopy=True):
         action="store",
         nargs="+",
         metavar="EXCLUDE_DIR",
-        help="exclude folder from scan.",
+        help="exclude folder from scan",
         default=None,
     )
 
     subparsers = parser.add_subparsers(help="sub-command --help")
 
-    xmp_parser = subparsers.add_parser("xmp", help="xmp help")
+    # scan
+
+    scan_parser = subparsers.add_parser("scan", help="scan --help")
+    scan_parser.set_defaults(func=scan_func)
+
+    # xmp
+
+    xmp_parser = subparsers.add_parser("xmp", help="xmp --help")
     xmp_parser.set_defaults(func=xmp_func)
 
     xmptypes = xmp_parser.add_argument_group("known files")
@@ -169,28 +254,54 @@ def main_func(mkcopy=True):
     global args
     args = parser.parse_args()
 
-    if args.debug:
-        print("arguments", args)
-
     debug = args.debug
+    dprint("arguments", args)
 
-    if "func" in args:
-        debug and print("call func", args.func.__name__)
-        rc = args.func(args)
-        exit(rc if rc != None else 0)
+    verbose = args.verbose
 
-    if args.show_version:
-        print("Version:", VERSION)
-        return
+    args.base = FileStat(args.base)
+    is_folder_or_die(args.base)
 
-    fbase = FileStat(args.base)
-    frepo = FileStat(args.dest_repo)
-    if fbase.name == frepo.name:
-        print("in place processing not supported")
+    args.dest_repo = FileStat(args.dest_repo)
+    is_folder_or_die(args.dest_repo)
+
+    if args.base.name == args.dest_repo.name:
+        print_err("in place processing not supported")
         sys.exit(1)
 
+    args.proc_dir = FileStat(args.proc_dir)
+    is_folder_or_die(args.proc_dir)
+
+    if args.exclude_dirs:
+        args.exclude_dirs = list(
+            map(lambda x: FileStat(x, prefetech=True), args.exclude_dirs)
+        )
+
+        for nam in args.exclude_dirs:
+            f = FileStat(nam, prefetch=True)
+            is_folder_or_die(f)
+        args.exclude_dirs = list(map(lambda x: x.name, args.exclude_dirs))
+
+    dbconf = SqliteConf("smog.db", path="..")
+    db = MediaDB(dbconf)
+
+    args.ctx = Context(
+        args.base.name,
+        args.dest_repo.name,
+        args.proc_dir.name,
+        db=db,
+        excludedirs=args.exclude_dirs,
+        verbose=verbose,
+        debug=debug,
+    )
+
+    if "func" in args:
+        dprint("call func", args.func.__name__)
+        rc = args.func(args)
+        return rc if rc != None else 0
+
     rc = move_pics(fbase.name, frepo, pattern=None, debug=args.debug)
-    debug and print("files total/ processed", rc)
+    dprint("files total/ processed", rc)
 
 
 if __name__ == "__main__":

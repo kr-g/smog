@@ -10,7 +10,7 @@ class Context(object):
         srcdir,
         repodir,
         procdir,
-        dbmeta,
+        db,
         pattern=None,
         addext=None,
         recursive=True,
@@ -35,7 +35,7 @@ class Context(object):
             ]
         )
 
-        self.dbmeta = dbmeta
+        self.db = db
 
         self._verbose = verbose
         self._debug = debug
@@ -49,9 +49,16 @@ class Context(object):
         self._verbose and print(*args)
 
     def dprint(self, *args):
-        self._debug and print(*args)
+        self._debug and print("DEBUG", *args)
+
+    def wprint(self, *args):
+        print("WARNING", *args)
+
+    def eprint(self, *args):
+        print("ERROR", *args)
 
     # static
+
     def mksubpath(fnam, path):
         path = FileStat(path).name + FileStat.sep
         if not fnam.startswith(path):
@@ -73,6 +80,15 @@ class CtxProcessor(object):
         raise NotImplementedError()
 
 
+class CtxTerm(CtxProcessor):
+    def process(self, inp, err):
+        if inp:
+            self.ctx.vprint("done", inp)
+        if err:
+            self.ctx.eprint(err)
+        return None, None
+
+
 class CtxPipe(object):
     def __init__(self, ctx):
         self.ctx = ctx
@@ -83,7 +99,7 @@ class CtxPipe(object):
 
     def reset(self):
         for cproc in self.chain:
-            cproc.reset(ctx)
+            cproc.reset(self.ctx)
 
     def process(self, inp=None, err=None):
         for cproc in self.chain:
