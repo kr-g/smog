@@ -69,7 +69,7 @@ class CtxPipe(object):
         for cproc in self.chain:
             cproc.reset(ctx)
 
-    def process(self, inp=None):
+    def process(self, inp=None, err=None):
         for cproc in self.chain:
             inp, err = cproc.process(inp, err)
             if inp is None and err is None:
