@@ -35,3 +35,10 @@ def xmp_tags(xmp_c):
     for v in xmp_c.values():
         rc.extend(v.items())
     return rc
+
+
+def get_tags(fnam):
+    xmp = xmp_dict(fnam)
+    xmp_c = cleanup_xmp_dict(xmp)
+    tags = xmp_tags(xmp_c)
+    return tags

@@ -77,16 +77,30 @@ class CtxProcessor(object):
         self.ctx = ctx
 
     def process(self, inp, err):
-        raise NotImplementedError()
+        # this does nothing
+        return inp, err
 
 
 class CtxTerm(CtxProcessor):
     def process(self, inp, err):
+        self.ctx.vprint("terminating")
         if inp:
-            self.ctx.vprint("done", inp)
+            self.ctx.dprint("done", inp)
         if err:
             self.ctx.eprint(err)
         return None, None
+
+
+class CtxPrint(CtxProcessor):
+    def process(self, inp, err):
+        self.ctx.print(inp)
+        return inp, err
+
+
+class CtxStop(CtxProcessor):
+    def process(self, inp, err):
+        self.ctx.print("\nSTOPPING", inp)
+        raise StopIteration()
 
 
 class CtxPipe(object):

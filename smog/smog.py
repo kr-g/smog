@@ -1,20 +1,26 @@
 import sys
-
+import time
 import json
 import argparse
 
 from .file import FileStat
 from .movepic import move_pics
 
-from .xmptype import dump_guessed
-from .xmpex import xmp_meta
-from .xmpex import xmp_dict, cleanup_xmp_dict, xmp_tags
-
-from .context import Context, CtxPipe, CtxTerm
+from .context import Context, CtxPipe, CtxTerm, CtxStop, CtxPrint, CtxProcessor
 from .dbconf import SqliteConf
 from .mediadb import MediaDB
 
-from .examine import CtxExamine
+from .examine import ifile
+from .xmptype import guess_xmp_fnam
+
+from .xmptype import dump_guessed
+from .xmpex import xmp_meta
+from .xmpex import get_tags, xmp_dict, cleanup_xmp_dict, xmp_tags
+
+from .timeguess import tm_guess_from_fnam
+
+from dateutil.parser import isoparse
+
 
 #
 
@@ -71,19 +77,217 @@ def is_folder_or_die(f):
 #
 
 
+class Container(object):
+    def __init__(self, inp):
+        self.inp = inp
+
+    def get(self, nam, default=None):
+        return self.__dict__.setdefault(nam, default)
+
+    def merge(self, dic):
+        self.__dict__.update(dic)
+
+    def __repr__(self):
+        return str(self.__dict__)
+
+
+class CtxExamine(CtxProcessor):
+    def reset(self, ctx):
+        super().reset(ctx)
+        self.iter = ifile(self.ctx.srcdir, recursive=self.ctx.recursive)
+
+    def process(self, inp, err):
+        if inp or err:
+            raise Exception("must be first in chain")
+
+        # this raises StopIteration
+        return Container(next(self.iter)), None
+
+
+class CtxExcludeFolder(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        for f in self.ctx.excludedirs:
+            if inp.name.startswith(f + FileStat.sep):
+                self.ctx.dprint("filtered", inp)
+                return None, None
+        return c, err
+
+
+class CtxCheckXMP(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        c.XMPscan = guess_xmp_fnam(inp.name)
+        self.ctx.vprint("xmp scan", c.XMPscan, inp.name)
+        return c, err
+
+
+class CtxXMP_tags(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        if c.get("XMPscan"):
+            try:
+                c.XMP = xmp_meta(inp.name)
+                self.ctx.vprint("xmp scan ok")
+                self.ctx.dprint(c.XMP)
+
+                c.XMPtags = get_tags(inp.name)
+                c.XMPdict = dict(c.XMPtags)
+                [self.ctx.dprint(x) for x in c.XMPtags]
+
+            except Exception as ex:
+                self.ctx.wprint("xmp load failed", inp.name)
+
+        return c, err
+
+
+def parse_iso_tm(isodate):
+    return isoparse(isodate).timetuple()
+
+
+def conv_tm(tm):
+    return time.mktime(tm)
+
+
+class CtxXMP_datetime(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        if c.get("XMPdict"):
+            try:
+                c.XMPtime_raw = c.XMPdict.get("xmp:CreateDate")
+                if c.XMPtime_raw:
+                    c.XMPtime_tm = parse_iso_tm(c.XMPtime_raw)
+                    self.ctx.vprint("xmp isodate", c.XMPtime_tm)
+                    c.XMPtime = conv_tm(c.XMPtime_tm)
+            except Exception as ex:
+                self.ctx.eprint("xmp timeformat", inp.name, ex)
+        return c, err
+
+
+class CtxEXIF_datetime(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        if c.get("XMPdict"):
+            try:
+                c.EXIFtime_raw = c.XMPdict.get("exif:DateTimeOriginal")
+                if c.EXIFtime_raw:
+                    c.EXIFtime_tm = parse_iso_tm(c.EXIFtime_raw)
+                    self.ctx.vprint("exif isodate", c.EXIFtime_tm)
+                    c.EXIFtime = conv_tm(c.EXIFtime_tm)
+            except Exception as ex:
+                self.ctx.eprint("exif timeformat", inp.name, ex)
+        return c, err
+
+
+class CtxEXIF_GPS(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        tags = c.get("XMPtags")
+        if tags:
+            for k, v in tags:
+                if k.startswith("exif:GPS"):
+                    key = k[len("exif:") :]
+                    c.get(key, v)
+                    self.ctx.vprint(key, v)
+        return c, err
+
+
+class CtxFileName_datetime(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        try:
+            c.FNAMtime_tm = tm_guess_from_fnam(inp.name)
+            c.FNAMtime = conv_tm(c.FNAMtime_tm)
+            self.ctx.dprint("file name time", c.FNAMtime)
+            self.ctx.vprint("file name time_tm", c.FNAMtime_tm)
+        except:
+            pass
+        return c, err
+
+
+class CtxFile_datetime(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        # first time or mtime ???
+        # todo ?
+        c.FILEtime_tm = inp.ftime()
+        c.FILEtime = conv_tm(c.FILEtime_tm)
+        self.ctx.dprint("file time", c.FILEtime)
+        self.ctx.vprint("file time_tm", c.FILEtime_tm)
+        return c, err
+
+
+class CtxTime_proc(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        for prop in ["XMPtime", "EXIFtime", "FNAMtime", "FILEtime"]:
+            p = c.get(prop)
+            if p:
+                c.ProcTime = c.get(prop)
+                c.ProcTime_tm = c.get(prop + "_tm")
+                c.ProcTimeMeth = prop
+                break
+        self.ctx.dprint("proc time meth", c.ProcTimeMeth)
+        self.ctx.dprint("proc time", c.ProcTime)
+        self.ctx.vprint("proc time_tm", c.ProcTime_tm)
+        return c, err
+
+
+class CtxListFileNameTimeMeth(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        meth = c.get("ProcTimeMeth")
+        if meth == "FNAMtime":
+            self.ctx.print("FNAMtime", inp.name)
+            for k, v in c.__dict__.items():
+                if k.lower().find("time") >= 0:
+                    self.ctx.dprint(k, v)
+        return c, err
+
+
+class CtxListFileTimeMeth(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        meth = c.get("ProcTimeMeth")
+        if meth == "FILEtime":
+            self.ctx.print("FILEtime", inp.name)
+            for k, v in c.__dict__.items():
+                if k.lower().find("time") >= 0:
+                    self.ctx.dprint(k, v)
+        return c, err
+
+
 def scan_func(args):
 
     pipe = CtxPipe(args.ctx)
     # keep this first
     pipe.add(CtxExamine())
     #
+    pipe.add(CtxExcludeFolder())
 
+    pipe.add(CtxFile_datetime())
+    pipe.add(CtxFileName_datetime())
+
+    pipe.add(CtxCheckXMP())
+    pipe.add(CtxXMP_tags())
+    pipe.add(CtxXMP_datetime())
+
+    pipe.add(CtxEXIF_datetime())
+    pipe.add(CtxEXIF_GPS())
+
+    pipe.add(CtxTime_proc())
+
+    pipe.add(CtxListFileNameTimeMeth())
+    pipe.add(CtxListFileTimeMeth())
+
+    #
+    # pipe.add(CtxStop())
     # add other processors here
     #
     None
     # keep this last, otherwise it might run forever
     pipe.add(CtxTerm())
-
+    #
     pipe.reset()
 
     noitems = 0
@@ -300,8 +504,7 @@ def main_func(mkcopy=True):
         rc = args.func(args)
         return rc if rc != None else 0
 
-    rc = move_pics(fbase.name, frepo, pattern=None, debug=args.debug)
-    dprint("files total/ processed", rc)
+    print("what? use --help")
 
 
 if __name__ == "__main__":

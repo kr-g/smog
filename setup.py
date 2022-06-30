@@ -43,6 +43,7 @@ setuptools.setup(
     install_requires=[
         "SQLAlchemy",
         "python-xmp-toolkit",
+        "python-dateutil",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",

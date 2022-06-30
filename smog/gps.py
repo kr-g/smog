@@ -32,4 +32,4 @@ def get_lat_lon(exif_gps_info):
         return lat, lon
 
     except Exception as ex:
-        raise Exception(ex, "invalid input", gps_info)
+        raise Exception(ex, "invalid input", exif_gps_info)
