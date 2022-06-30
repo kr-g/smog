@@ -259,3 +259,38 @@ class CtxOrganizeRepoPath(CtxProcessor):
         c.REPO_DEST_FNAM = dest_fnam
 
         return c, err
+
+
+def build_scan_flow(pipe):
+    # keep this first
+    pipe.add(CtxExamine())
+    #
+    pipe.add(CtxExcludeFolder())
+    pipe.add(CtxProcFile())
+    #
+    pipe.add(CtxFile_datetime())
+    pipe.add(CtxFileName_datetime())
+
+    pipe.add(CtxCheckXMP())
+    pipe.add(CtxXMP_tags())
+    pipe.add(CtxXMP_datetime())
+
+    # after xmp processing
+    pipe.add(CtxEXIF_datetime())
+    pipe.add(CtxEXIF_GPS())
+    pipe.add(CtxEXIF_GPSconv())
+
+    # after all timestamps have processed
+    pipe.add(CtxTime_proc(["XMPtime", "EXIFtime", "FNAMtime", "FILEtime"]))
+
+    pipe.add(CtxListFileNameTimeMeth())
+    pipe.add(CtxListFileTimeMeth())
+
+    pipe.add(CtxOrganizeRepoPath())
+    #
+    # pipe.add(CtxStop())
+    # add other processors here
+    #
+    None
+    # keep this last, otherwise it might run forever
+    pipe.add(CtxTerm())
