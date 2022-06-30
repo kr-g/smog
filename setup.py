@@ -24,7 +24,7 @@ def find_projectname():
     return name
 
 
-file = os.path.join("smog", "__init__.py")
+file = os.path.join("smog", "smog.py")
 version = find_version(file)
 projectname = find_projectname()
 
