@@ -18,6 +18,7 @@ from .xmpex import xmp_meta
 from .xmpex import get_tags, xmp_dict, cleanup_xmp_dict, xmp_tags
 
 from .timeguess import tm_guess_from_fnam
+from .gps import get_lat_lon
 
 from dateutil.parser import isoparse
 
@@ -184,11 +185,31 @@ class CtxEXIF_GPS(CtxProcessor):
         inp = c.inp
         tags = c.get("XMPtags")
         if tags:
+            gps = {}
             for k, v in tags:
                 if k.startswith("exif:GPS"):
                     key = k[len("exif:") :]
-                    c.get(key, v)
                     self.ctx.vprint(key, v)
+                    gps[key] = v
+            if len(gps.keys()) > 0:
+                c.get("EXIF_GPS", gps)
+                self.ctx.dprint("gps info", c.EXIF_GPS)
+        return c, err
+
+
+class CtxEXIF_GPSconv(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        gpsinfo = c.get("EXIF_GPS")
+        if gpsinfo:
+            try:
+                lat, lon = get_lat_lon(gpsinfo)
+                c.GPS_LAT = lat
+                c.GPS_LON = lon
+                c.GPS_LAT_LON = lat, lon
+            except Exception as ex:
+                c.GPSerror = True
+                self.ctx.eprint("gps conv", inp.name, gpsinfo, ex)
         return c, err
 
 
@@ -274,6 +295,7 @@ def scan_func(args):
 
     pipe.add(CtxEXIF_datetime())
     pipe.add(CtxEXIF_GPS())
+    pipe.add(CtxEXIF_GPSconv())
 
     pipe.add(CtxTime_proc())
 
