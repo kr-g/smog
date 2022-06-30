@@ -295,8 +295,10 @@ class CtxOrganizeRepoPath(CtxProcessor):
         dest_fnam = dest_repo.name
         c.REPO_COPY = True
 
+        c.FILE_HASH = inp.hash()
+
         if dest_repo.exists():
-            if dest_repo.hash() == inp.hash():
+            if dest_repo.hash() == c.FILE_HASH:
                 self.ctx.vprint("identical", inp.name, dest_repo.name)
                 c.REPO_COPY = False
             else:
