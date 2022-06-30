@@ -56,8 +56,8 @@ class CtxPipe(object):
         self.ctx = ctx
         self.chain = []
 
-    def add(self, ctx_runner):
-        self.chain.append(ctx_runner)
+    def add(self, ctx_proc):
+        self.chain.append(ctx_proc)
 
     def process(self, inp=None):
         for cproc in self.chain:
