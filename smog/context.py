@@ -35,15 +35,18 @@ class Context(object):
 
         self.dbmeta = dbmeta
 
+    # static
+    def mksubpath(fnam, path):
+        path = FileStat(path).name + FileStat.sep
+        if not fnam.startswith(path):
+            raise Exception("not on folder", path)
+        return fnam[len(path) :]
+
     def norm_repo_path(self, fnam):
-        if not fnam.startswith(self.repodir):
-            raise Exception("not on repo dir")
-        return fnam[len(self.repodir) + 1 :]
+        return Context.mksubpath(fnam, self.repodir)
 
     def norm_base_path(self, fnam):
-        if not fnam.startswith(self.srcdir):
-            raise Exception("not on src dir")
-        return fnam[len(self.srcdir) + 1 :]
+        return Context.mksubpath(fnam, self.srcdir)
 
 
 class CtxProcessor(object):
