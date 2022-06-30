@@ -42,11 +42,11 @@ class Context(object):
             raise Exception("not on folder", path)
         return fnam[len(path) :]
 
+    def norm_src_path(self, fnam):
+        return Context.mksubpath(fnam, self.srcdir)
+
     def norm_repo_path(self, fnam):
         return Context.mksubpath(fnam, self.repodir)
-
-    def norm_base_path(self, fnam):
-        return Context.mksubpath(fnam, self.srcdir)
 
 
 class CtxProcessor(object):
