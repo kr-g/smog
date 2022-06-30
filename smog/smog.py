@@ -243,9 +243,13 @@ class CtxFile_datetime(CtxProcessor):
 
 
 class CtxTime_proc(CtxProcessor):
+    def __init__(self, props):
+        super().__init__()
+        self.props = props
+
     def process(self, c, err):
         inp = c.inp
-        for prop in ["XMPtime", "EXIFtime", "FNAMtime", "FILEtime"]:
+        for prop in self.props:
             p = c.get(prop)
             if p:
                 c.ProcTime = c.get(prop)
@@ -312,6 +316,7 @@ class CtxOrganizeRepoPath(CtxProcessor):
 def scan_func(args):
 
     pipe = CtxPipe(args.ctx)
+
     # keep this first
     pipe.add(CtxExamine())
     #
@@ -324,11 +329,13 @@ def scan_func(args):
     pipe.add(CtxXMP_tags())
     pipe.add(CtxXMP_datetime())
 
+    # after xmp processing
     pipe.add(CtxEXIF_datetime())
     pipe.add(CtxEXIF_GPS())
     pipe.add(CtxEXIF_GPSconv())
 
-    pipe.add(CtxTime_proc())
+    # after all timestamps have processed
+    pipe.add(CtxTime_proc(["XMPtime", "EXIFtime", "FNAMtime", "FILEtime"]))
 
     pipe.add(CtxListFileNameTimeMeth())
     pipe.add(CtxListFileTimeMeth())
