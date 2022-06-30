@@ -300,8 +300,3 @@ def main_func(mkcopy=True):
         return rc if rc != None else 0
 
     print("what? use --help")
-
-
-if __name__ == "__main__":
-    rc = main_func()
-    print(rc)
