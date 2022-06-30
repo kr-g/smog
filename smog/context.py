@@ -15,6 +15,8 @@ class Context(object):
         addext=None,
         recursive=True,
         excludedirs=None,
+        verbose=False,
+        debug=False,
     ):
         self.srcdir = FileStat(srcdir).name
         self.repodir = FileStat(repodir).name
@@ -34,6 +36,9 @@ class Context(object):
         )
 
         self.dbmeta = dbmeta
+
+        self.verbose = verbose
+        self.debug = debug
 
     # static
     def mksubpath(fnam, path):
