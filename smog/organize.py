@@ -25,26 +25,3 @@ def build_timed_path_fnam(dt, fnam):
     )
 
     return dest_dir
-
-
-# obsolete
-def organize_move_pic(media, repo=None):
-
-    if repo == None:
-        repo = "$REPO"
-
-    src = media.file
-    tm = media.date
-
-    d = date(*tm[0:3])
-    t = dt_time(*tm[3:6])
-    dt = datetime.combine(d, t)
-
-    fnam = src.basename()
-    destfnam = build_timed_path_fnam(dt, fnam)
-
-    dest = FileStat(repo).join([destfnam])
-
-    clash = dest.exists()
-
-    return src, dest, clash, tm
