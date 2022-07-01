@@ -264,11 +264,12 @@ class FileStat(object):
     #
 
     def time(self, wrap=True):
-        t = self.st_time()
-        return FileStat.Time(*t) if wrap else t
+        t = self.st_time(wrap=wrap)
+        return t
 
     def amtime(self):
-        return self.st_time()[P_CREATE + 1 :]  # todo: order seq
+        cam = self.st_time()
+        return cam[1], cam[2]
 
     def utctime(self, wrap=True):
         return self._convtime(time.gmtime, wrap=wrap)

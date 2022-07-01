@@ -27,6 +27,7 @@ def build_timed_path_fnam(dt, fnam):
     return dest_dir
 
 
+# obsolete
 def organize_move_pic(media, repo=None):
 
     if repo == None:

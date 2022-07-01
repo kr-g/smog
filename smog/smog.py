@@ -93,7 +93,14 @@ def scan_func(args):
         except StopIteration:
             break
 
-    args.ctx.print("total files scanned", args.ctx.NO_FILES)
+    args.ctx.print(
+        "total files scanned",
+        args.ctx.NO_FILES,
+        "copied files",
+        args.ctx.NO_COPY_FILES,
+        "file copy failed",
+        args.ctx.NO_COPY_FILES_FAILED,
+    )
 
 
 #

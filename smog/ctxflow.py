@@ -41,7 +41,10 @@ class CtxExamine(CtxProcessor):
     def reset(self, ctx):
         super().reset(ctx)
         self.iter = ifile(self.ctx.srcdir, recursive=self.ctx.recursive)
+
         self.ctx.NO_FILES = 0
+        self.ctx.NO_COPY_FILES = 0
+        self.ctx.NO_COPY_FILES_FAILED = 0
 
     def process(self, inp, err):
         if inp or err:
@@ -237,6 +240,7 @@ class CtxListFileTimeMeth(CtxProcessor):
 class CtxOrganizeRepoPath(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
+
         ts = dt(*c.ProcTime_tm[0:6])
         fnam = inp.basename()
 
@@ -245,6 +249,7 @@ class CtxOrganizeRepoPath(CtxProcessor):
 
         dest_repo = FileStat(self.ctx.repodir).join([dest_rel])
         dest_fnam = dest_repo.name
+
         c.REPO_COPY = True
 
         c.FILE_HASH = inp.hash()
@@ -257,6 +262,30 @@ class CtxOrganizeRepoPath(CtxProcessor):
                 dest_fnam = make_unique_filename(dest_repo.name)
 
         c.REPO_DEST_FNAM = dest_fnam
+
+        return c, err
+
+
+class CtxCopyToRepoPath(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        if c.REPO_COPY:
+            src = inp
+            dest = FileStat(c.REPO_DEST_FNAM)
+            c.REPO_COPY_OK = False
+            try:
+                rc = src.move(dest.name, mkcopy=True, dryrun=False)
+                self.ctx.dprint("copy to repo, move", rc)
+                tm = c.ProcTime
+                dest.touch_ux((tm, tm))
+                c.REPO_COPY_OK = True
+
+                self.ctx.NO_COPY_FILES += 1
+                self.ctx.vprint("copy to repo", src.name, "->", dest.name, "@", tm)
+
+            except Exception as ex:
+                self.ctx.NO_COPY_FILES_FAILED += 1
+                self.ctx.eprint("copy to repo", src.name, dest.name, tm, ex)
 
         return c, err
 
@@ -287,6 +316,7 @@ def build_scan_flow(pipe):
     pipe.add(CtxListFileTimeMeth())
 
     pipe.add(CtxOrganizeRepoPath())
+    pipe.add(CtxCopyToRepoPath())
     #
     # pipe.add(CtxStop())
     # add other processors here
