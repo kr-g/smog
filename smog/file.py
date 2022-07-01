@@ -93,6 +93,10 @@ class FileStat(object):
             pass
             # print(ex, self.name)
 
+    def read_stat(self):
+        self.stat()
+        return self
+
     def clr_stat(self):
         self._stat = None
         return self
@@ -340,6 +344,25 @@ class FileStat(object):
         it = self.scandir(expand)
         f = filter(lambda x: x.stat() and x.is_dir(), it)
         return f
+
+    def walk(self, topdown=True, onerror=None, followlinks=False, wrap=True):
+        it = os.walk(
+            self.name, topdown=topdown, onerror=onerror, followlinks=followlinks
+        )
+        for e in it:
+            if wrap:
+                e = (
+                    FileStat(e[0]),
+                    [FileStat(e[0]).join([x]) for x in e[1]],
+                    [FileStat(e[0]).join([x]) for x in e[2]],
+                )
+            yield e
+
+    def find_empty_folder(self, wrap=False):
+        empty = filter(
+            lambda x: len(x[1]) == 0 and len(x[2]) == 0, self.walk(wrap=wrap)
+        )
+        return empty
 
     # manipulation
 
