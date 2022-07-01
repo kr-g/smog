@@ -2,25 +2,26 @@
 
 # smog 
 
-simple media organizer - organize media files (as of now only pictures)
+simple media organizer - organize media files 
 
-e.g. `20220202_093343.jpg`
-into a folder structure like 
-`~/media-repo/2022/02/20220202/20220202_093343.jpg`
-if possible exif metadata is used to determine the date,
+e.g. a file `20220202_093343.jpg`
+is moved into a folder structure like 
+`~/media-repo/2022/02/20220202/20220202_093343.jpg`.
+
+if possible xmp/exif metadata is used to determine the date,
 otherwise it's extracted from the name (experimental).
 
 
 # what's new ?
 
-Check
+check
 [`CHANGELOG`](https://github.com/kr-g/smog/blob/main/CHANGELOG.md)
 for latest ongoing, or upcoming news.
 
 
 # limitations
 
-Check 
+check 
 [`BACKLOG`](https://github.com/kr-g/smog/blob/main/BACKLOG.md)
 for open development tasks and limitations.
 
@@ -38,8 +39,8 @@ get cmd-line parameter with
 
 for expert reading 
 
-- [XMP](https://en.wikipedia.org/wiki/Extensible_Metadata_Platform)
-  - [adobe specfification](https://github.com/adobe/xmp-docs) 
+- [xmp (wikipedia)](https://en.wikipedia.org/wiki/Extensible_Metadata_Platform)
+  - [adobe xmp specfification](https://github.com/adobe/xmp-docs) 
 - 
 
 
@@ -66,7 +67,6 @@ smog itself can be installed with
     phyton3 -m pip install smog
     
 
-
 # license
 
 [`LICENSE`](https://github.com/kr-g/smog/blob/main/LICENSE.md)
@@ -74,6 +74,9 @@ smog itself can be installed with
 
 ## other licenses
 
+this is not a comprehensive list, 
+refer to each project to find more information
+
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
 - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
-
+- 
