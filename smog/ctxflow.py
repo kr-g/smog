@@ -4,7 +4,7 @@ from .file import FileStat
 
 from .context import Context, CtxPipe, CtxTerm, CtxStop, CtxPrint, CtxProcessor
 from .dbconf import SqliteConf
-from .mediadb import MediaDB
+from .dbmedia import MediaDB
 
 from .examine import ifile
 from .xmptype import guess_xmp_fnam

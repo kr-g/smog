@@ -7,7 +7,7 @@ from .file import FileStat
 from .movepic import move_pics
 
 from .dbconf import SqliteConf
-from .mediadb import MediaDB
+from .dbmedia import MediaDB
 
 from .xmptype import dump_guessed
 from .xmpex import xmp_meta
