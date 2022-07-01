@@ -312,6 +312,7 @@ class FileStat(object):
         self.stat()
         if not self.is_dir:
             raise Exception("not a folder")
+        # todo use stat from scandir dir entry directly inconstructor
         mf = map(lambda x: FileStat(x.path, expand=expand), os.scandir(self.name))
         return mf
 
