@@ -60,7 +60,7 @@ smog use following modules.
 
 - [`SQLAlchemy`](https://www.sqlalchemy.org/)
 - [`python-xmp-toolkit`](https://python-xmp-toolkit.readthedocs.io/en/latest/)  
-- [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
+  - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
 - [`python-dateutil`](https://dateutil.readthedocs.io/en/latest/)
 - 
 
@@ -82,6 +82,6 @@ refer to each project to find more information
 
 - [`SQLAlchemy`](https://github.com/sqlalchemy/sqlalchemy)
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
-- [`Exempi`](https://github.com/freedesktop/exempi)
+  - [`Exempi`](https://github.com/freedesktop/exempi)
 - [`python-dateutil`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)
 - 
