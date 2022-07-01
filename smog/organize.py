@@ -1,8 +1,5 @@
 import os
-
-
-from datetime import datetime, date
-from datetime import time as dt_time
+from datetime import datetime as DateTime
 
 try:
     from .file import FileStat
@@ -11,7 +8,7 @@ except:
 
 
 def build_timed_path_fnam_t(tm, fnam):
-    dt = datetime.fromtimestamp(tm)
+    dt = DateTime.fromtimestamp(tm)
     return build_timed_path_fnam(dt, fnam)
 
 
