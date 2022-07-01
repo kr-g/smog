@@ -1,3 +1,5 @@
+print("obsolete")
+
 import os
 import time
 

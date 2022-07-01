@@ -3,7 +3,7 @@ import time
 from .file import FileStat
 from .timeguess import tm_guess_from_fnam
 
-from .exif import parse_exif_date, exif_tags, get_original_date_time
+# from .exif import parse_exif_date, exif_tags, get_original_date_time
 
 from .media import Media
 
@@ -51,6 +51,8 @@ def i_examine_pic(
     pattern=None,
     recursive=False,
 ):
+
+    raise Exception("obsolete: i_examine_pic")
 
     files = ifile(
         fpath,
