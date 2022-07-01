@@ -56,10 +56,13 @@ alpha state, use on your own risk!
 
 # installation
 
-smog requires following modules. 
+smog use following modules. 
 
+- [`SQLAlchemy`](https://www.sqlalchemy.org/)
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
 - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
+- [`python-dateutil`](https://github.com/dateutil/dateutil)
+- 
 
 
 smog itself can be installed with
@@ -77,6 +80,8 @@ smog itself can be installed with
 this is not a comprehensive list, 
 refer to each project to find more information
 
+- [`SQLAlchemy`](https://www.sqlalchemy.org/)
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
 - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
+- [`python-dateutil`](https://github.com/dateutil/dateutil)
 - 
