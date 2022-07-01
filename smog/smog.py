@@ -13,6 +13,8 @@ from .xmptype import dump_guessed
 from .xmpex import xmp_meta
 from .xmpex import get_tags, xmp_dict, cleanup_xmp_dict, xmp_tags
 
+from datetime import datetime as DateTime
+
 from .context import (
     Context,
     CtxPipe,
@@ -96,8 +98,10 @@ def scan_func(args):
     args.ctx.print(
         "total files scanned",
         args.ctx.NO_FILES,
+        "\n",
         "copied files",
         args.ctx.NO_COPY_FILES,
+        "\n",
         "file copy failed",
         args.ctx.NO_COPY_FILES_FAILED,
     )
@@ -157,6 +161,14 @@ def main_func(mkcopy=True):
         action="store_true",
         help="display debug info (default: %(default)s)",
         default=debug,
+    )
+
+    parser.add_argument(
+        "-timer",
+        dest="show_time",
+        action="store_true",
+        help="display total processing time (default: %(default)s)",
+        default=False,
     )
 
     base = get_default_pic_folder()
@@ -303,7 +315,21 @@ def main_func(mkcopy=True):
 
     if "func" in args:
         dprint("call func", args.func.__name__)
+
+        t_start = time.time()
         rc = args.func(args)
-        return rc if rc != None else 0
+        t_stop = time.time()
+
+        rc = rc if rc != None else 0
+
+        if args.show_time:
+            t_used = DateTime.fromtimestamp(t_stop) - DateTime.fromtimestamp(t_start)
+            t_secs = t_used.total_seconds()
+            mins = int(t_secs / 60)
+            hrs = int(mins / 60)
+            secs = int(t_secs % 60)
+            print("total run time", mins, "minutes", secs, "secs")
+
+        return rc
 
     print("what? use --help")
