@@ -221,6 +221,19 @@ def main_func(mkcopy=True):
         default=dest_repo.name,
     )
 
+    db_path = FileStat("~/media-db")
+
+    parser.add_argument(
+        "-repo-db",
+        "-db",
+        type=str,
+        dest="repo_db_path",
+        action="store",
+        metavar="REPO_DB_DIR",
+        help="repo database folder (default: %(default)s)",
+        default=db_path.name,
+    )
+
     proc_dir = FileStat(base).join(["proc-media"])
 
     parser.add_argument(
@@ -332,7 +345,16 @@ def main_func(mkcopy=True):
             is_folder_or_die(f)
         args.exclude_dirs = list(map(lambda x: x.name, args.exclude_dirs))
 
-    dbconf = SqliteConf("smog.db", path="..")
+    dbdir = FileStat(args.repo_db_path)
+    if dbdir.exists():
+        if not dbdir.is_dir():
+            print_err("db folder parameter is not a folder", dbdir.name)
+            sys.exit(1)
+    else:
+        dprint("create db folder", dbdir.name)
+        dbdir.makedirs(is_file=False)
+
+    dbconf = SqliteConf("smog.db", path=dbdir.name)
     db = MediaDB(dbconf)
 
     args.ctx = Context(

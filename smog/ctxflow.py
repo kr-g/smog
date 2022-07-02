@@ -316,8 +316,7 @@ class CtxDB_upsert(CtxProcessor):
         inp = c.inp
 
         c.DB_REC_DIRTY = False
-
-        is_new = False
+        c.DB_REC_NEW = False
 
         if c.REPO_COPY or c.FILE_HASH_IDENTICAL:
             if c.DB_REC:
@@ -335,7 +334,7 @@ class CtxDB_upsert(CtxProcessor):
                 rec.filename = inp.basename()
 
                 c.DB_REC_DIRTY = True
-                is_new = True
+                c.DB_REC_NEW = True
 
             db_dest_path = self.ctx.norm_src_path(inp.name)
             found = False
@@ -347,7 +346,7 @@ class CtxDB_upsert(CtxProcessor):
                     found = True
                     break
 
-            if not found or is_new:
+            if not found or c.DB_REC_NEW:
                 prec = DBConf.create_new_with_id(MediaPath)
                 prec.path = db_dest_path
                 rec.paths.append(prec)
@@ -362,7 +361,7 @@ class CtxDB_gps(CtxProcessor):
 
         rec = c.DB_REC
 
-        if rec and c.REPO_COPY:
+        if rec and c.DB_REC_NEW:
             if c.GPS_LAT_LON:
                 if rec.gps is None:
                     gpsrec = DBConf.create_new_with_id(MediaGPS)
