@@ -329,6 +329,7 @@ class CtxCopyToRepoPath(CtxProcessor):
 def build_scan_flow(pipe):
     # keep this first
     pipe.add(CtxExamine())
+    # keep this second
     pipe.add(CtxResetGlobals())
     #
     pipe.add(CtxExcludeFolder())
