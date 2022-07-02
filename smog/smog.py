@@ -113,6 +113,21 @@ def scan_func(args):
 #
 
 
+def hash_func(args):
+    for fnam in args.hash_file:
+        f = FileStat(fnam).read_stat()
+        if not f.exists():
+            print("file not found", f)
+            continue
+        if f.is_dir():
+            print("file required, folder found", f)
+            continue
+        print(f.name, "->", f.hash())
+
+
+#
+
+
 def xmp_func(args):
     if args.xmp_filetypes:
         dump_guessed()
@@ -230,6 +245,14 @@ def main_func(mkcopy=True):
 
     scan_parser = subparsers.add_parser("scan", help="scan --help")
     scan_parser.set_defaults(func=scan_func)
+
+    # hash
+
+    hash_parser = subparsers.add_parser("hash", help="hash --help")
+    hash_parser.set_defaults(func=hash_func)
+    hash_parser.add_argument(
+        "hash_file", metavar="FILE", type=str, nargs="+", help="calculate file hash"
+    )
 
     # xmp
 
