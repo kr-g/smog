@@ -345,6 +345,8 @@ def main_func(mkcopy=True):
             is_folder_or_die(f)
         args.exclude_dirs = list(map(lambda x: x.name, args.exclude_dirs))
 
+    # todo
+    # refactor for other db than sqlite
     dbdir = FileStat(args.repo_db_path)
     if dbdir.exists():
         if not dbdir.is_dir():
