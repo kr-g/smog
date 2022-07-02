@@ -416,6 +416,16 @@ class CtxCopyToRepoPath(CtxProcessor):
         return c, err
 
 
+class CtxMoveToProcPath(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+
+        # todo
+        # empty stub
+
+        return c, err
+
+
 def build_scan_flow(pipe):
     # keep this first
     pipe.add(CtxExamine())
@@ -462,6 +472,12 @@ def build_scan_flow(pipe):
     pipe.add(CtxDB_commit())
 
     pipe.add(CtxCopyToRepoPath())
+
+    pipe.add(CtxMoveToProcPath())
+
+    # after move to proc path a update might be required
+    pipe.add(CtxDB_commit())
+
     #
     # pipe.add(CtxStop())
     # add other processors here
