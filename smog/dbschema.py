@@ -15,7 +15,7 @@ from sqlalchemy import String
 
 # from sqlalchemy import Boolean
 # from sqlalchemy import Integer
-# from sqlalchemy import Float
+from sqlalchemy import Float
 
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -57,16 +57,36 @@ class Media(Base):
         cascade="all, delete",
     )
 
+    gps = relationship(
+        "MediaGPS",
+        back_populates="media",
+        cascade="all, delete",  # delete-orphan todo?
+        uselist=False,  # one to one relationship
+    )
+
 
 class MediaPath(Base):
     __tablename__ = "media_path"
 
     id = Column(String(LEN_ID), primary_key=True)
 
-    path = Column(String(OS_PATH_LEN), index=True, nullable=False)
-
     media_id = Column(String(LEN_ID), ForeignKey("media.id"))
     media = relationship(
         "Media",
         back_populates="paths",
     )
+
+    path = Column(String(OS_PATH_LEN), index=True, nullable=False)
+
+
+class MediaGPS(Base):
+    __tablename__ = "media_gps"
+
+    media_id = Column(String(LEN_ID), ForeignKey("media.id"), primary_key=True)
+    media = relationship(
+        "Media",
+        back_populates="gps",
+    )
+
+    lat = Column(Float(), nullable=False)
+    lon = Column(Float(), nullable=False)
