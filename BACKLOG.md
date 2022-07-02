@@ -6,10 +6,12 @@ for latest ongoing, or upcoming news.
 
 # BACKLOG
 
-- XMP evaluation
+~~- XMP evaluation
   - https://pypi.org/project/python-xmp-toolkit/
     - https://github.com/python-xmp-toolkit/python-xmp-toolkit
-      - https://libopenraw.freedesktop.org/exempi/
+      - https://libopenraw.freedesktop.org/exempi/~~
+- database schema migration
+  - https://github.com/sqlalchemy/alembic
 - 
 
 
