@@ -107,6 +107,12 @@ def scan_func(args):
         "\n",
         "files renamed",
         args.ctx.NO_COPY_FILES_RENAMED,
+        "\n",
+        "db rec created",
+        args.ctx.NO_DB_CREATED,
+        "\n",
+        "db rec updated (incl created)",
+        args.ctx.NO_DB_UPDATED,
     )
 
 

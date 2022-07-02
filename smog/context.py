@@ -119,7 +119,7 @@ class CtxPipe(object):
         for cproc in self.chain:
             rc = cproc.process(inp, err)
             if rc is None:
-                raise Exception("ctx flow None return")
+                raise Exception("ctx flow None return", cproc.__class__.__name__)
             inp, err = rc
             if inp is None and err is None:
                 break

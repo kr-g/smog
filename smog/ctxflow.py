@@ -7,6 +7,9 @@ from .file import FileStat
 
 from .context import Context, CtxPipe, CtxTerm, CtxStop, CtxPrint, CtxProcessor
 
+from .dbconf import DBConf
+from .dbschema import Media, MediaPath, MediaGPS
+
 from .examine import ifile
 from .xmptype import guess_xmp_fnam
 
@@ -61,6 +64,9 @@ class CtxResetGlobals(CtxProcessor):
         self.ctx.NO_COPY_FILES = 0
         self.ctx.NO_COPY_FILES_RENAMED = 0
         self.ctx.NO_COPY_FILES_FAILED = 0
+
+        self.ctx.NO_DB_CREATED = 0
+        self.ctx.NO_DB_UPDATED = 0
 
 
 class CtxExcludeFolder(CtxProcessor):
@@ -174,6 +180,7 @@ class CtxEXIF_GPSconv(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
         gpsinfo = c.get("EXIF_GPS")
+        c.GPS_LAT_LON = None
         if gpsinfo:
             try:
                 lat, lon = get_lat_lon(gpsinfo)
@@ -183,6 +190,7 @@ class CtxEXIF_GPSconv(CtxProcessor):
             except Exception as ex:
                 c.GPSerror = True
                 self.ctx.eprint("gps conv", inp.name, gpsinfo, ex)
+
         return c, err
 
 
@@ -294,11 +302,94 @@ class CtxDB_HashLoopup(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
         c.DB_REC = None
-        if c.REPO_COPY:
-            rec = self.ctx.db.qry_media_hash(c.FILE_HASH)
-            c.DB_REC = rec
+
+        rec = self.ctx.db.qry_media_hash(c.FILE_HASH)
+        c.DB_REC = rec
+        if c.DB_REC:
+            pass  # todo logging
+
+        return c, err
+
+
+class CtxDB_upsert(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+
+        c.DB_REC_DIRTY = False
+
+        is_new = False
+
+        if c.REPO_COPY or c.FILE_HASH_IDENTICAL:
             if c.DB_REC:
-                pass
+                rec = c.DB_REC
+            else:
+                rec = DBConf.create_new_with_id(Media)
+                c.DB_REC = rec
+                self.ctx.NO_DB_CREATED += 1
+
+                rec.hash = c.FILE_HASH
+                rec.repopath = self.ctx.norm_repo_path(c.REPO_DEST_FNAM)
+                rec.mime = c.FILE_MIME
+
+                # this might be different from REPO_DEST_FNAM
+                rec.filename = inp.basename()
+
+                c.DB_REC_DIRTY = True
+                is_new = True
+
+            db_dest_path = self.ctx.norm_src_path(inp.name)
+            found = False
+
+            # paths
+
+            for r in rec.paths:
+                if r.path == db_dest_path:
+                    found = True
+                    break
+
+            if not found or is_new:
+                prec = DBConf.create_new_with_id(MediaPath)
+                prec.path = db_dest_path
+                rec.paths.append(prec)
+                c.DB_REC_DIRTY = True
+
+        return c, err
+
+
+class CtxDB_gps(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+
+        rec = c.DB_REC
+
+        if rec and c.REPO_COPY:
+            if c.GPS_LAT_LON:
+                if rec.gps is None:
+                    gpsrec = DBConf.create_new_with_id(MediaGPS)
+                    rec.gps = gpsrec
+                    c.DB_REC_DIRTY = True
+                else:
+                    gpsrec = rec.gps
+
+                if gpsrec.lat != c.GPS_LAT or gpsrec.lon != c.GPS_LON:
+                    # todo logging
+                    gpsrec.lat = c.GPS_LAT
+                    gpsrec.lon = c.GPS_LON
+                    c.DB_REC_DIRTY = True
+
+        return c, err
+
+
+class CtxDB_commit(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        if c.DB_REC_DIRTY:
+            self.ctx.dprint("db commit", inp.name, c.DB_REC.id)
+            self.ctx.db.upsert(c.DB_REC)
+            self.ctx.db.commit()
+            c.DB_REC_DIRTY = False
+            self.ctx.NO_DB_UPDATED += 1
+
         return c, err
 
 
@@ -364,7 +455,13 @@ def build_scan_flow(pipe):
     pipe.add(CtxListFileTimeMeth())
 
     pipe.add(CtxOrganizeRepoPath())
+
     pipe.add(CtxDB_HashLoopup())
+    pipe.add(CtxDB_upsert())
+    pipe.add(CtxDB_gps())
+
+    pipe.add(CtxDB_commit())
+
     pipe.add(CtxCopyToRepoPath())
     #
     # pipe.add(CtxStop())

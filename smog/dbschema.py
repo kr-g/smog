@@ -47,9 +47,13 @@ class Media(Base):
 
     id = Column(String(LEN_ID), primary_key=True)
 
-    hash = Column(String(HASH_LEN), index=True, nullable=False)
+    hash = Column(String(HASH_LEN), index=True, nullable=False)  # , unique=True todo ?
+
     repopath = Column(String(MEDIA_PATH_LEN), index=True, nullable=False)
+
     mime = Column(String(MEDIA_TYPE_LEN), nullable=True)
+
+    filename = Column(String(FNAM_LEN), index=True, nullable=False)
 
     paths = relationship(
         "MediaPath",
