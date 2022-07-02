@@ -271,6 +271,18 @@ class CtxOrganizeRepoPath(CtxProcessor):
         return c, err
 
 
+class CtxDB_HashLoopup(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        c.DB_REC = None
+        if c.REPO_COPY:
+            rec = self.ctx.db.qry_media_hash(c.FILE_HASH)
+            c.DB_REC = rec
+            if c.DB_REC:
+                pass
+        return c, err
+
+
 class CtxCopyToRepoPath(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
@@ -321,6 +333,7 @@ def build_scan_flow(pipe):
     pipe.add(CtxListFileTimeMeth())
 
     pipe.add(CtxOrganizeRepoPath())
+    pipe.add(CtxDB_HashLoopup())
     pipe.add(CtxCopyToRepoPath())
     #
     # pipe.add(CtxStop())
