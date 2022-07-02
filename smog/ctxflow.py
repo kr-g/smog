@@ -35,15 +35,13 @@ class Container(object):
         return str(self.__dict__)
 
 
+#
+
+
 class CtxExamine(CtxProcessor):
     def reset(self, ctx):
         super().reset(ctx)
         self.iter = ifile(self.ctx.srcdir, recursive=self.ctx.recursive)
-
-        self.ctx.NO_FILES = 0
-        self.ctx.NO_COPY_FILES = 0
-        self.ctx.NO_COPY_FILES_RENAMED = 0
-        self.ctx.NO_COPY_FILES_FAILED = 0
 
     def process(self, inp, err):
         if inp or err:
@@ -51,6 +49,18 @@ class CtxExamine(CtxProcessor):
 
         # this raises StopIteration
         return Container(next(self.iter)), None
+
+
+class CtxResetGlobals(CtxProcessor):
+    def reset(self, ctx):
+        super().reset(ctx)
+
+        # todo ?
+        # move to reset of producing ctx flow handlers
+        self.ctx.NO_FILES = 0
+        self.ctx.NO_COPY_FILES = 0
+        self.ctx.NO_COPY_FILES_RENAMED = 0
+        self.ctx.NO_COPY_FILES_FAILED = 0
 
 
 class CtxExcludeFolder(CtxProcessor):
@@ -319,6 +329,7 @@ class CtxCopyToRepoPath(CtxProcessor):
 def build_scan_flow(pipe):
     # keep this first
     pipe.add(CtxExamine())
+    pipe.add(CtxResetGlobals())
     #
     pipe.add(CtxExcludeFolder())
     pipe.add(CtxProcFile())
@@ -337,7 +348,16 @@ def build_scan_flow(pipe):
     pipe.add(CtxEXIF_GPSconv())
 
     # after all timestamps have processed
-    pipe.add(CtxTime_proc(["XMPtime", "EXIFtime", "FNAMtime", "FILEtime"]))
+    pipe.add(
+        CtxTime_proc(
+            [
+                "XMPtime",
+                "EXIFtime",
+                "FNAMtime",
+                "FILEtime",
+            ]
+        )
+    )
 
     pipe.add(CtxListFileNameTimeMeth())
     pipe.add(CtxListFileTimeMeth())
