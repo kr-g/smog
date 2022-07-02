@@ -1,4 +1,7 @@
 import time
+from datetime import datetime as dt
+from dateutil.parser import isoparse
+import mimetypes
 
 from .file import FileStat
 
@@ -16,9 +19,6 @@ from .gps import get_lat_lon
 
 from .organize import build_timed_path_fnam
 from .file1name import make_unique_filename
-
-from datetime import datetime as dt
-from dateutil.parser import isoparse
 
 
 class Container(object):
@@ -66,6 +66,15 @@ class CtxExcludeFolder(CtxProcessor):
 class CtxProcFile(CtxProcessor):
     def process(self, c, err):
         self.ctx.NO_FILES += 1
+        return c, err
+
+
+class CtxMimeType(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        mime, _encoding = mimetypes.guess_type(inp.name)
+        c.FILE_MIME = mime
+        self.ctx.dprint("mime type", c.FILE_MIME)
         return c, err
 
 
@@ -313,6 +322,7 @@ def build_scan_flow(pipe):
     #
     pipe.add(CtxExcludeFolder())
     pipe.add(CtxProcFile())
+    pipe.add(CtxMimeType())
     #
     pipe.add(CtxFile_datetime())
     pipe.add(CtxFileName_datetime())
