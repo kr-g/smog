@@ -99,11 +99,14 @@ def scan_func(args):
         "total files scanned",
         args.ctx.NO_FILES,
         "\n",
-        "copied files",
+        "files copied",
         args.ctx.NO_COPY_FILES,
         "\n",
         "file copy failed",
         args.ctx.NO_COPY_FILES_FAILED,
+        "\n",
+        "files renamed",
+        args.ctx.NO_COPY_FILES_RENAMED,
     )
 
 

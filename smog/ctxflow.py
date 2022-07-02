@@ -42,6 +42,7 @@ class CtxExamine(CtxProcessor):
 
         self.ctx.NO_FILES = 0
         self.ctx.NO_COPY_FILES = 0
+        self.ctx.NO_COPY_FILES_RENAMED = 0
         self.ctx.NO_COPY_FILES_FAILED = 0
 
     def process(self, inp, err):
@@ -251,13 +252,19 @@ class CtxOrganizeRepoPath(CtxProcessor):
         c.REPO_COPY = True
 
         c.FILE_HASH = inp.hash()
+        # todo refactor ?
+        c.FILE_HASH_IDENTICAL = False
 
         if dest_repo.exists():
             if dest_repo.hash() == c.FILE_HASH:
                 self.ctx.vprint("identical", inp.name, dest_repo.name)
                 c.REPO_COPY = False
+                # todo refactor ?
+                c.FILE_HASH_IDENTICAL = True
             else:
                 dest_fnam = make_unique_filename(dest_repo.name)
+                c.NO_COPY_FILES_RENAMED += 1
+                self.ctx.vprint("file renamed", inp.name, dest_fnam)
 
         c.REPO_DEST_FNAM = dest_fnam
 
