@@ -56,7 +56,7 @@ alpha state, use on your own risk!
 
 # installation
 
-smog use following modules. 
+smog project dependencies: 
 
 - [`SQLAlchemy`](https://www.sqlalchemy.org/)
 - [`python-xmp-toolkit`](https://python-xmp-toolkit.readthedocs.io/en/latest/)  
