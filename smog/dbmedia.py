@@ -6,7 +6,7 @@ except:
     from dbschema import Base, Setting, Media, MediaPath
 
 from sqlalchemy.orm import Session
-from sqlalchemy import asc, desc
+from sqlalchemy import select, asc, desc
 
 
 class MediaDB(object):
@@ -96,14 +96,22 @@ class MediaDB(object):
 
     #
 
-    def qry_media_time(self, timestamp=None):
+    def qry_media_stream(self, timestamp=None):
 
-        raise Exception("draft, untested")
+        qry = self.session.query(Media)
 
-        if timestamp is None:
-            timestamp = dt.now()
-
-        qry = self.session.query(Media).where(Media.timestamp <= timestamp)
+        if timestamp:
+            qry = qry.where(Media.timestamp <= timestamp)
 
         qry = qry.order_by(desc(Media.timestamp))
-        return qry
+
+        qry = qry.execution_options(
+            stream_results=True,
+            yield_per=50,
+        )
+
+        def _it():
+            for raw in self.session.execute(qry):
+                yield raw._data[0]
+
+        return _it()

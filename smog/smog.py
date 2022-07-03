@@ -13,7 +13,7 @@ from .xmptype import dump_guessed
 from .xmpex import xmp_meta
 from .xmpex import get_tags, xmp_dict, cleanup_xmp_dict, xmp_tags
 
-from datetime import datetime as DateTime
+from dateutil.parser import isoparse
 
 from .context import (
     Context,
@@ -129,6 +129,32 @@ def hash_func(args):
             print("file required, folder found", f)
             continue
         print(f.name, "->", f.hash())
+
+
+#
+
+
+def find_func(args):
+    if args.find_id:
+        rec = args.ctx.db.qry_media_id(args.find_id)
+        if rec:
+            print(rec.id, rec.repopath, rec.timestamp)
+            return
+        eprint("not found", args.find_id)
+        sys.exit(1)
+
+    qry = args.ctx.db.qry_media_stream(args.find_before)
+
+    _limit = args.find_limit
+    if _limit <= 0:
+        eprint("limit must be a positive number > 0")
+        sys.exit(1)
+
+    for rec in qry:
+        _limit -= 1
+        if _limit < 0:
+            break
+        print(rec.id, rec.repopath, rec.timestamp)
 
 
 #
@@ -271,6 +297,38 @@ def main_func(mkcopy=True):
     hash_parser.set_defaults(func=hash_func)
     hash_parser.add_argument(
         "hash_file", metavar="FILE", type=str, nargs="+", help="calculate file hash"
+    )
+
+    # find
+
+    find_parser = subparsers.add_parser("find", help="find --help")
+    find_parser.set_defaults(func=find_func)
+
+    find_xgroup = find_parser.add_mutually_exclusive_group()
+    find_xgroup.add_argument(
+        "-id",
+        dest="find_id",
+        metavar="ID",
+        type=str,
+        help="find media id",
+        default=None,
+    )
+    find_x2_group = find_xgroup.add_argument_group()
+    find_x2_group.add_argument(
+        "-before",
+        dest="find_before",
+        metavar="BEFORE",
+        type=isoparse,
+        help="find media before timestamp",
+        default=None,
+    )
+    find_x2_group.add_argument(
+        "-limit",
+        dest="find_limit",
+        metavar="LIMIT",
+        type=int,
+        help="limit result set  (default: %(default)s)",
+        default=50,
     )
 
     # xmp
