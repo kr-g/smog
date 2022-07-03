@@ -333,6 +333,8 @@ class CtxDB_upsert(CtxProcessor):
                 # this might be different from REPO_DEST_FNAM
                 rec.filename = inp.basename()
 
+                rec.timestamp = dt.fromtimestamp(c.ProcTime)
+
                 c.DB_REC_DIRTY = True
                 c.DB_REC_NEW = True
 

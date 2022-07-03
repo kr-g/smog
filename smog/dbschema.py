@@ -16,6 +16,7 @@ from sqlalchemy import String
 # from sqlalchemy import Boolean
 # from sqlalchemy import Integer
 from sqlalchemy import Float
+from sqlalchemy import DateTime
 
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -55,6 +56,8 @@ class Media(Base):
 
     filename = Column(String(FNAM_LEN), index=True, nullable=False)
 
+    timestamp = Column(DateTime(), index=True, nullable=False)
+
     paths = relationship(
         "MediaPath",
         back_populates="media",
@@ -74,7 +77,9 @@ class MediaPath(Base):
 
     id = Column(String(LEN_ID), primary_key=True)
 
-    media_id = Column(String(LEN_ID), ForeignKey("media.id"))
+    media_id = Column(
+        String(LEN_ID), ForeignKey("media.id"), index=True, nullable=False
+    )
     media = relationship(
         "Media",
         back_populates="paths",
@@ -92,5 +97,5 @@ class MediaGPS(Base):
         back_populates="gps",
     )
 
-    lat = Column(Float(), nullable=False)
-    lon = Column(Float(), nullable=False)
+    lat = Column(Float(), index=True, nullable=False)
+    lon = Column(Float(), index=True, nullable=False)
