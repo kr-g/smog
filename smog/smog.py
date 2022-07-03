@@ -14,6 +14,7 @@ from .xmpex import xmp_meta
 from .xmpex import get_tags, xmp_dict, cleanup_xmp_dict, xmp_tags
 
 from dateutil.parser import isoparse
+from datetime import datetime as DateTime
 
 from .context import (
     Context,

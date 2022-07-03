@@ -13,6 +13,7 @@ for open development tasks and limitations.
 - sqlalchemy orm integration for media database
 - introduced pipe style processing of media items
 - enhanced cmd-line with `scan` sub-command
+- cmd-line `find` sub-command 
 - 
 
 
