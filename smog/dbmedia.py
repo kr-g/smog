@@ -6,6 +6,7 @@ except:
     from dbschema import Base, Setting, Media, MediaPath
 
 from sqlalchemy.orm import Session
+from sqlalchemy import asc, desc
 
 
 class MediaDB(object):
@@ -93,86 +94,16 @@ class MediaDB(object):
         media = recs[0].media if len(recs) == 1 else None
         return media
 
+    #
 
-#
-#
-#
+    def qry_media_time(self, timestamp=None):
 
-if __name__ == "__main__":
+        raise Exception("draft, untested")
 
-    import mimetypes
-    from dbconf import SqliteConf
-    from context import Context
-    from organize import build_timed_path_fnam_t
-    from file import FileStat, Hash
+        if timestamp is None:
+            timestamp = dt.now()
 
-    default_path = "~/Bilder"
-    repo_path = "~/media-repo"
+        qry = self.session.query(Media).where(Media.timestamp <= timestamp)
 
-    ctx = Context(default_path, repo_path, None, None)
-
-    f = FileStat(default_path).join(["20220521.jpeg"])
-
-    fnam, ext = f.splitext()
-
-    hash_ = f.hash()
-
-    dbconf = SqliteConf("smog.db", path="..")
-
-    db = MediaDB(dbconf)
-
-    to_insert = False
-
-    media = db.qry_media_hash(hash_)
-
-    if media is None:
-        print("add media")
-        media = SqliteConf.create_new_with_id(Media)
-        media.hash = f.hash()
-        media.mime = mimetypes.types_map.get(ext, None)
-        # todo
-        media.repopath = f.name  # ctx.norm_repo_path(f.name)
-        to_insert = True
-
-    # todo
-    fpath = ctx.norm_base_path(f.name)
-
-    already_exists = any(filter(lambda x: x.path == fpath, media.paths))
-
-    if not already_exists:
-        print("add path")
-        mp = SqliteConf.create_new_with_id(MediaPath)
-        mp.path = ctx.norm_base_path(f.name)
-        mp.media = media
-        to_insert = True
-
-    sett = db.qry_setting("UPDATED")
-    if sett is None:
-        sett = Setting()
-        sett.key = "UPDATED"
-        sett.val = 0
-    else:
-        print(sett.key, sett.val)
-
-    settrun = db.qry_setting("RUN")
-    if settrun is None:
-        settrun = Setting()
-        settrun.key = "RUN"
-        settrun.val = 0
-    else:
-        print(settrun.key, settrun.val)
-
-    settrun.val = int(settrun.val) + 1
-
-    auto_commit = False
-
-    if to_insert:
-
-        sett.val = int(sett.val) + 1
-
-        db.upsert([media, mp, sett, settrun], auto_commit=auto_commit)
-    else:
-        print("nothing to do")
-        db.upsert(settrun, auto_commit=auto_commit)
-
-    db.commit()
+        qry = qry.order_by(desc(Media.timestamp))
+        return qry
