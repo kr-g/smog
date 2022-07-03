@@ -1,3 +1,5 @@
+import sys
+
 try:
     from .file import FileStat
 except:
@@ -55,7 +57,7 @@ class Context(object):
         print("WARNING", *args)
 
     def eprint(self, *args):
-        print("ERROR", *args)
+        print("ERROR", *args, file=sys.stderr)
 
     # static
 

@@ -53,7 +53,7 @@ def wprint(*args, **kwargs):
 
 
 def eprint(*args, **kwargs):
-    print("ERROR", *args, **kwargs)
+    print("ERROR", *args, **kwargs, file=sys.stderr)
 
 
 def print_err(*args, **kwargs):
@@ -134,27 +134,31 @@ def hash_func(args):
 #
 
 
+def print_rec(args, rec):
+    print(rec.id, rec.timestamp, rec.repopath, rec.hash if args.find_show_hash else "")
+
+
 def find_func(args):
     if args.find_id:
         rec = args.ctx.db.qry_media_id(args.find_id)
         if rec:
-            print(rec.id, rec.repopath, rec.timestamp)
+            print_rec(args, rec)
             return
         eprint("not found", args.find_id)
         sys.exit(1)
-
-    qry = args.ctx.db.qry_media_stream(args.find_before)
 
     _limit = args.find_limit
     if _limit <= 0:
         eprint("limit must be a positive number > 0")
         sys.exit(1)
 
+    qry = args.ctx.db.qry_media_stream(args.find_before)
+
     for rec in qry:
         _limit -= 1
         if _limit < 0:
             break
-        print(rec.id, rec.repopath, rec.timestamp)
+        print_rec(args, rec)
 
 
 #
@@ -304,7 +308,17 @@ def main_func(mkcopy=True):
     find_parser = subparsers.add_parser("find", help="find --help")
     find_parser.set_defaults(func=find_func)
 
+    find_parser.add_argument(
+        "-hash",
+        dest="find_show_hash",
+        action="store_true",
+        help="show hash",
+        default=False,
+    )
+
     find_xgroup = find_parser.add_mutually_exclusive_group()
+
+    # find_id_group = find_xgroup.add_argument_group("id", "id options")
     find_xgroup.add_argument(
         "-id",
         dest="find_id",
@@ -313,8 +327,8 @@ def main_func(mkcopy=True):
         help="find media id",
         default=None,
     )
-    find_x2_group = find_xgroup.add_argument_group()
-    find_x2_group.add_argument(
+    find_before_group = find_xgroup.add_argument_group("before", "before options")
+    find_before_group.add_argument(
         "-before",
         dest="find_before",
         metavar="BEFORE",
@@ -322,7 +336,7 @@ def main_func(mkcopy=True):
         help="find media before timestamp",
         default=None,
     )
-    find_x2_group.add_argument(
+    find_before_group.add_argument(
         "-limit",
         dest="find_limit",
         metavar="LIMIT",
