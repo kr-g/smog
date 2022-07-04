@@ -485,5 +485,5 @@ def build_scan_flow(pipe):
     # add other processors here
     #
     None
-    # keep this last, otherwise it might run forever
+    # keep this last, otherwise it run's forever
     pipe.add(CtxTerm())

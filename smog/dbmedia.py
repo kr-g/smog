@@ -38,7 +38,7 @@ class MediaDB(object):
         return self.add_(recs=recs, auto_commit=auto_commit)
 
     def remove(self, recs, auto_commit=False):
-        return self.remove(recs=recs, auto_commit=auto_commit)
+        return self.del_(recs=recs, auto_commit=auto_commit)
 
     #
 
