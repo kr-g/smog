@@ -3,6 +3,8 @@ import time
 import json
 import argparse
 
+from .const import VERSION
+
 from .file import FileStat
 from .movepic import move_pics
 
@@ -26,11 +28,6 @@ from .context import (
 )
 
 from .ctxflow import build_scan_flow
-
-#
-
-VERSION = "v0.0.2-a"
-
 
 #
 
