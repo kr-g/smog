@@ -477,7 +477,7 @@ def build_scan_flow(pipe):
 
     pipe.add(CtxMoveToProcPath())
 
-    # after move to proc path a update might be required
+    # after move to proc path an update might be required
     pipe.add(CtxDB_commit())
 
     #
