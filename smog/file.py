@@ -428,6 +428,7 @@ class FileStat(object):
                 os.rename(src.name, dest.name)
             else:
                 shutil.copy2(src.name, dest.name)
+                # todo touch_ux
 
         self.name = dest.name
         self.stat()

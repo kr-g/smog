@@ -64,6 +64,8 @@ class CtxResetGlobals(CtxProcessor):
         self.ctx.NO_COPY_FILES = 0
         self.ctx.NO_COPY_FILES_RENAMED = 0
         self.ctx.NO_COPY_FILES_FAILED = 0
+        self.ctx.NO_MOVE_FILES = 0
+        self.ctx.NO_MOVE_FILES_FAILED = 0
 
         self.ctx.NO_DB_CREATED = 0
         self.ctx.NO_DB_UPDATED = 0
@@ -343,8 +345,11 @@ class CtxDB_upsert(CtxProcessor):
 
             # paths
 
+            c.DB_REC_PATH = None
+
             for r in rec.paths:
                 if r.path == db_dest_path:
+                    c.DB_REC_PATH = r
                     found = True
                     break
 
@@ -352,9 +357,16 @@ class CtxDB_upsert(CtxProcessor):
                 prec = DBConf.create_new_with_id(MediaPath)
                 prec.path = db_dest_path
                 rec.paths.append(prec)
+                c.DB_REC_PATH = prec
                 c.DB_REC_DIRTY = True
 
         return c, err
+
+
+def find_rec_path(rec, path):
+    for r in rec.paths:
+        if r.path == db_dest_path:
+            return r
 
 
 class CtxDB_gps(CtxProcessor):
@@ -397,7 +409,7 @@ class CtxDB_commit(CtxProcessor):
 class CtxCopyToRepoPath(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
-        if c.REPO_COPY:
+        if c.REPO_COPY and self.ctx.move2repo:
             src = inp
             dest = FileStat(c.REPO_DEST_FNAM)
             c.REPO_COPY_OK = False
@@ -422,8 +434,29 @@ class CtxMoveToProcPath(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
 
-        # todo
-        # empty stub
+        relp = c.inp.name[len(self.ctx.srcdir + FileStat.sep) :]
+        dest_proc = FileStat(self.ctx.procdir).join([relp]).name
+
+        if self.ctx.move2proc:
+            self.vprint("move to proc", inp.name, "->", dest_proc)
+
+            raise Exception("untested")
+
+            try:
+                inp.move(dest_proc)
+                self.ctx.NO_MOVE_FILES += 1
+
+                r = c.DB_REC_PATH
+                r.path = self.ctx.norm_src_path(dest_proc)
+                c.DB_REC_DIRTY = True
+
+            except Exception as ex:
+                self.ctx.NO_MOVE_FILES_FAILED += 1
+                self.ctx.eprint("move to proc", src.name, dest.name, ex)
+
+            raise StopIteration()
+        else:
+            self.ctx.dprint("no move to proc", inp.name, dest_proc)
 
         return c, err
 
@@ -476,7 +509,6 @@ def build_scan_flow(pipe):
     pipe.add(CtxCopyToRepoPath())
 
     pipe.add(CtxMoveToProcPath())
-
     # after move to proc path an update might be required
     pipe.add(CtxDB_commit())
 

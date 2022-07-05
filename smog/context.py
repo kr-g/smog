@@ -13,6 +13,8 @@ class Context(object):
         repodir,
         procdir,
         db,
+        move2repo=True,
+        move2proc=False,
         pattern=None,
         addext=None,
         recursive=True,
@@ -38,6 +40,9 @@ class Context(object):
         )
 
         self.db = db
+
+        self.move2repo = move2repo
+        self.move2proc = move2proc
 
         self._verbose = verbose
         self._debug = debug

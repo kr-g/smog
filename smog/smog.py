@@ -3,7 +3,12 @@ import time
 import json
 import argparse
 
-from .const import VERSION
+from .const import (
+    VERSION,
+    DEFAULT_MEDIA_REPO,
+    DEFAULT_MEDIA_DB,
+    DEFAULT_REL_PROC,
+)
 
 from .file import FileStat
 from .movepic import move_pics
@@ -102,6 +107,12 @@ def scan_func(args):
         "\n",
         "file copy failed",
         args.ctx.NO_COPY_FILES_FAILED,
+        "\n",
+        "files moved",
+        args.ctx.NO_MOVE_FILES,
+        "\n",
+        "file move failed",
+        args.ctx.NO_MOVE_FILES_FAILED,
         "\n",
         "files renamed",
         args.ctx.NO_COPY_FILES_RENAMED,
@@ -236,7 +247,7 @@ def main_func(mkcopy=True):
         default=base,
     )
 
-    dest_repo = FileStat("~/media-repo")
+    dest_repo = FileStat(DEFAULT_MEDIA_REPO)
 
     parser.add_argument(
         "-dest",
@@ -249,7 +260,7 @@ def main_func(mkcopy=True):
         default=dest_repo.name,
     )
 
-    db_path = FileStat("~/media-db")
+    db_path = FileStat(DEFAULT_MEDIA_DB)
 
     parser.add_argument(
         "-repo-db",
@@ -262,7 +273,7 @@ def main_func(mkcopy=True):
         default=db_path.name,
     )
 
-    proc_dir = FileStat(base).join(["proc-media"])
+    proc_dir = FileStat(base).join([DEFAULT_REL_PROC])
 
     parser.add_argument(
         "-proc",
