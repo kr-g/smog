@@ -292,8 +292,9 @@ class CtxOrganizeRepoPath(CtxProcessor):
                 c.FILE_HASH_IDENTICAL = True
             else:
                 dest_fnam = make_unique_filename(dest_repo.name)
-                c.NO_COPY_FILES_RENAMED += 1
-                self.ctx.vprint("file renamed", inp.name, dest_fnam)
+                self.ctx.NO_COPY_FILES_RENAMED += 1
+                self.ctx.print("file renamed", inp.name, dest_fnam)
+                raise StopIteration()
 
         c.REPO_DEST_FNAM = dest_fnam
 
@@ -425,7 +426,7 @@ class CtxCopyToRepoPath(CtxProcessor):
 
             except Exception as ex:
                 self.ctx.NO_COPY_FILES_FAILED += 1
-                self.ctx.eprint("copy to repo", src.name, dest.name, tm, ex)
+                self.ctx.eprint("copy to repo", src.name, dest.name, ex)
 
         return c, err
 

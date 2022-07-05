@@ -7,14 +7,17 @@ def clr_spec(s, spec=":_.- "):
     return "".join(s)
 
 
+_patterns = [
+    r".*([0-9]{8})[_-]([0-9]{6}).*",
+    r".*([0-9]{4}[:.-][0-9]{2}[:.-][0-9]{2})[_ -]([0-9]{2}[:.-][0-9]{2}[:.-][0-9]{2}).*",
+    r".*[_ -]([0-9]{8})([0-9]{6}).*",
+]
+
+_regex = [re.compile(x) for x in _patterns]
+
+
 def tm_guess_from_fnam(fnam):
-    pats = [
-        r".*([0-9]{8})[_-]([0-9]{6}).*",
-        r".*([0-9]{4}[:.-][0-9]{2}[:.-][0-9]{2})[_ -]([0-9]{2}[:.-][0-9]{2}[:.-][0-9]{2}).*",
-        r".*[_ -]([0-9]{8})([0-9]{6}).*",
-    ]
-    for pat in pats:
-        regex = re.compile(pat)
+    for regex in _regex:
         match = regex.match(fnam)
         if match:
             try:
