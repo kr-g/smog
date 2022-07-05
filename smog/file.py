@@ -13,7 +13,7 @@ import time
 
 import tempfile
 
-from collections import namedtuple
+from collections import namedtuple, ChainMap
 import glob
 
 import hashlib
@@ -209,13 +209,29 @@ class FileStat(object):
 
     # os env helpers
 
+    _env = {}
+    _overlay = ChainMap(_env, os.environ)
+
     @staticmethod
-    def setenv(k, v):
-        os.environ[k] = v
+    def clrenv():
+        """
+        clear overlay env settings
+        """
+        FileStat._env.clear()
+
+    @staticmethod
+    def setenv(k, v, overlay=False):
+        if overlay:
+            if v is not None:
+                FileStat._env[k] = v
+            else:
+                del FileStat._env[k]
+        else:
+            os.environ[k] = v
 
     @staticmethod
     def getenv(k):
-        return os.environ[k]
+        return FileStat._overlay[k]
 
     # first and last access time
     # looking on _all_ time stamps
