@@ -11,7 +11,6 @@ from .const import (
 )
 
 from .file import FileStat
-from .movepic import move_pics
 
 from .dbconf import SqliteConf
 from .dbmedia import MediaDB

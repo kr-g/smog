@@ -22,3 +22,11 @@ def build_timed_path_fnam(dt, fnam):
     )
 
     return dest_dir
+
+
+def make_timed_rel_store_path(prefix="proc-media", incl_tm=False):
+    tm = time.strftime(
+        "%Y-%m-%d" + (" %H:%M" if incl_tm else ""), time.localtime(time.time())
+    )
+    store = f"{prefix} {tm}"
+    return store
