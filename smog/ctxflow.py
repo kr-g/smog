@@ -1,5 +1,5 @@
 import time
-from datetime import datetime as dt
+from datetime import datetime as DateTime
 from dateutil.parser import isoparse
 import mimetypes
 
@@ -269,7 +269,7 @@ class CtxOrganizeRepoPath(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
 
-        ts = dt(*c.ProcTime_tm[0:6])
+        ts = DateTime(*c.ProcTime_tm[0:6])
         fnam = inp.basename()
 
         dest_rel = build_timed_path_fnam(ts, fnam)
@@ -336,7 +336,7 @@ class CtxDB_upsert(CtxProcessor):
                 # this might be different from REPO_DEST_FNAM
                 rec.filename = inp.basename()
 
-                rec.timestamp = dt.fromtimestamp(c.ProcTime)
+                rec.timestamp = DateTime.fromtimestamp(c.ProcTime)
 
                 c.DB_REC_DIRTY = True
                 c.DB_REC_NEW = True
