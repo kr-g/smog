@@ -9,6 +9,7 @@ from smog.memo import (
     S_DATE,
     S_TIME,
     S_REFER,
+    hashtag,
 )
 
 
@@ -74,6 +75,28 @@ end
 
     def test_200_read_memo3(self):
         self.assertRaises(PreludeTimeException, self.readmemo, MEMO03)
+
+    def test_800_hashtag(self):
+        inp = """sample text #here is a #sample-text     one
+showing all #hashTag.probs or no #more:or
+#see,also #tags_here-or-what and #guess+this
+#com#bine#this #without-slash/ or #, #/ <-invalid
+"""
+        expect_rc = [
+            "#here",
+            "#sample-text",
+            "#hashTag",
+            "#more",
+            "#see",
+            "#tags_here-or-what",
+            "#guess+this",
+            "#com",
+            "#bine",
+            "#this",
+            "#without-slash",
+        ]
+        ht = hashtag(inp)
+        self.assertEqual(expect_rc, ht)
 
     def test_999_more_tests__missing__(self):
         pass

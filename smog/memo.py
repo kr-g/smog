@@ -1,4 +1,5 @@
 import time
+import re
 
 try:
     from .file import FileStat
@@ -51,6 +52,24 @@ def is_commented(s):
     if len(s) > 0:
         return s[0] in ["-", "#"]
     return False
+
+
+#
+
+_hash_regex = re.compile(r"(#[a-zA-Z0-9_+-]+)")
+
+
+def ihashtag(tx):
+    match = _hash_regex.finditer(tx)
+    for i in match:
+        yield i.group(0)
+
+
+def hashtag(tx):
+    return list(ihashtag(tx))
+
+
+#
 
 
 class Memo(object):
