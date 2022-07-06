@@ -1,0 +1,13 @@
+date 9.8.21
+# time missing
+id			34716237_2
+refer_id 34716237
+gps-lat-lon  47.424420,8.304410
+gps-lat-lon  47,8
+#this is a comment in the header
+
+# comment in body part
+
+this is a test text
+
+end-of-text sample

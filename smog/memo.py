@@ -6,6 +6,19 @@ try:
 except:
     from file import FileStat
 
+
+class PreludeException(Exception):
+    pass
+
+
+class PreludeDateException(PreludeException):
+    pass
+
+
+class PreludeTimeException(PreludeException):
+    pass
+
+
 MEMO_VERSION = 1
 
 S_VERSION = "version"
@@ -95,6 +108,7 @@ class Memo(object):
 
     def _parse_header(self):
         self._parse_header_prelude()
+        print(self._head)
         for h in self._head:
             self._parse_head(h)
 
@@ -103,13 +117,13 @@ class Memo(object):
     def _parse_header_prelude(self):
         for f, e in [
             (self._parse_version, None),
-            (self._parse_date, "date missing"),
-            (self._parse_time, "time missing"),
+            (self._parse_date, PreludeDateException),
+            (self._parse_time, PreludeTimeException),
         ]:
             if f(self._head[0]):
                 self._head.pop(0)
             elif e:
-                raise Exception("prelude header: " + e)
+                raise e()
         return
 
     def _parse_version(self, s):
@@ -127,29 +141,20 @@ class Memo(object):
         s = s.strip()
         d = None
 
-        if is_commented(s):
-            d = 0
-        else:
-            _cmp, _h, _t = startswith_and_split(s, S_DATE)
-            if _cmp:
-                s = _t
-            for df in [
-                "%d.%m.%y",
-                "%d.%m.%Y",
-                "%d.%m.",
-                "%Y.%m.%d",
-                "%y.%m.%d",
-            ]:
-                try:
-                    d = time.strptime(s, df)
-                    if d.tm_year == 1900:
-                        now = time.localtime(time.time())
-                        d = list(d)
-                        d[0] = now.tm_year
-                        d = time.struct_time(d)
-                    break
-                except:
-                    pass
+        _cmp, _h, _t = startswith_and_split(s, S_DATE)
+        if _cmp:
+            s = _t
+        for df in [
+            "%d.%m.%y",
+            "%d.%m.%Y",
+            "%Y.%m.%d",
+            "%y.%m.%d",
+        ]:
+            try:
+                d = time.strptime(s, df)[0:3]
+                break
+            except:
+                pass
 
         if d != None:
             self._config[S_DATE] = d
@@ -159,18 +164,18 @@ class Memo(object):
         s = s.strip()
         d = None
 
-        if is_commented(s):
-            d = 0
-        else:
-            _cmp, _h, _t = startswith_and_split(s, S_TIME)
-            if _cmp:
-                s = _t
-            for df in ["%H:%M:%S", "%H:%M", "%H"]:
-                try:
-                    d = time.strptime(s, df)
-                    break
-                except:
-                    pass
+        _cmp, _h, _t = startswith_and_split(s, S_TIME)
+        if _cmp:
+            s = _t
+        for df in [
+            "%H:%M:%S",
+            "%H:%M",
+        ]:
+            try:
+                d = time.strptime(s, df)[3:6]
+                break
+            except:
+                pass
 
         if d != None:
             self._config[S_TIME] = d
@@ -252,6 +257,11 @@ class Memo(object):
     def set_head(self, key, val):
         self._dirty = True
         self._config_add(key, str(val))
+
+    def headers(self):
+        return self._config
+
+    #
 
     def get_str_head(self):
 

@@ -1,0 +1,21 @@
+9.8.21
+8:03
+id 34716237
+type text
+type markdown
+meta yes
+meta text/plain
+meta text/markdown
+tag pic
+tag landscape
+category private
+category picture
+refer "$REPO/DSC08731.JPG"
+refer $REPO/DSC08677.JPG
+#gps-lat-lon  47.424420,8.304410
+
+this is a first text
+
+end
+
+#end of file -- here --
