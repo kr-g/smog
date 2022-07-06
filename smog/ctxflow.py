@@ -66,8 +66,13 @@ class CtxExamine(CtxProcessor):
     def _create_iter(self):
         for fnam in self.scanlist:
             f = FileStat(fnam)
+
+            if not f.name.startswith(self.ctx.srcdir + FileStat.sep):
+                self.ctx.eprint("not on source path", fnam)
+                continue
+
             if not f.exists():
-                self.ctx.eprint("not found", fnam)
+                self.ctx.eprint("not found", f.name)
                 continue
             if f.is_file():
                 yield f
