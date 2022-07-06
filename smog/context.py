@@ -19,6 +19,7 @@ class Context(object):
         addext=None,
         recursive=True,
         excludedirs=None,
+        scanlist=None,
         verbose=False,
         debug=False,
     ):
@@ -38,6 +39,8 @@ class Context(object):
                 procdir,
             ]
         )
+
+        self.scanlist = scanlist
 
         self.db = db
 

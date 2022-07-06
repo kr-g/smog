@@ -41,10 +41,38 @@ class Container(object):
 #
 
 
+class CtxPrintFile(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+        self.ctx.print(inp.name)
+        return c, err
+
+
+#
+
+
 class CtxExamine(CtxProcessor):
     def reset(self, ctx):
         super().reset(ctx)
-        self.iter = ifile(self.ctx.srcdir, recursive=self.ctx.recursive)
+
+        self.scanlist = self.ctx.scanlist if self.ctx.scanlist else []
+        if len(self.scanlist) == 0:
+            self.scanlist = [self.ctx.srcdir]
+
+        self.ctx.vprint("to scan", self.scanlist)
+
+        self.iter = self._create_iter()
+
+    def _create_iter(self):
+        for fnam in self.scanlist:
+            f = FileStat(fnam)
+            if not f.exists():
+                self.ctx.eprint("not found", fnam)
+                continue
+            if f.is_file():
+                yield f
+                continue
+            yield from ifile(fnam, recursive=self.ctx.recursive)
 
     def process(self, inp, err):
         if inp or err:
@@ -465,6 +493,7 @@ class CtxMoveToProcPath(CtxProcessor):
 def build_scan_flow(pipe):
     # keep this first
     pipe.add(CtxExamine())
+
     # keep this second
     pipe.add(CtxResetGlobals())
     #

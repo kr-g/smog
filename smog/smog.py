@@ -302,6 +302,13 @@ def main_func(mkcopy=True):
 
     scan_parser = subparsers.add_parser("scan", help="scan --help")
     scan_parser.set_defaults(func=scan_func)
+    scan_parser.add_argument(
+        "scanlist",
+        metavar="FILE",
+        default=None,
+        nargs="*",
+        help="file or folder to scan",
+    )
 
     # hash
 
@@ -445,6 +452,7 @@ def main_func(mkcopy=True):
         args.proc_dir.name,
         db=db,
         excludedirs=args.exclude_dirs,
+        scanlist=args.scanlist,
         verbose=verbose,
         debug=debug,
     )
