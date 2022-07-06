@@ -67,17 +67,22 @@ class CtxExamine(CtxProcessor):
         for fnam in self.scanlist:
             f = FileStat(fnam)
 
-            if not f.name.startswith(self.ctx.srcdir + FileStat.sep):
-                self.ctx.eprint("not on source path", fnam)
-                continue
-
             if not f.exists():
                 self.ctx.eprint("not found", f.name)
                 continue
+
             if f.is_file():
+                if not f.name.startswith(self.ctx.srcdir + FileStat.sep):
+                    self.ctx.eprint("not on source path", f.name)
+                    continue
                 yield f
                 continue
-            yield from ifile(fnam, recursive=self.ctx.recursive)
+
+            if not (f.name + FileStat.sep).startswith(self.ctx.srcdir + FileStat.sep):
+                self.ctx.eprint("not on source path", f.name)
+                continue
+
+            yield from ifile(f.name, recursive=self.ctx.recursive)
 
     def process(self, inp, err):
         if inp or err:
