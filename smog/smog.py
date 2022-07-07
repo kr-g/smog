@@ -320,7 +320,7 @@ def main_func(mkcopy=True):
         "-cleartags",
         dest="scan_cleartags",
         action="store_true",
-        help="clear all hashtags from media before further processing (default: %(default)s)",
+        help="clear all hashtags from media before further processing",
         default=False,
     )
     scan_parser.add_argument(
