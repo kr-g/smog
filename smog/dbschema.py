@@ -33,6 +33,8 @@ MEDIA_PATH_LEN = MEDIA_PATH_LEN + FNAM_LEN
 
 MEDIA_TYPE_LEN = 1 << 5
 
+LEN_HASHTAG = 128
+
 
 Base = declarative_base()
 
@@ -71,6 +73,12 @@ class Media(Base):
         uselist=False,  # one to one relationship
     )
 
+    hashtags = relationship(
+        "MediaHashtag",
+        back_populates="media",
+        cascade="all, delete",
+    )
+
 
 class MediaPath(Base):
     __tablename__ = "media_path"
@@ -99,3 +107,19 @@ class MediaGPS(Base):
 
     lat = Column(Float(), index=True, nullable=False)
     lon = Column(Float(), index=True, nullable=False)
+
+
+class MediaHashtag(Base):
+    __tablename__ = "media_hashtag"
+
+    id = Column(String(LEN_ID), primary_key=True)
+
+    media_id = Column(
+        String(LEN_ID), ForeignKey("media.id"), index=True, nullable=False
+    )
+    media = relationship(
+        "Media",
+        back_populates="hashtags",
+    )
+
+    hashtag = Column(String(LEN_HASHTAG), index=True, nullable=False)

@@ -15,6 +15,8 @@ class Context(object):
         db,
         move2repo=True,
         move2proc=False,
+        hashtag=None,
+        cleartags=False,
         pattern=None,
         addext=None,
         recursive=True,
@@ -46,6 +48,9 @@ class Context(object):
 
         self.move2repo = move2repo
         self.move2proc = move2proc
+
+        self.hashtag = ["#" + x.lower() for x in hashtag] if hashtag else None
+        self.cleartags = cleartags
 
         self._verbose = verbose
         self._debug = debug

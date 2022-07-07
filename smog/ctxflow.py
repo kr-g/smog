@@ -8,7 +8,7 @@ from .file import FileStat
 from .context import Context, CtxPipe, CtxTerm, CtxStop, CtxPrint, CtxProcessor
 
 from .dbconf import DBConf
-from .dbschema import Media, MediaPath, MediaGPS
+from .dbschema import Media, MediaPath, MediaGPS, MediaHashtag
 
 from .examine import ifile
 from .xmptype import guess_xmp_fnam
@@ -432,6 +432,32 @@ class CtxDB_gps(CtxProcessor):
         return c, err
 
 
+class CtxDB_Hashtag(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+
+        rec = c.DB_REC
+        if self.ctx.cleartags:
+            self.ctx.dprint("cleartags from record")
+            hashtags = rec.hashtags
+            self.ctx.db.remove(list(hashtags))
+            rec.hashtags.clear()
+            c.DB_REC_DIRTY = True
+
+        ht = self.ctx.hashtag
+        if ht:
+            hashtags = rec.hashtags
+            for el in ht:
+                found = len(list(filter(lambda x: x.hashtag == el, hashtags))) > 0
+                if not found:
+                    mhtrec = DBConf.create_new_with_id(MediaHashtag)
+                    mhtrec.hashtag = el
+                    rec.hashtags.append(mhtrec)
+                    c.DB_REC_DIRTY = True
+
+        return c, err
+
+
 class CtxDB_commit(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
@@ -543,6 +569,7 @@ def build_scan_flow(pipe):
     pipe.add(CtxDB_HashLoopup())
     pipe.add(CtxDB_upsert())
     pipe.add(CtxDB_gps())
+    pipe.add(CtxDB_Hashtag())
 
     pipe.add(CtxDB_commit())
 

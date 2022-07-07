@@ -28,7 +28,10 @@ class MediaDB(object):
             return self.commit()
 
     def del_(self, recs, auto_commit=True):
-        self.session.delete_all(recs if type(recs) is list else [recs])
+        if type(recs) is not list:
+            recs = [recs]
+        for rec in recs:
+            self.session.delete(rec)
         if auto_commit:
             return self.commit()
 

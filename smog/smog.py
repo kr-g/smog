@@ -195,6 +195,11 @@ def xmp_func(args):
         print(json.dumps(xmp_c, indent=4))
 
 
+def getarg(nam, defval=None):
+    global args
+    return args.__dict__.get(nam, defval)
+
+
 def main_func(mkcopy=True):
 
     global debug, verbose
@@ -303,6 +308,22 @@ def main_func(mkcopy=True):
     scan_parser = subparsers.add_parser("scan", help="scan --help")
     scan_parser.set_defaults(func=scan_func)
     scan_parser.add_argument(
+        "-tag",
+        dest="scan_hashtag",
+        metavar="HASHTAG",
+        type=str,
+        action="append",
+        help="hashtag to add to the media. don't add a leading '#' to the tag here.",
+        default=None,
+    )
+    scan_parser.add_argument(
+        "-cleartags",
+        dest="scan_cleartags",
+        action="store_true",
+        help="clear all hashtags from media before further processing (default: %(default)s)",
+        default=False,
+    )
+    scan_parser.add_argument(
         "scanlist",
         metavar="FILE",
         default=None,
@@ -393,7 +414,6 @@ def main_func(mkcopy=True):
         default=False,
     )
     xmp_show_opts.add_argument(
-        "-tag",
         "-tags",
         dest="xmp_tag",
         action="store_true",
@@ -451,8 +471,10 @@ def main_func(mkcopy=True):
         args.dest_repo.name,
         args.proc_dir.name,
         db=db,
+        hashtag=getarg("scan_hashtag"),
+        cleartags=getarg("scan_cleartags"),
         excludedirs=args.exclude_dirs,
-        scanlist=args.scanlist,
+        scanlist=getarg("scanlist"),
         verbose=verbose,
         debug=debug,
     )
