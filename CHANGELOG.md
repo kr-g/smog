@@ -16,7 +16,7 @@ for open development tasks and limitations.
 - cmd-line `find` sub-command 
 - cmd-line `scan` hashtag 
 - cmd-line `scan` collection 
-- added `alemic` database migration
+- added `alembic` database migration
 - 
 
 
