@@ -476,12 +476,19 @@ def main_func(mkcopy=True):
     dbconf = SqliteConf("smog.db", path=dbdir.name)
     db = MediaDB(dbconf)
 
+    hashtag = getarg("scan_hashtag")
+    if hashtag:
+        for ht in hashtag:
+            if ht.index("#") >= 0:
+                print_err("hashtag contains '#'", ht)
+                sys.exit(1)
+
     args.ctx = Context(
         args.base.name,
         args.dest_repo.name,
         args.proc_dir.name,
         db=db,
-        hashtag=getarg("scan_hashtag"),
+        hashtag=hashtag,
         cleartags=getarg("scan_cleartags"),
         collection=getarg("scan_collection"),
         excludedirs=args.exclude_dirs,
