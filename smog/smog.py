@@ -324,6 +324,15 @@ def main_func(mkcopy=True):
         default=False,
     )
     scan_parser.add_argument(
+        "-collection",
+        "-col",
+        dest="scan_collection",
+        type=str,
+        help="add media to collection",
+        default=None,
+    )
+
+    scan_parser.add_argument(
         "scanlist",
         metavar="FILE",
         default=None,
@@ -473,6 +482,7 @@ def main_func(mkcopy=True):
         db=db,
         hashtag=getarg("scan_hashtag"),
         cleartags=getarg("scan_cleartags"),
+        collection=getarg("scan_collection"),
         excludedirs=args.exclude_dirs,
         scanlist=getarg("scanlist"),
         verbose=verbose,

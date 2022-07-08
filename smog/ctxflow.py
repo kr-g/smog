@@ -8,7 +8,14 @@ from .file import FileStat
 from .context import Context, CtxPipe, CtxTerm, CtxStop, CtxPrint, CtxProcessor
 
 from .dbconf import DBConf
-from .dbschema import Media, MediaPath, MediaGPS, MediaHashtag
+from .dbschema import (
+    Media,
+    MediaPath,
+    MediaGPS,
+    MediaHashtag,
+    MediaCollection,
+    MediaCollectionItem,
+)
 
 from .examine import ifile
 from .xmptype import guess_xmp_fnam
@@ -458,6 +465,49 @@ class CtxDB_Hashtag(CtxProcessor):
         return c, err
 
 
+class CtxDB_Collection(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+
+        rec = c.DB_REC
+        if self.ctx.collection:
+            self.ctx.vprint("add to collection", self.ctx.collection)
+
+            collection = self.ctx.db.qry_media_collection_name(self.ctx.collection)
+
+            if collection is None:
+                self.ctx.dprint("new collection", self.ctx.collection)
+                collection = DBConf.create_new_with_id(MediaCollection)
+                collection.name = self.ctx.collection
+
+                collection.first_media = rec.timestamp
+                collection.last_media = rec.timestamp
+
+                self.ctx.db.upsert(collection)
+                c.DB_REC_DIRTY = True
+
+            found = False
+            for mediaitem in collection.mediaitems:
+                if mediaitem.media_col_item == rec.id:
+                    found = True
+                    self.ctx.dprint("found media", rec.id)
+                    break
+
+            if not found:
+                self.ctx.vprint("add media", rec.id)
+                mediaitem = DBConf.create_new_with_id(MediaCollectionItem)
+                mediaitem.media = rec
+                mediaitem.collection_id = collection.id
+                self.ctx.db.upsert(mediaitem)
+                collection.mediaitems.append(mediaitem)
+                collection.first_media = rec.timestamp
+                collection.last_media = rec.timestamp
+                self.ctx.db.upsert(collection)
+                c.DB_REC_DIRTY = True
+
+        return c, err
+
+
 class CtxDB_commit(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
@@ -570,6 +620,7 @@ def build_scan_flow(pipe):
     pipe.add(CtxDB_upsert())
     pipe.add(CtxDB_gps())
     pipe.add(CtxDB_Hashtag())
+    pipe.add(CtxDB_Collection())
 
     pipe.add(CtxDB_commit())
 

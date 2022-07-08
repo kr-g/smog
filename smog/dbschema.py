@@ -34,7 +34,7 @@ MEDIA_PATH_LEN = MEDIA_PATH_LEN + FNAM_LEN
 MEDIA_TYPE_LEN = 1 << 5
 
 LEN_HASHTAG = 128
-
+LEN_COLLECTION = 256
 
 Base = declarative_base()
 
@@ -123,3 +123,42 @@ class MediaHashtag(Base):
     )
 
     hashtag = Column(String(LEN_HASHTAG), index=True, nullable=False)
+
+
+class MediaCollection(Base):
+    __tablename__ = "media_collection"
+
+    id = Column(String(LEN_ID), primary_key=True)
+
+    name = Column(String(LEN_COLLECTION), index=True, nullable=False)
+
+    first_media = Column(DateTime(), index=True, nullable=False)
+    last_media = Column(DateTime(), index=True, nullable=False)
+
+    mediaitems = relationship(
+        "MediaCollectionItem",
+        back_populates="media_collection",
+        cascade="all, delete",
+    )
+
+
+class MediaCollectionItem(Base):
+    __tablename__ = "media_col_item"
+
+    id = Column(String(LEN_ID), primary_key=True)
+
+    media_collection_id = Column(
+        String(LEN_ID), ForeignKey("media_collection.id"), index=True, nullable=False
+    )
+    media_collection = relationship(
+        "MediaCollection",
+        back_populates="mediaitems",
+    )
+
+    media_col_item = Column(
+        String(LEN_ID), ForeignKey("media.id"), index=True, nullable=False
+    )
+    media = relationship(
+        "Media",
+        backref="media_col_item",
+    )

@@ -16,6 +16,7 @@ class Context(object):
         move2repo=True,
         move2proc=False,
         hashtag=None,
+        collection=None,
         cleartags=False,
         pattern=None,
         addext=None,
@@ -52,6 +53,8 @@ class Context(object):
         self.hashtag = ["#" + x.lower() for x in hashtag] if hashtag else None
         self.cleartags = cleartags
 
+        self.collection = collection
+
         self._verbose = verbose
         self._debug = debug
 
@@ -79,6 +82,8 @@ class Context(object):
         if not fnam.startswith(path):
             raise Exception("not on folder", path)
         return fnam[len(path) :]
+
+    #
 
     def norm_src_path(self, fnam):
         return Context.mksubpath(fnam, self.srcdir)

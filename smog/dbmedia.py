@@ -1,12 +1,12 @@
 try:
     from .dbconf import DBConf
-    from .dbschema import Base, Setting, Media, MediaPath
+    from .dbschema import Base, Setting, Media, MediaPath, MediaCollection
 except:
     from dbconf import DBConf
-    from dbschema import Base, Setting, Media, MediaPath
+    from dbschema import Base, Setting, Media, MediaPath, MediaCollection
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select, asc, desc
+from sqlalchemy import select, func, asc, desc
 
 
 class MediaDB(object):
@@ -118,3 +118,37 @@ class MediaDB(object):
                 yield raw._data[0]
 
         return _it()
+
+    #
+
+    def qry_media_collection(self, collectionid):
+        qry = self.session.query(MediaCollection)
+        qry = qry.where(MediaCollection.is_(collectionid))
+        collection = qry.one_or_none()
+        return collection
+
+    def qry_media_collection_name_stream(self, name=None):
+
+        qry = self.session.query(MediaCollection)
+
+        if name:
+            _name = name.lower()
+            qry = qry.where(func.lower(MediaCollection.name) == _name)
+
+        qry = qry.order_by(desc(MediaCollection.last_media))
+
+        qry = qry.execution_options(
+            stream_results=True,
+            yield_per=50,
+        )
+
+        def _it():
+            for raw in self.session.execute(qry):
+                yield raw._data[0]
+
+        return _it()
+
+    def qry_media_collection_name(self, name):
+        """return first match"""
+        for rec in self.qry_media_collection_name_stream(name):
+            return rec
