@@ -14,6 +14,9 @@ for open development tasks and limitations.
 - introduced pipe style processing of media items
 - enhanced cmd-line with `scan` sub-command
 - cmd-line `find` sub-command 
+- cmd-line `scan` hashtag 
+- cmd-line `scan` collection 
+- added `alemic` database migration
 - 
 
 

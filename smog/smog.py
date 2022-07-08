@@ -8,6 +8,7 @@ from .const import (
     DEFAULT_MEDIA_REPO,
     DEFAULT_MEDIA_DB,
     DEFAULT_REL_PROC,
+    SMOG_DB_NAME,
 )
 
 from .file import FileStat
@@ -488,7 +489,7 @@ def main_func(mkcopy=True):
         dprint("create db folder", dbdir.name)
         dbdir.makedirs(is_file=False)
 
-    dbconf = SqliteConf("smog.db", path=dbdir.name)
+    dbconf = SqliteConf(SMOG_DB_NAME, path=dbdir.name)
     db = MediaDB(dbconf)
 
     hashtag = getarg("scan_hashtag")

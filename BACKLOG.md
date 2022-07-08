@@ -16,8 +16,16 @@ for latest ongoing, or upcoming news.
       - https://libopenraw.freedesktop.org/exempi/
 </del>
 
+<del>
 - database schema migration
+
   - https://github.com/sqlalchemy/alembic
+</del>
+
+- configuration of alembic paths via smog cmd-line
+  - auto migrate smog.db
+- support for MySQL
+- support for PostgreSql
 - 
 
 

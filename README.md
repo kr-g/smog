@@ -59,6 +59,7 @@ alpha state, use on your own risk!
 smog project dependencies: 
 
 - [`SQLAlchemy`](https://www.sqlalchemy.org/)
+- [`alembic`](https://alembic.sqlalchemy.org)
 - [`python-xmp-toolkit`](https://python-xmp-toolkit.readthedocs.io/en/latest/)  
   - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
 - [`python-dateutil`](https://dateutil.readthedocs.io/en/latest/)
@@ -72,6 +73,8 @@ smog itself can be installed with
 
 # license
 
+refer to 
+`GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007`
 [`LICENSE`](https://github.com/kr-g/smog/blob/main/LICENSE.md)
 
 
@@ -81,6 +84,7 @@ this is not a comprehensive list,
 refer to each project to find more information
 
 - [`SQLAlchemy`](https://github.com/sqlalchemy/sqlalchemy)
+- [`alembic`](https://github.com/sqlalchemy/alembic)
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
   - [`Exempi`](https://github.com/freedesktop/exempi)
 - [`python-dateutil`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)
