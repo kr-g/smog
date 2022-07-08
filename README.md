@@ -56,7 +56,7 @@ alpha state, use on your own risk!
 
 # installation
 
-smog project dependencies: 
+`smog` project dependencies: 
 
 - [`SQLAlchemy`](https://www.sqlalchemy.org/)
 - [`alembic`](https://alembic.sqlalchemy.org)
