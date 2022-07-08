@@ -160,7 +160,14 @@ def find_func(args):
         eprint("limit must be a positive number > 0")
         sys.exit(1)
 
-    qry = args.ctx.db.qry_media_stream(args.find_before)
+    _skip = args.find_skip
+    if _skip < 0:
+        eprint("skip must be a positive number >= 0")
+        sys.exit(1)
+    if _skip == 0:
+        _skip = None
+
+    qry = args.ctx.db.qry_media_stream(args.find_before, skip_offset=_skip)
 
     for rec in qry:
         _limit -= 1
@@ -355,7 +362,7 @@ def main_func(mkcopy=True):
     find_parser.set_defaults(func=find_func)
 
     find_parser.add_argument(
-        "-hash",
+        "-showhash",
         dest="find_show_hash",
         action="store_true",
         help="show hash",
@@ -389,6 +396,14 @@ def main_func(mkcopy=True):
         type=int,
         help="limit result set  (default: %(default)s)",
         default=50,
+    )
+    find_before_group.add_argument(
+        "-skip",
+        dest="find_skip",
+        metavar="SKIP",
+        type=int,
+        help="skip result result set  (default: %(default)s)",
+        default=0,
     )
 
     # xmp

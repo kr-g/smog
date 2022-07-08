@@ -99,7 +99,7 @@ class MediaDB(object):
 
     #
 
-    def qry_media_stream(self, timestamp=None):
+    def qry_media_stream(self, timestamp=None, skip_offset=None):
 
         qry = self.session.query(Media)
 
@@ -107,6 +107,8 @@ class MediaDB(object):
             qry = qry.where(Media.timestamp <= timestamp)
 
         qry = qry.order_by(desc(Media.timestamp))
+        if skip_offset:
+            qry = qry.offset(skip_offset)
 
         qry = qry.execution_options(
             stream_results=True,
