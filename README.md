@@ -59,7 +59,7 @@ alpha state, use on your own risk!
 `smog` project dependencies: 
 
 - [`SQLAlchemy`](https://www.sqlalchemy.org/)
-- [`alembic`](https://alembic.sqlalchemy.org)
+  - [`alembic`](https://alembic.sqlalchemy.org)
 - [`python-xmp-toolkit`](https://python-xmp-toolkit.readthedocs.io/en/latest/)  
   - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
 - [`python-dateutil`](https://dateutil.readthedocs.io/en/latest/)
