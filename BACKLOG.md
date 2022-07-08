@@ -26,6 +26,7 @@ for latest ongoing, or upcoming news.
   - auto migrate smog.db
 - support for MySQL
 - support for PostgreSql
+- rework cmd-line interface
 - 
 
 
