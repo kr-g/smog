@@ -73,6 +73,10 @@ def hashtag(tx):
 
 
 class Memo(object):
+
+    EXT = ".smf"
+    MIME = "application/simple-memo"
+
     def __init__(self, fnam):
         self.fnam = fnam
         self._head = []
