@@ -327,6 +327,7 @@ def main_func(mkcopy=True):
         "-collection",
         "-col",
         dest="scan_collection",
+        metavar="COLLECTION",
         type=str,
         help="add media to collection",
         default=None,
