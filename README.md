@@ -84,7 +84,7 @@ this is not a comprehensive list,
 refer to each project to find more information
 
 - [`SQLAlchemy`](https://github.com/sqlalchemy/sqlalchemy)
-- [`alembic`](https://github.com/sqlalchemy/alembic)
+  - [`alembic`](https://github.com/sqlalchemy/alembic)
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
   - [`Exempi`](https://github.com/freedesktop/exempi)
 - [`python-dateutil`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)
