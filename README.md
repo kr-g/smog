@@ -66,7 +66,7 @@ smog project dependencies:
 - 
 
 
-smog itself can be installed with
+`smog` itself can be installed with
 
     phyton3 -m pip install smog
     
