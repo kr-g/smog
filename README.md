@@ -69,7 +69,25 @@ alpha state, use on your own risk!
 `smog` itself can be installed with
 
     phyton3 -m pip install smog
+ 
+ 
+## initial configuration
+
+after first installation of `smog` run
+
+    smog config -db-init
     
+to create an empty database `~/media-db/smog.sb` 
+
+
+## upgrade from older version
+
+backup your database `~/media-db/smog.sb` and migrate 
+the database with  
+
+    smog config -db-migrate
+
+
 
 # license
 

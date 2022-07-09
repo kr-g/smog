@@ -17,6 +17,7 @@ for open development tasks and limitations.
 - cmd-line `scan` hashtag 
 - cmd-line `scan` collection 
 - added `alembic` database migration
+- added `config` sub-command with `-db-init` and `-db-migrate`
 - 
 
 

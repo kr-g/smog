@@ -43,6 +43,9 @@ def run_migrations_offline() -> None:
     script output.
 
     """
+
+    raise Exception("untested")
+
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -84,7 +87,6 @@ def run_migrations_online() -> None:
 
 
 if context.is_offline_mode():
-    raise Exception("untested")
     run_migrations_offline()
 else:
     run_migrations_online()

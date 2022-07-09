@@ -84,6 +84,37 @@ def is_folder_or_die(f):
 #
 
 
+def config_func(args):
+    needtocreate = args.needtocreate
+    db_path = args.db_path
+    db_conf = args.db_conf
+
+    from alembic.config import Config as AlembicConfig
+    from alembic import command
+
+    from smog.dbschema import Base
+
+    target_metadata = Base.metadata
+
+    import smog_alembic
+
+    inid = FileStat(smog_alembic.__file__).dirname()
+    ini = FileStat(inid).join(["alembic.ini"])
+
+    alembic_cfg = AlembicConfig(ini.name)
+    # overwrite location
+    alembic_cfg.set_main_option("script_location", inid)
+
+    engine = db_conf.open_db()
+
+    with engine.begin() as connection:
+        alembic_cfg.attributes["connection"] = connection
+        command.upgrade(alembic_cfg, "head")
+
+
+#
+
+
 def scan_func(args):
 
     pipe = CtxPipe(args.ctx)
@@ -185,6 +216,15 @@ def xmp_func(args):
         dump_guessed()
         return
     if args.xmp_file:
+
+        f = FileStat(args.xmp_file)
+        if not f.exists():
+            print_err("file not found", f.name)
+            return 1
+        if not f.is_file():
+            print_err("not a file", f.name)
+            return 1
+
         if args.xmp_xml:
             meta = xmp_meta(args.xmp_file)
             meta = str(meta)
@@ -310,6 +350,29 @@ def main_func(mkcopy=True):
     )
 
     subparsers = parser.add_subparsers(help="sub-command --help")
+
+    # init
+
+    config_parser = subparsers.add_parser("config", help="config --help")
+    config_parser.set_defaults(func=config_func)
+
+    config_xgroup = config_parser.add_mutually_exclusive_group()
+    config_xgroup.add_argument(
+        "-db-init",
+        dest="db_init",
+        action="store_true",
+        help="create a new database",
+        default=False,
+    )
+
+    config_xgroup.add_argument(
+        "-db-migrate",
+        "-db-mig",
+        dest="db_migrate",
+        action="store_true",
+        help="migrate the database to the lastest version",
+        default=False,
+    )
 
     # scan
 
@@ -447,6 +510,8 @@ def main_func(mkcopy=True):
         default=False,
     )
 
+    #
+
     global args
     args = parser.parse_args()
 
@@ -489,13 +554,28 @@ def main_func(mkcopy=True):
         dprint("create db folder", dbdir.name)
         dbdir.makedirs(is_file=False)
 
+    dbf = dbdir.clone().join([SMOG_DB_NAME])
+    needtocreate = not dbf.exists()
+    args.needtocreate = needtocreate
+
     dbconf = SqliteConf(SMOG_DB_NAME, path=dbdir.name)
+
+    if getarg("db_init") or getarg("db_migrate"):
+        args.db_path = dbf
+        args.db_conf = dbconf
+        return config_func(args)
+
+    if needtocreate:
+        print_err("database not found. run \n\t")
+        print("smog config -db-init")
+        sys.exit(1)
+
     db = MediaDB(dbconf)
 
     hashtag = getarg("scan_hashtag")
     if hashtag:
         for ht in hashtag:
-            if ht.index("#") >= 0:
+            if ht.find("#") >= 0:
                 print_err("hashtag contains '#'", ht)
                 sys.exit(1)
 
