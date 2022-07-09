@@ -92,10 +92,6 @@ def config_func(args):
     from alembic.config import Config as AlembicConfig
     from alembic import command
 
-    from smog.dbschema import Base
-
-    target_metadata = Base.metadata
-
     import smog_alembic
 
     inid = FileStat(smog_alembic.__file__).dirname()
