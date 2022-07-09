@@ -9,6 +9,7 @@ for open development tasks and limitations.
 
 - support of xmp metadata added
   - support of various file types containing xmp metadata
+    - `xmp -types` will list all file extensions
   - cmd-line `xmp` sub-command for query xmp metadata
 - [`sqlalchemy`](https://www.sqlalchemy.org/) orm integration for media database
 - introduced pipe style processing of media items
