@@ -1,8 +1,6 @@
 try:
-    from .dbconf import DBConf
     from .dbschema import Base, Setting, Media, MediaPath, MediaCollection
 except:
-    from dbconf import DBConf
     from dbschema import Base, Setting, Media, MediaPath, MediaCollection
 
 from sqlalchemy.orm import Session
