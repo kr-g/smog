@@ -1,7 +1,23 @@
 try:
-    from .dbschema import Base, Setting, Media, MediaPath, MediaCollection, MediaHashtag
+    from .dbschema import (
+        Base,
+        Setting,
+        Media,
+        MediaPath,
+        MediaCollection,
+        MediaCollectionItem,
+        MediaHashtag,
+    )
 except:
-    from dbschema import Base, Setting, Media, MediaPath, MediaCollection, MediaHashtag
+    from dbschema import (
+        Base,
+        Setting,
+        Media,
+        MediaPath,
+        MediaCollection,
+        MediaCollectionItem,
+        MediaHashtag,
+    )
 
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func, asc, desc
@@ -97,7 +113,9 @@ class MediaDB(object):
 
     #
 
-    def qry_media_stream(self, timestamp=None, skip_offset=None, hashtag=None):
+    def qry_media_stream(
+        self, timestamp=None, skip_offset=None, hashtag=None, collection=None
+    ):
 
         qry = self.session.query(Media)
 
@@ -112,6 +130,16 @@ class MediaDB(object):
             hashtag = list(map(lambda x: "#" + x.lower(), hashtag))
             if len(hashtag) > 0:
                 qry = qry.join(MediaHashtag).filter(MediaHashtag.hashtag.in_(hashtag))
+
+        if collection:
+            _name = collection.strip().lower()
+            if len(_name) > 0:
+                qry = qry.join(MediaCollectionItem).filter(
+                    MediaCollectionItem.media_col_item == Media.id
+                )
+                qry = qry.join(MediaCollection).filter(
+                    func.lower(MediaCollection.name) == _name
+                )
 
         if skip_offset:
             qry = qry.offset(skip_offset)
@@ -140,8 +168,9 @@ class MediaDB(object):
         qry = self.session.query(MediaCollection)
 
         if name:
-            _name = name.lower()
-            qry = qry.where(func.lower(MediaCollection.name) == _name)
+            _name = name.strip().lower()
+            if len(_name) > 0:
+                qry = qry.where(func.lower(MediaCollection.name) == _name)
 
         qry = qry.order_by(desc(MediaCollection.last_media))
 

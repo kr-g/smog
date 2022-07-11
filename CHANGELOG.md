@@ -20,6 +20,7 @@ for open development tasks and limitations.
 - added `alembic` database migration
 - added `config` sub-command with `-db-init` and `-db-migrate`
 - `find` filter on hashtag(s)
+- `find` filter on collection name
 - 
 
 

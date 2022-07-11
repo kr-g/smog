@@ -196,12 +196,16 @@ def find_func(args):
         _skip = None
 
     qry = args.ctx.db.qry_media_stream(
-        args.find_before, skip_offset=_skip, hashtag=args.find_hashtag
+        args.find_before,
+        skip_offset=_skip,
+        hashtag=args.find_hashtag,
+        collection=args.find_collection,
     )
 
     for rec in qry:
         _limit -= 1
         if _limit < 0:
+            print(f"showing {args.find_limit} records...")
             break
         print_rec(args, rec)
 
@@ -473,7 +477,16 @@ def main_func(mkcopy=True):
         metavar="HASHTAG",
         type=str,
         action="append",
-        help="hashtag to add to the media. don't add a leading '#' to the tag here.",
+        help="hashtag filter. don't add a leading '#' to the tag here",
+        default=None,
+    )
+    find_before_group.add_argument(
+        "-collection",
+        "-col",
+        dest="find_collection",
+        metavar="COLLECTION",
+        type=str,
+        help="collection filter",
         default=None,
     )
 
