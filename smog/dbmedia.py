@@ -138,7 +138,9 @@ class MediaDB(object):
                     MediaCollectionItem.media_col_item == Media.id
                 )
                 qry = qry.join(MediaCollection).filter(
-                    func.lower(MediaCollection.name) == _name
+                    # todo use id
+                    func.lower(MediaCollection.name)
+                    == _name
                 )
 
         if skip_offset:
