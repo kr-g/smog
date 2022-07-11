@@ -195,7 +195,9 @@ def find_func(args):
     if _skip == 0:
         _skip = None
 
-    qry = args.ctx.db.qry_media_stream(args.find_before, skip_offset=_skip)
+    qry = args.ctx.db.qry_media_stream(
+        args.find_before, skip_offset=_skip, hashtag=args.find_hashtag
+    )
 
     for rec in qry:
         _limit -= 1
@@ -464,6 +466,15 @@ def main_func(mkcopy=True):
         type=int,
         help="skip result result set  (default: %(default)s)",
         default=0,
+    )
+    find_before_group.add_argument(
+        "-tag",
+        dest="find_hashtag",
+        metavar="HASHTAG",
+        type=str,
+        action="append",
+        help="hashtag to add to the media. don't add a leading '#' to the tag here.",
+        default=None,
     )
 
     # xmp

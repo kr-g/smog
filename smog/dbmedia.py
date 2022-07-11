@@ -1,7 +1,7 @@
 try:
-    from .dbschema import Base, Setting, Media, MediaPath, MediaCollection
+    from .dbschema import Base, Setting, Media, MediaPath, MediaCollection, MediaHashtag
 except:
-    from dbschema import Base, Setting, Media, MediaPath, MediaCollection
+    from dbschema import Base, Setting, Media, MediaPath, MediaCollection, MediaHashtag
 
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func, asc, desc
@@ -97,7 +97,7 @@ class MediaDB(object):
 
     #
 
-    def qry_media_stream(self, timestamp=None, skip_offset=None):
+    def qry_media_stream(self, timestamp=None, skip_offset=None, hashtag=None):
 
         qry = self.session.query(Media)
 
@@ -105,6 +105,14 @@ class MediaDB(object):
             qry = qry.where(Media.timestamp <= timestamp)
 
         qry = qry.order_by(desc(Media.timestamp))
+
+        if hashtag:
+            if type(hashtag) is not list:
+                hashtag = [hashtag]
+            hashtag = list(map(lambda x: "#" + x.lower(), hashtag))
+            if len(hashtag) > 0:
+                qry = qry.join(MediaHashtag).filter(MediaHashtag.hashtag.in_(hashtag))
+
         if skip_offset:
             qry = qry.offset(skip_offset)
 
