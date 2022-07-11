@@ -79,6 +79,13 @@ class Media(Base):
         cascade="all, delete",
     )
 
+    media_collection_items = relationship(
+        "MediaCollectionItem",
+        back_populates="media",
+        cascade="all, delete",
+        overlaps="media, media_col_item",
+    )
+
 
 class MediaPath(Base):
     __tablename__ = "media_path"
