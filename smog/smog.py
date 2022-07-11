@@ -171,7 +171,12 @@ def hash_func(args):
 
 
 def print_rec(args, rec):
-    print(rec.id, rec.timestamp, rec.repopath, rec.hash if args.find_show_hash else "")
+    pargs = [rec.id]
+    if not args.find_short:
+        pargs.extend([rec.timestamp, rec.repopath])
+    if args.find_show_hash:
+        pargs.append(rec.hash)
+    print(*pargs)
 
 
 def find_func(args):
@@ -432,6 +437,13 @@ def main_func(mkcopy=True):
         dest="find_show_hash",
         action="store_true",
         help="show hash",
+        default=False,
+    )
+    find_parser.add_argument(
+        "-short",
+        dest="find_short",
+        action="store_true",
+        help="show short info (only id)",
         default=False,
     )
 

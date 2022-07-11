@@ -21,6 +21,7 @@ for open development tasks and limitations.
 - added `config` sub-command with `-db-init` and `-db-migrate`
 - `find` filter on hashtag(s)
 - `find` filter on collection name
+- `find` short display option showing just `media.id`
 - 
 
 
