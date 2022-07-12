@@ -27,6 +27,7 @@ for latest ongoing, or upcoming news.
 - support for MySQL
 - support for PostgreSql
 - rework cmd-line interface
+- processed-files handling (cmd-line `-proc`). move already scanned media to separate folder
 - 
 
 

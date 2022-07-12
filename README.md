@@ -125,6 +125,17 @@ the database with
     smog config -db-migrate
 
 
+# internals
+
+folloing folders are used:
+
+| folder | description |
+| --- | --- | 
+| ~/Pictures or ~/Bilder | scan default folder. can be overwritten with cmd-line `-src`  | 
+| ~/media-repo | media repo folder where all data is stored. dont manipulate content of this folder manually. use `smog` cmd-line. can be overwritten with cmd-line `-dest`  | 
+| ~/media-db | folder for the database index. can be overwritten with cmd-line `-repo-db`  | 
+
+
 # license
 
 refer to 
