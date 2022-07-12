@@ -15,7 +15,7 @@ internally `smog` calculates a SHA512 hash for each file for identification
 along with an UUID identifier. in case an identical file is scanned more than once,
 e.g. if it exists in different locations (and also different file names) on a harddrive, 
 it is added only once to the main database-index and the internal storage. 
-anyway `smog` tracks the different file locations on the hard drive.
+anyway `smog` tracks the different file locations on the hard drive in the db-index.
 
 for organizing different scan runs, or groups of related data, 
 `smog` can add media files to collections.
