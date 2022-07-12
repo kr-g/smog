@@ -213,6 +213,16 @@ def find_func(args):
             print(f"showing {args.find_limit} records...")
             break
         print_rec(args, rec)
+        if args.find_remove:
+            print("drop db index for", rec.id)
+            args.ctx.db.remove(rec)
+            f = FileStat(args.ctx.repodir).join([rec.repopath])
+            print("remove path", f.name)
+            f.remove()
+
+    if args.find_remove:
+        print("commit database index")
+        args.ctx.db.commit()
 
 
 #
@@ -444,6 +454,15 @@ def main_func(mkcopy=True):
         dest="find_short",
         action="store_true",
         help="show short info (only id)",
+        default=False,
+    )
+
+    find_parser.add_argument(
+        "-remove",
+        "-rm",
+        dest="find_remove",
+        action="store_true",
+        help="remove media from database index and repo",
         default=False,
     )
 
