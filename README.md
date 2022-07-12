@@ -21,6 +21,12 @@ a media is a file what transports kind of information, such as:
 - pdf 
 - ...
 
+`smog` supports xmp metadata scanning for many file types/ mimes out-of-the-box.
+
+get a list of automatic xmp scanned file extensions with:
+
+    smog xmp -types
+
 
 # what's new ?
 
