@@ -144,7 +144,7 @@ otherwise the database-index points to invalid destinations on the harddrive.
 to view the database-index use e.g. [`sqlitebrowser`](https://sqlitebrowser.org/)
 
 
-## can i use a different database backend engine?
+## are different database backend engine supported?
 
 at the present time only `SQLite` is supported as database backend.
 but since `smog` uses `SQLAlchemy` as  
