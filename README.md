@@ -148,7 +148,7 @@ to view the database-index use `smog find`, or `smog col` from cmd-line, or
 e.g. [`sqlitebrowser`](https://sqlitebrowser.org/) for raw view.
 
 
-## are different database backend engine supported?
+## are different database backend engines supported?
 
 at the present time only `SQLite` is supported as database backend.
 but since `smog` uses `SQLAlchemy` as  
