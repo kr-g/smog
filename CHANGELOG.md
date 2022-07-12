@@ -22,7 +22,9 @@ for open development tasks and limitations.
 - `find` filter on hashtag(s)
 - `find` filter on collection name
 - `find` short display option showing column `media.id`
-- `find` with `-remove` for deleting from db-index and repo
+- `find` with `-remove` for deleting from db-index and repo (file-system)
+- `col` for inspecting collections
+- `colman` with `remove` for deleting a collection from the db-index
 - 
 
 

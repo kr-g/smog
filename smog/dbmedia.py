@@ -161,13 +161,18 @@ class MediaDB(object):
 
     def qry_media_collection(self, collectionid):
         qry = self.session.query(MediaCollection)
-        qry = qry.where(MediaCollection.is_(collectionid))
+        qry = qry.where(MediaCollection.id.is_(collectionid))
         collection = qry.one_or_none()
         return collection
 
-    def qry_media_collection_name_stream(self, name=None):
+    def qry_media_collection_name_stream(
+        self, name=None, timestamp=None, skip_offset=None
+    ):
 
         qry = self.session.query(MediaCollection)
+
+        if timestamp:
+            qry = qry.where(MediaCollection.last_media <= timestamp)
 
         if name:
             _name = name.strip().lower()
@@ -175,6 +180,9 @@ class MediaDB(object):
                 qry = qry.where(func.lower(MediaCollection.name) == _name)
 
         qry = qry.order_by(desc(MediaCollection.last_media))
+
+        if skip_offset:
+            qry = qry.offset(skip_offset)
 
         qry = qry.execution_options(
             stream_results=True,

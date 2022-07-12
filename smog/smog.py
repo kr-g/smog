@@ -228,6 +228,47 @@ def find_func(args):
 #
 
 
+def collection_func(args):
+
+    _limit = args.col_limit
+    if _limit <= 0:
+        eprint("limit must be a positive number > 0")
+        sys.exit(1)
+
+    _skip = args.col_skip
+    if _skip < 0:
+        eprint("skip must be a positive number >= 0")
+        sys.exit(1)
+    if _skip == 0:
+        _skip = None
+
+    col_name = args.col_name
+
+    qry = args.ctx.db.qry_media_collection_name_stream(
+        name=args.col_name, timestamp=args.col_before, skip_offset=_skip
+    )
+
+    for rec in qry:
+        _limit -= 1
+        if _limit < 0:
+            print(f"showing {args.col_limit} records...")
+            break
+        print(rec.id, rec.name, rec.first_media, rec.last_media)
+
+
+#
+
+
+def colman_func(args):
+    for colid in args.colman_remove:
+        rec = args.ctx.db.qry_media_collection(colid)
+        print("remove from database", rec.id, rec.name)
+        args.ctx.db.remove(rec, auto_commit=True)
+
+
+#
+
+
 def xmp_func(args):
     if args.xmp_filetypes:
         dump_guessed()
@@ -462,7 +503,7 @@ def main_func(mkcopy=True):
         "-rm",
         dest="find_remove",
         action="store_true",
-        help="remove media from database index and repo",
+        help="remove media completely from database index, all collections and repo",
         default=False,
     )
 
@@ -518,6 +559,65 @@ def main_func(mkcopy=True):
         metavar="COLLECTION",
         type=str,
         help="collection filter",
+        default=None,
+    )
+
+    # collection
+
+    collection_parser = subparsers.add_parser("col", help="col --help")
+    collection_parser.set_defaults(func=collection_func)
+
+    collection_parser.add_argument(
+        "-name",
+        dest="col_name",
+        metavar="COLLECTION",
+        type=str,
+        help="collection name",
+        default=None,
+    )
+
+    collection_parser.add_argument(
+        "-before",
+        dest="col_before",
+        metavar="BEFORE",
+        type=isoparse,
+        help="find collection before timestamp",
+        default=None,
+    )
+
+    collection_parser.add_argument(
+        "-limit",
+        dest="col_limit",
+        metavar="LIMIT",
+        type=int,
+        help="limit result set  (default: %(default)s)",
+        default=50,
+    )
+
+    collection_parser.add_argument(
+        "-skip",
+        dest="col_skip",
+        metavar="SKIP",
+        type=int,
+        help="skip result result set  (default: %(default)s)",
+        default=0,
+    )
+
+    # collection manager
+
+    colman_parser = subparsers.add_parser("colman", help="colman --help")
+    colman_parser.set_defaults(func=colman_func)
+
+    colman_parser.add_argument(
+        "-remove",
+        "-rm",
+        "-delete",
+        "-del",
+        dest="colman_remove",
+        metavar="COL_ID",
+        nargs="+",
+        type=str,
+        help="remove collection. this does not remove media from the database index",
         default=None,
     )
 
