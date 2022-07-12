@@ -141,6 +141,8 @@ __IMPORTANT NOTE:__
 so it is important to call `smog` always with the same set of base parameters,
 otherwise the database-index points to invalid destinations on the harddrive.
 
+to view the database-index use [`sqlitebrowser`](https://sqlitebrowser.org/)
+
 
 # license
 
