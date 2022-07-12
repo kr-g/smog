@@ -144,7 +144,8 @@ __IMPORTANT NOTE:__
 so it is important to call `smog` always with the same set of base parameters,
 otherwise the database-index points to invalid destinations on the harddrive.
 
-to view the database-index use e.g. [`sqlitebrowser`](https://sqlitebrowser.org/)
+to view the database-index use `smog find`, or
+e.g. [`sqlitebrowser`](https://sqlitebrowser.org/)
 
 
 ## are different database backend engine supported?
