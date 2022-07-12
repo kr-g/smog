@@ -12,6 +12,16 @@ if possible xmp/exif metadata is used to determine the date,
 otherwise it's extracted from the name (experimental).
 
 
+## what is a media ?
+
+a media is a file what transports kind of information, such as:
+
+- photo
+- video
+- pdf 
+- ...
+
+
 # what's new ?
 
 check
@@ -26,13 +36,20 @@ check
 for open development tasks and limitations.
 
 
-# how to use
+# how to use 
 
-todo: documentation pending
+##todo documentation
+
+
+# how to use with cmd-line
 
 get cmd-line parameter with
 
     phyton3 -m smog --help
+    
+or for a sub-cmd
+
+    phyton3 -m smog *sub-cmd* --help
 
 
 # additional reference documentation
@@ -86,7 +103,6 @@ backup your database `~/media-db/smog.sb` and migrate
 the database with  
 
     smog config -db-migrate
-
 
 
 # license
