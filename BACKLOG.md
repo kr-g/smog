@@ -22,6 +22,7 @@ for latest ongoing, or upcoming news.
   - https://github.com/sqlalchemy/alembic
 </del>
 
+- automatic tests 
 - configuration of alembic paths via smog cmd-line
   - auto migrate smog.db
 - support for MySQL
