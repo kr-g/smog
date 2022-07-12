@@ -5,7 +5,12 @@ for open development tasks and limitations.
 
 # Changelog
 
-## version v0.0.2 - ???
+# next version v0.0.3 - ???
+
+- 
+
+
+## version v0.0.2 - 20220712
 
 - support of xmp metadata added
   - support of various file types containing xmp metadata
