@@ -117,12 +117,12 @@ after first installation of `smog` run
 
     smog config -db-init
     
-to create an empty database `~/media-db/smog.sb` 
+to create an empty database `~/media-db/smog.db` 
 
 
 ## upgrade from older version
 
-backup your database `~/media-db/smog.sb` and migrate 
+backup your database `~/media-db/smog.db` and migrate 
 the database with  
 
     smog config -db-migrate
