@@ -138,7 +138,7 @@ folloing folders are used:
 __IMPORTANT NOTE:__
 
 `smog` database-index is build with relative paths. 
-so it is important to call `smog` always with the same set of parameters,
+so it is important to call `smog` always with the same set of base parameters,
 otherwise the database-index points to invalid destinations on the harddrive.
 
 
