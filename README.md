@@ -139,7 +139,7 @@ __IMPORTANT NOTE:__
 
 `smog` database-index is build with relative paths. 
 so it is important to call `smog` always with the same set of parameters,
-otherwise the database points to invalid destination on the harddrive.
+otherwise the database-index points to invalid destinations on the harddrive.
 
 
 # license
