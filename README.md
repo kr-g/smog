@@ -141,7 +141,15 @@ __IMPORTANT NOTE:__
 so it is important to call `smog` always with the same set of base parameters,
 otherwise the database-index points to invalid destinations on the harddrive.
 
-to view the database-index use [`sqlitebrowser`](https://sqlitebrowser.org/)
+to view the database-index use e.g. [`sqlitebrowser`](https://sqlitebrowser.org/)
+
+
+## can i use a different database backend engine?
+
+at the present time only `SQLite` is supported as database backend.
+but since `smog` uses `SQLAlchemy` as  
+[`ORM`](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping) 
+mapper it might be implemented in the future.
 
 
 # license
