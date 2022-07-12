@@ -105,6 +105,11 @@ alpha state, use on your own risk!
 - [`python-dateutil`](https://dateutil.readthedocs.io/en/latest/)
 - 
 
+__NOTE:__
+on linux `Exempi` is mostlikely already installed. 
+otherwise download binaries from Exempi site or build local 
+from source package 
+
 
 `smog` itself can be installed with
 
