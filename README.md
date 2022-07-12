@@ -11,6 +11,15 @@ is moved into a folder structure like
 if possible xmp/exif metadata is used to determine the date,
 otherwise it's extracted from the name (experimental).
 
+internally `smog` calculates a SHA512 hash for each file for identification 
+along with an UUID identifier. in case an identical file is scanned more than once,
+e.g. if it exists in different locations (and also different file names) on a harddrive, 
+it is added only once to the main database-index and the internal storage. 
+anyway `smog` tracks the different file locations on the hard drive.
+
+for organizing different scan runs, or groups of related data, 
+`smog` can add media files to collections.
+
 
 ## what is a media ?
 
@@ -44,10 +53,15 @@ for open development tasks and limitations.
 
 # how to use 
 
-##todo documentation
+todo: documentation
 
 
-# how to use with cmd-line
+## is there a graphical user interface (GUI) ?
+
+not yet (but probably later...)
+
+
+## how to use with cmd-line
 
 get cmd-line parameter with
 
