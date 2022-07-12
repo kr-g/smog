@@ -14,8 +14,7 @@ otherwise it's extracted from the name (experimental).
 
 ## what is a media ?
 
-a [media ](https://en.wikipedia.org/wiki/Media_(communication))
-is a file what transports kind of information, such as:
+a media is a file what transports kind of information, such as:
 
 - photo
 - video
