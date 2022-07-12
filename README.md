@@ -135,6 +135,12 @@ folloing folders are used:
 | ~/media-repo | media repo folder where all data is stored. dont manipulate content of this folder manually. use `smog` cmd-line. can be overwritten with cmd-line `-dest`  | 
 | ~/media-db | folder for the database index. can be overwritten with cmd-line `-repo-db`  | 
 
+__IMPORTANT NOTE:__
+
+`smog` database-index is build with relative paths. 
+so it is important to call `smog` always with the same set of parameters,
+otherwise the database points to invalid destination on the harddrive.
+
 
 # license
 
