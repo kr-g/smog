@@ -4,3 +4,4 @@ include BACKLOG.md
 include LICENSE.md
 
 include smog_alembic/alembic.ini
+include smog_alembic/script.py.mako
