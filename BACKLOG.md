@@ -39,6 +39,8 @@ for latest ongoing, or upcoming news.
     - https://en.wikipedia.org/wiki/SpatiaLite
       - https://www.gaia-gis.it/fossil/libspatialite/home
         - others hilbert or z -curve, r-tree ...
+          - https://en.wikipedia.org/wiki/Geohash
+        - 
 - 
 
 
