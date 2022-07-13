@@ -33,6 +33,7 @@ for latest ongoing, or upcoming news.
   - https://en.wikipedia.org/wiki/Haversine_formula
     - https://en.wikipedia.org/wiki/Versine#Haversine
       - https://en.wikipedia.org/wiki/Versor
+        - https://upload.wikimedia.org/wikipedia/commons/7/73/ECEF_ENU_Longitude_Latitude_relationships.svg
 - 
 
 
