@@ -30,10 +30,15 @@ for latest ongoing, or upcoming news.
 - rework cmd-line interface
 - processed-files handling (cmd-line `-proc`). move already scanned media to separate folder
 - filter on gps location
-  - https://en.wikipedia.org/wiki/Haversine_formula
-    - https://en.wikipedia.org/wiki/Versine#Haversine
-      - https://en.wikipedia.org/wiki/Versor
-        - https://upload.wikimedia.org/wikipedia/commons/7/73/ECEF_ENU_Longitude_Latitude_relationships.svg
+  - theory
+    - https://en.wikipedia.org/wiki/Haversine_formula
+      - https://en.wikipedia.org/wiki/Versine#Haversine
+        - https://en.wikipedia.org/wiki/Versor
+          - https://upload.wikimedia.org/wikipedia/commons/7/73/ECEF_ENU_Longitude_Latitude_relationships.svg
+  - impl
+    - https://en.wikipedia.org/wiki/SpatiaLite
+      - https://www.gaia-gis.it/fossil/libspatialite/home
+        - others hilbert or z -curve, r-tree ...
 - 
 
 
