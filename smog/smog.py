@@ -381,7 +381,7 @@ def filter_hashtag(hashtags, tag):
             return rec
 
 
-def hhashtag_funcashtag_func(args):
+def hashtag_func(args):
     if args.hashtag_all:
         for hashtag in args.ctx.db.qry_hashtag():
             print(hashtag)
