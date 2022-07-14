@@ -15,7 +15,7 @@ from .file import FileStat
 
 from .dbconf import DBConf, SqliteConf
 from .dbmedia import MediaDB
-from .dbschema import MediaCollection, MediaCollectionItem
+from .dbschema import MediaCollection, MediaCollectionItem, MediaHashtag
 
 from .xmptype import dump_guessed
 from .xmpex import xmp_meta
@@ -375,10 +375,73 @@ def colman_func(args):
 #
 
 
+def filter_hashtag(hashtags, tag):
+    for rec in hashtags:
+        if rec.hashtag == tag:
+            return rec
+
+
 def hashtag_func(args):
     if args.hashtag_all:
         for hashtag in args.ctx.db.qry_hashtag():
             print(hashtag)
+        return
+
+    hashtag = args.hashtag_tag
+
+    if hashtag:
+        hashtag = hashtag.strip().lower()
+        if len(hashtag) == 0:
+            hashtag = None
+
+    if hashtag is None:
+        eprint("hashtag missing")
+        return 1
+
+    hashtag = "#" + hashtag
+
+    if args.hashtag_rm:
+        rc = args.ctx.db.qry_hashtag_drop(hashtag)
+        args.ctx.db.commit()
+        return rc
+
+    if args.hashtag_media_add:
+        for mediaid in args.hashtag_media_add:
+            media = args.ctx.db.qry_media_id(mediaid)
+            if media is None:
+                wprint("media not found", mediaid)
+                continue
+            hashtags = media.hashtags
+            rec = filter_hashtag(hashtags, hashtag)
+            if rec:
+                vprint("media already tagged", mediaid)
+                continue
+            mediahashtag = DBConf.create_new_with_id(MediaHashtag)
+            mediahashtag.media = media
+            mediahashtag.hashtag = hashtag
+
+            media.hashtags.append(mediahashtag)
+            args.ctx.db.upsert(mediahashtag)
+            args.ctx.db.upsert(media)
+            args.ctx.db.commit()
+        return
+
+    if args.hashtag_media_rm:
+        for mediaid in args.hashtag_media_rm:
+            media = args.ctx.db.qry_media_id(mediaid)
+            if media is None:
+                wprint("media not found", mediaid)
+                continue
+            hashtags = media.hashtags
+            rec = filter_hashtag(hashtags, hashtag)
+            if rec is None:
+                vprint("media not tagged", mediaid)
+                continue
+
+            media.hashtags.remove(rec)
+            args.ctx.db.remove(rec)
+            args.ctx.db.upsert(media)
+            args.ctx.db.commit()
         return
 
     print("what? use --help")
@@ -804,12 +867,50 @@ def main_func(mkcopy=True):
     hashtag_parser.set_defaults(func=hashtag_func)
 
     hashtag_parser.add_argument(
+        "-tag",
+        dest="hashtag_tag",
+        metavar="HASHTAG",
+        type=str,
+        default=None,
+        help="hashtag for '-add-media', and '-rm-media'",
+    )
+
+    hashtag_x_group = hashtag_parser.add_mutually_exclusive_group()
+
+    hashtag_x_group.add_argument(
         "-all",
         "-list",
         dest="hashtag_all",
         action="store_true",
         default=False,
         help="list all hashtags",
+    )
+    hashtag_x_group.add_argument(
+        "-drop",
+        "-rm",
+        dest="hashtag_rm",
+        action="store_true",
+        default=False,
+        help="remove hashtag from database-index",
+    )
+
+    hashtag_x_group.add_argument(
+        "-add-media",
+        "-addm",
+        dest="hashtag_media_add",
+        metavar="MEDIA_ID",
+        nargs="+",
+        type=str,
+        help="add hashtag to media",
+    )
+    hashtag_x_group.add_argument(
+        "-rm-media",
+        "-rmm",
+        dest="hashtag_media_rm",
+        metavar="MEDIA_ID",
+        nargs="+",
+        type=str,
+        help="remove hashtag from media",
     )
 
     # xmp

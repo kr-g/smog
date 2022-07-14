@@ -13,7 +13,7 @@ for open development tasks and limitations.
   - `-rm-mdeia`, removing media from a collection
   - `touch`, sets the first/last timestamps fresh 
     - resolves BUG in `scan` with `-col`
-- sub-cmd `tag` for hashtag media handling
+- sub-cmd `tag` for hashtag and media handling
 - 
 
 

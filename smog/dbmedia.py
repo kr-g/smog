@@ -202,8 +202,28 @@ class MediaDB(object):
 
     #
 
-    def qry_hashtag(self):
-        qry = self.session.query(distinct(MediaHashtag.hashtag))
+    def norm_hashtag(self, hashtag):
+        if hashtag:
+            hashtag = hashtag.strip().lower()
+            if len(hashtag) == 0:
+                hashtag = None
+        return hashtag
+
+    def qry_hashtag_drop(self, hashtag):
+        hashtag = self.norm_hashtag(hashtag)
+        if hashtag is None:
+            return
+        qry = self.session.query(MediaHashtag)
+        qry = qry.where(MediaHashtag.hashtag == hashtag)
+        return qry.delete()
+
+    def qry_hashtag(self, hashtag=None):
+        hashtag = self.norm_hashtag(hashtag)
+        if hashtag is None:
+            qry = self.session.query(distinct(MediaHashtag.hashtag))
+        else:
+            qry = self.session.query(MediaHashtag)
+            qry = qry.where(MediaHashtag.hashtag == hashtag)
 
         qry = qry.execution_options(
             stream_results=True,
@@ -215,3 +235,8 @@ class MediaDB(object):
                 yield raw._data[0]
 
         return _it()
+
+    def qry_hashtag_name(self, name=None):
+        """return first match"""
+        for rec in self.qry_hashtag(name=name):
+            return rec
