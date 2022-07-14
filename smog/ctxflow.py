@@ -461,6 +461,8 @@ class CtxDB_Hashtag(CtxProcessor):
                     mhtrec.hashtag = el
                     rec.hashtags.append(mhtrec)
                     c.DB_REC_DIRTY = True
+                else:
+                    self.ctx.vprint("already tagged")
 
         return c, err
 
@@ -501,11 +503,13 @@ class CtxDB_Collection(CtxProcessor):
                 self.ctx.db.upsert(mediaitem)
                 collection.mediaitems.append(mediaitem)
                 #
-                collection.first_media = min(col.first_media, rec.timestamp)
-                collection.last_media = max(col.last_media, rec.timestamp)
+                collection.first_media = min(collection.first_media, rec.timestamp)
+                collection.last_media = max(collection.last_media, rec.timestamp)
                 #
                 self.ctx.db.upsert(collection)
                 c.DB_REC_DIRTY = True
+            else:
+                self.ctx.vprint("already in collection")
 
         return c, err
 
