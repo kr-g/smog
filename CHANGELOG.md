@@ -3,7 +3,8 @@ see [`BACKLOG`](https://github.com/kr-g/smog/blob/main/BACKLOG.md)
 for open development tasks and limitations.
 
 
-# Changelog
+# CHANGELOG
+
 
 # next version v0.0.3 - ???
 
