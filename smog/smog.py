@@ -638,7 +638,7 @@ def main_func(mkcopy=True):
         dest="find_before",
         metavar="BEFORE",
         type=isoparse,
-        help="find media before timestamp",
+        help="find media before timestamp (will accept any iso format with '-' or dots, or not)",
         default=None,
     )
     find_before_group.add_argument(
