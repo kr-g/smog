@@ -20,7 +20,7 @@ except:
     )
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select, func, asc, desc
+from sqlalchemy import select, func, distinct, asc, desc
 
 
 class MediaDB(object):
@@ -199,3 +199,19 @@ class MediaDB(object):
         """return first match"""
         for rec in self.qry_media_collection_name_stream(name=name):
             return rec
+
+    #
+
+    def qry_hashtag(self):
+        qry = self.session.query(distinct(MediaHashtag.hashtag))
+
+        qry = qry.execution_options(
+            stream_results=True,
+            yield_per=50,
+        )
+
+        def _it():
+            for raw in self.session.execute(qry):
+                yield raw._data[0]
+
+        return _it()

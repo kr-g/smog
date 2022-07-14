@@ -375,6 +375,18 @@ def colman_func(args):
 #
 
 
+def hashtag_func(args):
+    if args.hashtag_all:
+        for hashtag in args.ctx.db.qry_hashtag():
+            print(hashtag)
+        return
+
+    print("what? use --help")
+
+
+#
+
+
 def xmp_func(args):
     if args.xmp_filetypes:
         dump_guessed()
@@ -784,6 +796,20 @@ def main_func(mkcopy=True):
         type=str,
         help="remove media from collection",
         default=None,
+    )
+
+    # xmp
+
+    hashtag_parser = subparsers.add_parser("tag", help="tag --help")
+    hashtag_parser.set_defaults(func=hashtag_func)
+
+    hashtag_parser.add_argument(
+        "-all",
+        "-list",
+        dest="hashtag_all",
+        action="store_true",
+        default=False,
+        help="list all hashtags",
     )
 
     # xmp
