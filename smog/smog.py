@@ -515,7 +515,7 @@ def main_func(mkcopy=True):
         "-rm",
         dest="find_remove",
         action="store_true",
-        help="remove media completely from database index, all collections and repo",
+        help="remove media completely from database index, all collections and media-repo folder",
         default=False,
     )
 
