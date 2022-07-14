@@ -629,7 +629,7 @@ def main_func(mkcopy=True):
         metavar="COL_ID",
         nargs="+",
         type=str,
-        help="remove collection. this does not remove media from the database index",
+        help="remove collection. this does not remove included media from the database index nor from the harddrive",
         default=None,
     )
 
