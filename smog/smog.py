@@ -398,6 +398,10 @@ def hashtag_func(args):
         eprint("hashtag missing")
         return 1
 
+    if hashtag.find("#") >= 0:
+        eprint("hashtag contains '#'", hashtag)
+        return 1
+
     hashtag = "#" + hashtag
 
     if args.hashtag_rm:
