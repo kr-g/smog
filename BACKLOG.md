@@ -26,6 +26,7 @@ for latest ongoing, or upcoming news.
 
 <del>
 - configuration of alembic paths via smog cmd-line
+
   - auto migrate smog.db
 </del>
 
