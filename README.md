@@ -19,6 +19,7 @@ anyway `smog` tracks the different file locations on the hard drive with the dat
 
 for organizing different scan runs, or groups of related data, 
 `smog` can add media files to collections.
+in addition it is also possible to `hashtag` media files.
 
 if a media contains xmp exif and gps location data this is extracted to a
 separate database index. (with v0.0.2 it is not possible to filter on that)
