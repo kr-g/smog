@@ -177,6 +177,10 @@ def print_rec(args, rec):
     if args.find_show_hash:
         pargs.append(rec.hash)
     print(*pargs)
+    
+    if args.find_show_paths:
+        for p in rec.paths:
+            print("->", p.path)
 
 
 def find_func(args):
@@ -495,6 +499,14 @@ def main_func(mkcopy=True):
         dest="find_short",
         action="store_true",
         help="show short info (only id)",
+        default=False,
+    )
+    find_parser.add_argument(
+        "-show-paths",
+        "-paths",
+        dest="find_show_paths",
+        action="store_true",
+        help="show also paths info",
         default=False,
     )
 
