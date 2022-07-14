@@ -381,7 +381,7 @@ def filter_hashtag(hashtags, tag):
             return rec
 
 
-def hashtag_func(args):
+def hhashtag_funcashtag_func(args):
     if args.hashtag_all:
         for hashtag in args.ctx.db.qry_hashtag():
             print(hashtag)
@@ -876,7 +876,7 @@ def main_func(mkcopy=True):
         metavar="HASHTAG",
         type=str,
         default=None,
-        help="hashtag for '-add-media', and '-rm-media'",
+        help="hashtag for '-rm', '-add-media', and '-rm-media'",
     )
 
     hashtag_x_group = hashtag_parser.add_mutually_exclusive_group()
