@@ -500,8 +500,10 @@ class CtxDB_Collection(CtxProcessor):
                 mediaitem.collection_id = collection.id
                 self.ctx.db.upsert(mediaitem)
                 collection.mediaitems.append(mediaitem)
-                collection.first_media = rec.timestamp
-                collection.last_media = rec.timestamp
+                #
+                collection.first_media = min(col.first_media, rec.timestamp)
+                collection.last_media = max(col.last_media, rec.timestamp)
+                #
                 self.ctx.db.upsert(collection)
                 c.DB_REC_DIRTY = True
 

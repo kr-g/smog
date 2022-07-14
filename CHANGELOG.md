@@ -7,6 +7,11 @@ for open development tasks and limitations.
 
 # next version v0.0.3 - ???
 
+- new for `colman`
+  - `-add-media`, adding media to a collection
+  - `-rm-mdeia`, removing media from a collection
+  - `touch`, sets the first/last timestamps fresh 
+    - resolves BUG in `scan` with `-col`
 - 
 
 

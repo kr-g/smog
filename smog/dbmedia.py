@@ -195,7 +195,7 @@ class MediaDB(object):
 
         return _it()
 
-    def qry_media_collection_name(self, name):
+    def qry_media_collection_name(self, name=None):
         """return first match"""
-        for rec in self.qry_media_collection_name_stream(name):
+        for rec in self.qry_media_collection_name_stream(name=name):
             return rec

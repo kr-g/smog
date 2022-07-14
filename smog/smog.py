@@ -13,8 +13,9 @@ from .const import (
 
 from .file import FileStat
 
-from .dbconf import SqliteConf
+from .dbconf import DBConf, SqliteConf
 from .dbmedia import MediaDB
+from .dbschema import MediaCollection, MediaCollectionItem
 
 from .xmptype import dump_guessed
 from .xmpex import xmp_meta
@@ -177,7 +178,7 @@ def print_rec(args, rec):
     if args.find_show_hash:
         pargs.append(rec.hash)
     print(*pargs)
-    
+
     if args.find_show_paths:
         for p in rec.paths:
             print("->", p.path)
@@ -263,11 +264,112 @@ def collection_func(args):
 #
 
 
+def filter_mediaitem_id(mediaitems, id):
+    for mi in mediaitems:
+        if mi.media_col_item == id:
+            return mi
+
+
 def colman_func(args):
-    for colid in args.colman_remove:
-        rec = args.ctx.db.qry_media_collection(colid)
-        print("remove from database", rec.id, rec.name)
-        args.ctx.db.remove(rec, auto_commit=True)
+
+    if args.colman_touch:
+        for colid in args.colman_touch:
+            col = args.ctx.db.qry_media_collection(colid)
+            if col is None:
+                wprint("not found", colid)
+                continue
+
+            for mediaitem in col.mediaitems:
+                col.first_media = min(col.first_media, mediaitem.media.timestamp)
+                col.last_media = max(col.last_media, mediaitem.media.timestamp)
+
+            args.ctx.db.upsert(col, auto_commit=True)
+
+        return
+
+    if args.colman_remove:
+        for colid in args.colman_remove:
+            rec = args.ctx.db.qry_media_collection(colid)
+            if rec is None:
+                wprint("not found", colid)
+                continue
+            print("remove from database", rec.id, rec.name)
+            args.ctx.db.remove(rec, auto_commit=True)
+
+        return
+
+    col = None
+
+    if args.colman_add or args.colman_remove:
+
+        if args.colman_name:
+            col = args.ctx.db.qry_media_collection_name(args.colman_name)
+            if col is None:
+                col = DBConf.create_new_with_id(MediaCollection)
+                col.name = args.colman_name
+                col.first_media = DateTime.utcnow()
+                col.last_media = DateTime.fromtimestamp(0)
+
+        if col is None:
+            if args.colman_id is None:
+                col = args.ctx.db.qry_media_collection_name()
+                print("using default collection", col.id, col.name)
+            else:
+                col = args.ctx.db.qry_media_collection(args.colman_id)
+                if col is None:
+                    eprint("collection not found")
+                    return 1
+
+        mediaitems = col.mediaitems
+
+        if args.colman_add:
+            for mediaid in args.colman_add:
+
+                media = args.ctx.db.qry_media_id(mediaid)
+                if media is None:
+                    eprint("media not found", mediaid)
+                    continue
+
+                mi = filter_mediaitem_id(mediaitems, mediaid)
+                if mi:
+                    vprint("media already exists in collection", mediaid)
+                    continue
+
+                mediaitem = DBConf.create_new_with_id(MediaCollectionItem)
+                mediaitem.media_collection = col
+                mediaitem.media = media
+
+                vprint("add media to collection", mediaid)
+                args.ctx.db.upsert(mediaitem)
+                col.mediaitems.append(mediaitem)
+
+        if args.colman_remove:
+            for mediaid in args.colman_remove:
+
+                media = args.ctx.db.qry_media_id(mediaid)
+                if media is None:
+                    eprint("media not found", mediaid)
+                    continue
+
+                mediaitem = filter_mediaitem_id(mediaitems, mediaid)
+                if mediaitem is None:
+                    vprint("media not in collection", mediaid)
+                    continue
+
+                vprint("remove media from collection", mediaid)
+                args.ctx.db.remove(mediaitem)
+                mediaitems.remove(mediaitem)
+
+        for mediaitem in mediaitems:
+            col.first_media = min(col.first_media, mediaitem.media.timestamp)
+            col.last_media = max(col.last_media, mediaitem.media.timestamp)
+
+        args.ctx.db.upsert(col)
+        args.ctx.db.commit()
+
+        return
+
+    print("what? use --help")
 
 
 #
@@ -621,6 +723,27 @@ def main_func(mkcopy=True):
     colman_parser.set_defaults(func=colman_func)
 
     colman_parser.add_argument(
+        "-col-id",
+        "-id",
+        dest="colman_id",
+        metavar="COL_ID",
+        type=str,
+        help="collection to use for -add-media, and -rm-media, defaults to latest collection",
+        default=None,
+    )
+    colman_parser.add_argument(
+        "-col",
+        "-name",
+        dest="colman_name",
+        metavar="COL_NAME",
+        type=str,
+        help="collection to use for -add-media, and -rm-media, creates a new collection if not existing",
+        default=None,
+    )
+
+    colman_x_group = colman_parser.add_mutually_exclusive_group()
+
+    colman_x_group.add_argument(
         "-remove",
         "-rm",
         "-delete",
@@ -630,6 +753,36 @@ def main_func(mkcopy=True):
         nargs="+",
         type=str,
         help="remove collection. this does not remove included media from the database index nor from the harddrive",
+        default=None,
+    )
+    colman_x_group.add_argument(
+        "-touch",
+        dest="colman_touch",
+        metavar="COL_ID",
+        nargs="+",
+        type=str,
+        help="adjusts the collection dates from media",
+        default=None,
+    )
+
+    colman_x_group.add_argument(
+        "-add-media",
+        "-addm",
+        dest="colman_add",
+        metavar="MEDIA_ID",
+        nargs="+",
+        type=str,
+        help="add media to collection",
+        default=None,
+    )
+    colman_x_group.add_argument(
+        "-rm-media",
+        "-rmm",
+        dest="colman_remove",
+        metavar="MEDIA_ID",
+        nargs="+",
+        type=str,
+        help="remove media from collection",
         default=None,
     )
 
