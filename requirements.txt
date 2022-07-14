@@ -2,3 +2,6 @@ SQLAlchemy
 alembic
 python-xmp-toolkit
 python-dateutil
+#tinytag
+#mutagen
+#python-magic

@@ -158,7 +158,8 @@ e.g. [`sqlitebrowser`](https://sqlitebrowser.org/) for raw view.
 at the present time only `SQLite` is supported as database backend.
 but since `smog` uses `SQLAlchemy` as  
 [`ORM`](https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping) 
-mapper it might be implemented in the future.
+mapper it might be implemented in the future for other 
+[sql dialects](https://docs.sqlalchemy.org/en/14/dialects/)
 
 
 # license
