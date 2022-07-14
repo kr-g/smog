@@ -24,7 +24,7 @@ duplicating the used space on the harddrive since this is stored
 only in the database-index.
 in addition it is also possible to `hashtag` media files.
 
-if a media contains xmp exif and `gps` location data this is extracted to a
+if a media contains xmp exif data regarding `gps` location data; this is extracted to a
 separate database index. (with v0.0.2 it is not possible to filter on that)
 
 
