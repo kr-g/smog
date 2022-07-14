@@ -23,8 +23,12 @@ for latest ongoing, or upcoming news.
 </del>
 
 - automatic tests 
+
+<del>
 - configuration of alembic paths via smog cmd-line
   - auto migrate smog.db
+</del>
+
 - support for MySQL
 - support for PostgreSql
 - rework cmd-line interface
