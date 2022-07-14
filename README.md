@@ -18,7 +18,10 @@ it is added only once to the main database-index and the internal storage.
 anyway `smog` tracks the different file locations on the hard drive with the database-index.
 
 for organizing different scan runs, or groups of related data, 
-`smog` can add media files to collections.
+`smog` can add media files to collections. 
+a media file can be grouped in more than one collection without
+duplicating the used space on the harddrive since this is stored 
+only in the database-index.
 in addition it is also possible to `hashtag` media files.
 
 if a media contains xmp exif and gps location data this is extracted to a
