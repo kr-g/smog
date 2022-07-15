@@ -14,6 +14,7 @@ for open development tasks and limitations.
   - `touch`, sets the first/last timestamps fresh 
     - resolves BUG in `scan` with `-col`
 - sub-cmd `tag` for hashtag and media handling
+- database schema revision check during startup
 - 
 
 
