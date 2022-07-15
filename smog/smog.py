@@ -85,28 +85,75 @@ def is_folder_or_die(f):
 #
 
 
-def config_func(args):
-    needtocreate = args.needtocreate
-    db_path = args.db_path
-    db_conf = args.db_conf
+def check_db_revision(args):
+
+    CHKC = getarg("db_check_call_print", True)
+
+    CHKC and print("checking db revision")
 
     from alembic.config import Config as AlembicConfig
-    from alembic import command
-
+    from alembic.runtime import migration
+    from alembic import script
     import smog_alembic
 
     inid = FileStat(smog_alembic.__file__).dirname()
     ini = FileStat(inid).join(["alembic.ini"])
 
     alembic_cfg = AlembicConfig(ini.name)
+    if not CHKC:
+        alembic_cfg = AlembicConfig()
+
     # overwrite location
     alembic_cfg.set_main_option("script_location", inid)
 
+    db_conf = args.db_conf
     engine = db_conf.open_db()
+
+    directory = script.ScriptDirectory.from_config(alembic_cfg)
 
     with engine.begin() as connection:
         alembic_cfg.attributes["connection"] = connection
-        command.upgrade(alembic_cfg, "head")
+        context = migration.MigrationContext.configure(connection)
+        current = set(context.get_current_heads())
+        latest = set(directory.get_heads())
+
+        CHKC and print("current", current)
+        CHKC and print("latest", latest)
+
+    return current == latest
+
+
+def config_func(args):
+
+    if args.db_check:
+        return check_db_revision(args)
+
+    if args.db_init or args.db_migrate:
+
+        needtocreate = args.needtocreate
+        db_path = args.db_path
+        db_conf = args.db_conf
+
+        from alembic.config import Config as AlembicConfig
+        from alembic import command
+        import smog_alembic
+
+        inid = FileStat(smog_alembic.__file__).dirname()
+        ini = FileStat(inid).join(["alembic.ini"])
+
+        alembic_cfg = AlembicConfig(ini.name)
+        # overwrite location
+        alembic_cfg.set_main_option("script_location", inid)
+
+        engine = db_conf.open_db()
+
+        with engine.begin() as connection:
+            alembic_cfg.attributes["connection"] = connection
+            command.upgrade(alembic_cfg, "head")
+
+        return
+
+    print("what? use --help")
 
 
 #
@@ -600,6 +647,15 @@ def main_func(mkcopy=True):
     config_parser.set_defaults(func=config_func)
 
     config_xgroup = config_parser.add_mutually_exclusive_group()
+
+    config_xgroup.add_argument(
+        "-db-check",
+        dest="db_check",
+        action="store_true",
+        help="check database revision",
+        default=False,
+    )
+
     config_xgroup.add_argument(
         "-db-init",
         dest="db_init",
@@ -1006,11 +1062,20 @@ def main_func(mkcopy=True):
     args.needtocreate = needtocreate
 
     dbconf = SqliteConf(SMOG_DB_NAME, path=dbdir.name)
+    args.db_path = dbf
+    args.db_conf = dbconf
 
-    if getarg("db_init") or getarg("db_migrate"):
-        args.db_path = dbf
-        args.db_conf = dbconf
+    if getarg("db_check") or getarg("db_init") or getarg("db_migrate"):
         return config_func(args)
+    else:
+        vprint("checking db revision")
+        args.db_check_call_print = False
+        rev_ok = check_db_revision(args)
+        if not rev_ok:
+            eprint(
+                "database not latest revision. backup and upgrade with '-db-migrate'"
+            )
+            sys.exit(1)
 
     if needtocreate:
         print_err("database not found. run \n\t")
