@@ -114,7 +114,12 @@ class MediaDB(object):
     #
 
     def qry_media_stream(
-        self, timestamp=None, skip_offset=None, hashtag=None, collection=None
+        self,
+        timestamp=None,
+        skip_offset=None,
+        hashtag=None,
+        collection=None,
+        collectionid=None,
     ):
 
         qry = self.session.query(Media)
@@ -131,6 +136,9 @@ class MediaDB(object):
             if len(hashtag) > 0:
                 qry = qry.join(MediaHashtag).filter(MediaHashtag.hashtag.in_(hashtag))
 
+        if collection and collectionid:
+            print("confused by collection name and id beeing set")
+
         if collection:
             _name = collection.strip().lower()
             if len(_name) > 0:
@@ -138,9 +146,20 @@ class MediaDB(object):
                     MediaCollectionItem.media_col_item == Media.id
                 )
                 qry = qry.join(MediaCollection).filter(
-                    # todo use id
+                    # todo refactor
                     func.lower(MediaCollection.name)
                     == _name
+                )
+        elif collectionid:
+            _id = collectionid.strip().lower()
+            if len(_id) > 0:
+                qry = qry.join(MediaCollectionItem).filter(
+                    MediaCollectionItem.media_col_item == Media.id
+                )
+                qry = qry.join(MediaCollection).filter(
+                    # todo refactor
+                    func.lower(MediaCollection.id)
+                    == _id
                 )
 
         if skip_offset:

@@ -15,6 +15,7 @@ for open development tasks and limitations.
     - resolves BUG in `scan` with `-col`
 - sub-cmd `tag` for hashtag and media handling
 - database schema revision check during startup
+- `find` filter on collection id
 - 
 
 

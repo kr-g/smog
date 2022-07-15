@@ -257,6 +257,7 @@ def find_func(args):
         skip_offset=_skip,
         hashtag=args.find_hashtag,
         collection=args.find_collection,
+        collectionid=args.find_collection_id,
     )
 
     for rec in qry:
@@ -808,6 +809,15 @@ def main_func(mkcopy=True):
         metavar="COLLECTION",
         type=str,
         help="collection filter",
+        default=None,
+    )
+    find_before_group.add_argument(
+        "-collection-id",
+        "-colid",
+        dest="find_collection_id",
+        metavar="COLLECTION-ID",
+        type=str,
+        help="collection id filter",
         default=None,
     )
 
