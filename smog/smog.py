@@ -12,6 +12,7 @@ from .const import (
 )
 
 from .file import FileStat
+from .colname import build_timed_collection_name
 
 from .dbconf import DBConf, SqliteConf
 from .dbmedia import MediaDB
@@ -332,6 +333,24 @@ def colman_func(args):
                 col.last_media = max(col.last_media, mediaitem.media.timestamp)
 
             args.ctx.db.upsert(col, auto_commit=True)
+
+        return
+
+    if args.colman_rename:
+        if args.colman_id is None:
+            eprint("collection id missing")
+            return 1
+
+        col = args.ctx.db.qry_media_collection(args.colman_id)
+        if col is None:
+            wprint("not found", args.colman_id)
+            return 1
+
+        col.name = build_timed_collection_name(
+            args.colman_rename, col.first_media, col.last_media
+        )
+
+        args.ctx.db.upsert(col, auto_commit=True)
 
         return
 
@@ -907,6 +926,15 @@ def main_func(mkcopy=True):
         nargs="+",
         type=str,
         help="adjusts the collection dates from media",
+        default=None,
+    )
+    colman_x_group.add_argument(
+        "-rename",
+        "-rn",
+        dest="colman_rename",
+        metavar="COL_NAME",
+        type=str,
+        help="rename collection. a literal '%%d' in the name will be expanded to the first/ last date(s) of the collection",
         default=None,
     )
 
