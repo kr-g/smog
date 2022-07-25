@@ -36,7 +36,7 @@ def is_predefined(fnam):
 
 def convert(args, container=None, env=None, open_external=True):
 
-    _bak = dict(os.environ)
+    _bak_env = dict(os.environ)
     _env = SmogConvert.merge_os_env(env)
 
     exprefnam = is_predefined(args[0])
@@ -51,14 +51,14 @@ def convert(args, container=None, env=None, open_external=True):
         args = normalize_args(args)
         mod = importlib.import_module(SMOGCONV_NAME + "." + args[0])
         # bump argv
-        temp_argv = sys.argv
+        bak_argv = sys.argv
         sys.argv = args
         # bump env
         os.environ = _env
         #
         rc = mod.convert(container)
         # roll back
-        sys.argv = temp_argv
-        # os.environ = _bak
+        sys.argv = bak_argv
+        # os.environ = _bak_env
 
     return rc

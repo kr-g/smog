@@ -117,6 +117,11 @@ class ArgTwoOutAdapter(OutAdapter, ArgAdapter):
         ArgAdapter.__init__(self, StdoutAdapter, FileOutAdapter, 2, args)
 
 
+# use this rather than own impl with e.g. argparse
+# to support "in-proc" dynamic loading with import lib
+# since convert call with container parameter
+
+
 class ArgsInAdapter(ArgOneInAdapter):
     pass
 
