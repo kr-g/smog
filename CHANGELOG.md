@@ -6,7 +6,12 @@ for open development tasks and limitations.
 # CHANGELOG
 
 
-# next version v0.0.3 - ???
+# next version v0.0.4 - ???
+
+- 
+
+
+# version v0.0.3 - 20220725
 
 - new for `colman`
   - `-add-media`, adding media to a collection
@@ -16,6 +21,7 @@ for open development tasks and limitations.
 - sub-cmd `tag` for hashtag and media handling
 - database schema revision check during startup
 - `find` filter on collection id
+- license change
 - 
 
 

@@ -87,4 +87,10 @@ print(f"using python version: {pyversion}")
 
 
 # python3 -m setup sdist build bdist_wheel
+
+# test.pypi
+# twine upload --repository testpypi dist/*
+# python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ smog
+
+# pypi
 # twine upload dist/*
