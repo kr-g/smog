@@ -137,7 +137,7 @@ class MediaDB(object):
                 qry = qry.join(MediaHashtag).filter(MediaHashtag.hashtag.in_(hashtag))
 
         if collection and collectionid:
-            print("confused by collection name and id beeing set")
+            print("confused by collection name and id being set")
 
         if collection:
             _name = collection.strip().lower()
