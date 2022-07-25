@@ -8,6 +8,8 @@ for open development tasks and limitations.
 
 # next version v0.0.4 - ???
 
+- `colman` sub-cmd `-rename` 
+  - a literal "%d" in the name will be expanded to the first/ last date(s) of the collection media items
 - 
 
 
@@ -15,7 +17,7 @@ for open development tasks and limitations.
 
 - new for `colman`
   - `-add-media`, adding media to a collection
-  - `-rm-mdeia`, removing media from a collection
+  - `-rm-media`, removing media from a collection
   - `touch`, sets the first/last timestamps fresh 
     - resolves BUG in `scan` with `-col`
 - sub-cmd `tag` for hashtag and media handling
