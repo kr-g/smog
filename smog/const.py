@@ -1,4 +1,4 @@
-VERSION = "v0.0.3"
+VERSION = "v0.0.4-a"
 
 # DEFAULT_MEDIA_DOC = "~/media-documents"
 
