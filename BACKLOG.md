@@ -47,6 +47,13 @@ for latest ongoing, or upcoming news.
           - https://en.wikipedia.org/wiki/Geohash
         - https://en.wikipedia.org/wiki/Military_Grid_Reference_System
         - 
+- outbound processing
+  - watermark
+  - resize
+  - thumbnails
+  - convert to different pic formats
+  - word press integration (?)
+- syncronize data from different devices
 - 
 
 
