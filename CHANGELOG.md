@@ -6,14 +6,14 @@ for open development tasks and limitations.
 # CHANGELOG
 
 
-# next version v0.0.4 - ???
+## next version v0.0.4 - ???
 
 - `colman` sub-cmd `-rename` to rename a collection
   - a literal "%d" in the name will be expanded to the first/ last date(s) of the collection media items
 - 
 
 
-# version v0.0.3 - 20220725
+## version v0.0.3 - 20220725
 
 - new for `colman`
   - `-add-media`, adding media to a collection
