@@ -93,11 +93,6 @@ for expert reading
 tested on python3, and linux
 
 
-# development status
-
-alpha state, use on your own risk!
-
-
 # installation
 
 `smog` project dependencies: 
@@ -168,8 +163,7 @@ mapper it might be implemented in the future for other
 
 # license
 
-refer to 
-`GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007`
+`smog` is dual licensed, and free only for `non-commercial` use. read properly.
 [`LICENSE`](https://github.com/kr-g/smog/blob/main/LICENSE.md)
 
 
