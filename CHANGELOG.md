@@ -8,7 +8,7 @@ for open development tasks and limitations.
 
 # next version v0.0.4 - ???
 
-- `colman` sub-cmd `-rename` 
+- `colman` sub-cmd `-rename` to rename a collection
   - a literal "%d" in the name will be expanded to the first/ last date(s) of the collection media items
 - 
 
