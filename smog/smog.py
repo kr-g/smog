@@ -868,8 +868,8 @@ def main_func(mkcopy=True):
     colman_parser.set_defaults(func=colman_func)
 
     colman_parser.add_argument(
-        "-col-id",
-        "-id",
+        "-collection-id",
+        "-colid",
         dest="colman_id",
         metavar="COL_ID",
         type=str,
@@ -877,8 +877,8 @@ def main_func(mkcopy=True):
         default=None,
     )
     colman_parser.add_argument(
+        "-collection",
         "-col",
-        "-name",
         dest="colman_name",
         metavar="COL_NAME",
         type=str,
@@ -921,6 +921,7 @@ def main_func(mkcopy=True):
         default=None,
     )
     colman_x_group.add_argument(
+        "-remove-media",
         "-rm-media",
         "-rmm",
         dest="colman_remove",
