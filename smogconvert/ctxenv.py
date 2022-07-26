@@ -2,13 +2,14 @@ import os
 
 
 class CtxEnv(object):
-    def __init__(self):
+    def __init__(self, env=None):
         self._env = None
+        self._overlay = env
 
-    def __enter__(self, env=None):
+    def __enter__(self):
         self._env = dict(os.environ)
-        if env:
-            os.environ = env
+        if self._overlay:
+            os.environ = self._overlay
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):

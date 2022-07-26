@@ -58,6 +58,9 @@ def convert(args, input=None, container=None, env=None, open_external=True):
         else:
             cap_mode = False
 
+        if container:
+            print("external run. drop container", container)
+
         rc = subprocess.run(
             args=_exec_ctx,
             stdin=inp_mode,
@@ -89,5 +92,8 @@ if __name__ == "__main__":
                 *sys.argv[1:],
             ],
             env=z,
+            container={"a": 1},
+            open_external=ot,
         )
         print(rc)
+        print("---")
