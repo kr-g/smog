@@ -46,20 +46,33 @@ def convert(args, container=None, env=None, open_external=True):
     if open_external:
         _exec_ctx = get_call_context(args)
         _exec_ctx.extend([exprefnam, *args[1:]])
-        rc = subprocess.run(args=_exec_ctx, env=_env, capture_output=True)
+
+        if args[1] == SmogConvert.STDIO:
+            inp_mode = subprocess.PIPE
+        else:
+            inp_mode = None
+
+        if args[2] == SmogConvert.STDIO:
+            cap_mode = True
+        else:
+            cap_mode = False
+
+        rc = subprocess.run(
+            args=_exec_ctx, stdin=inp_mode, env=_env, capture_output=cap_mode
+        )
     else:
         nargs = normalize_args(args)
         mod = importlib.import_module(SMOGCONV_NAME + "." + nargs[0])
-        # bump argv
-        bak_argv = sys.argv
-        sys.argv = nargs
         # bump env
         os.environ = _env
         #
-        rc = mod.convert(container)
+        try:
+            rc = mod.convert(nargs, container)
+        except Exception as ex:
+            print(ex, file=sys.stderr)
+            rc = ex
         # roll back
-        sys.argv = bak_argv
-        # os.environ = _bak_env
+        os.environ = _bak_env
 
     return rc
 

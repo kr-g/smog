@@ -4,22 +4,30 @@ import os
 MEDIA_SRC = "MEDIA_SRC"
 FIRST_OPT_ARG = 3
 
-from .adapter import ArgsInAdapter, ArgsOutAdapter
+from .adapter import STDIO, ArgsInAdapter, ArgsOutAdapter
 
 
-def check_argv(err_ok=False):
-    _chk = len(sys.argv) < FIRST_OPT_ARG
+def get_argv(args=None):
+    if args is None:
+        args = sys.argv
+    return args
+
+
+def check_argv(args=None, err_ok=False):
+    args = get_argv(args)
+    _chk = len(args) < FIRST_OPT_ARG
     if err_ok:
         return _chk
     if _chk:
         raise Exception("wrong number of call parameter")
 
 
-def opt_argv():
-    return sys.argv[FIRST_OPT_ARG:]
+def opt_argv(args=None):
+    args = get_argv(args)
+    return args[FIRST_OPT_ARG:]
 
 
-def merge_os_env(env):
+def merge_os_env(env=None):
     _env = dict(os.environ)
     if env:
         for k, v in env.items():
