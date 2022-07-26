@@ -10,8 +10,6 @@ def convert(args=None, container=None):
         with ArgsOutAdapter(args) as fo:
             fo.write(fi.read())
 
-    print(opt_argv(args))
-
 
 if __name__ == "__main__":
     # print(sys.argv)
