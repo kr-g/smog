@@ -6,8 +6,8 @@ def convert(args=None, container=None):
     args = get_argv(args)
     check_argv(args)
 
-    with ArgsInAdapter() as fi:
-        with ArgsOutAdapter() as fo:
+    with ArgsInAdapter(args) as fi:
+        with ArgsOutAdapter(args) as fo:
             fo.write(fi.read())
 
     print(opt_argv(args))
