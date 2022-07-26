@@ -1,6 +1,5 @@
 import sys
 
-
 STDIO = "-"
 
 
@@ -97,6 +96,11 @@ class ArgAdapter(Adapter):
             self.ad = cls1()
         else:
             self.ad = cls2(args[argno])
+
+        self.args = args
+
+    def optargs(self):
+        return self.args[FIRST_OPT_ARG:]
 
     def _open(self):
         return self.ad._open()
