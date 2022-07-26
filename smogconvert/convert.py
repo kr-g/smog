@@ -4,6 +4,7 @@ import subprocess
 import importlib
 
 import smogconvert as SmogConvert
+from smogconvert.ctxenv import CtxEnv
 
 SMOGCONV_FILE = SmogConvert.__file__
 SMOGCONV_NAME = SmogConvert.__name__
@@ -34,13 +35,13 @@ def is_predefined(fnam):
         return path
 
 
-def convert(args, container=None, env=None, open_external=True):
+def convert(args, input=None, container=None, env=None, open_external=True):
 
-    _bak_env = dict(os.environ)
     _env = SmogConvert.merge_os_env(env)
 
     exprefnam = is_predefined(args[0])
     if not exprefnam:
+        exprefnam = args[0]
         raise NotImplementedError()
 
     if open_external:
@@ -58,21 +59,23 @@ def convert(args, container=None, env=None, open_external=True):
             cap_mode = False
 
         rc = subprocess.run(
-            args=_exec_ctx, stdin=inp_mode, env=_env, capture_output=cap_mode
+            args=_exec_ctx,
+            stdin=inp_mode,
+            input=input,
+            env=_env,
+            capture_output=cap_mode,
         )
     else:
         nargs = normalize_args(args)
         mod = importlib.import_module(SMOGCONV_NAME + "." + nargs[0])
-        # bump env
-        os.environ = _env
-        #
-        try:
-            rc = mod.convert(nargs, container)
-        except Exception as ex:
-            print(ex, file=sys.stderr)
-            rc = ex
-        # roll back
-        os.environ = _bak_env
+
+        with CtxEnv(_env) as ctxenv:
+            # bump env
+            try:
+                rc = mod.convert(nargs, container)
+            except Exception as ex:
+                print(ex, file=sys.stderr)
+                rc = ex
 
     return rc
 
