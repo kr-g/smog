@@ -86,16 +86,16 @@ class StdoutAdapter(OutAdapter):
 
 
 class ArgAdapter(Adapter):
-    def __init__(self, cls1, cls2, argno, args=None):
+    def __init__(self, clsstd, clscust, argno, args=None):
         Adapter.__init__(self)
 
         if args is None:
             args = sys.argv
 
         if args[argno] == STDIO:
-            self.ad = cls1()
+            self.ad = clsstd()
         else:
-            self.ad = cls2(args[argno])
+            self.ad = clscust(args[argno])
 
         self.args = args
 

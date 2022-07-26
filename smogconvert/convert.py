@@ -48,11 +48,11 @@ def convert(args, container=None, env=None, open_external=True):
         _exec_ctx.extend([exprefnam, *args[1:]])
         rc = subprocess.run(args=_exec_ctx, env=_env, capture_output=True)
     else:
-        args = normalize_args(args)
-        mod = importlib.import_module(SMOGCONV_NAME + "." + args[0])
+        nargs = normalize_args(args)
+        mod = importlib.import_module(SMOGCONV_NAME + "." + nargs[0])
         # bump argv
         bak_argv = sys.argv
-        sys.argv = args
+        sys.argv = nargs
         # bump env
         os.environ = _env
         #
@@ -62,3 +62,16 @@ def convert(args, container=None, env=None, open_external=True):
         # os.environ = _bak_env
 
     return rc
+
+
+if __name__ == "__main__":
+    z = {"zzz": 56657}
+    for ot in [True, False]:
+        rc = convert(
+            [
+                "copyfile.py",
+                *sys.argv[1:],
+            ],
+            env=z,
+        )
+        print(rc)
