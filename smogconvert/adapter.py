@@ -91,13 +91,13 @@ class ArgAdapter(Adapter):
 
         if args is None:
             args = sys.argv
+        self.args = args
 
-        if args[argno] == STDIO:
+        self.is_stdio = args[argno] == STDIO
+        if self.is_stdio:
             self.ad = clsstd()
         else:
             self.ad = clscust(args[argno])
-
-        self.args = args
 
     def optargs(self):
         return self.args[FIRST_OPT_ARG:]

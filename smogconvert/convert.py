@@ -35,6 +35,16 @@ def is_predefined(fnam):
         return path
 
 
+def procrun(args, input=None, env=None, capture_output=True):
+    rc = subprocess.run(
+        args=args,
+        input=input,
+        env=env,
+        capture_output=capture_output,
+    )
+    return rc
+
+
 def convert(args, input=None, container=None, env=None, open_external=True):
 
     _env = SmogConvert.merge_os_env(env)
@@ -48,22 +58,13 @@ def convert(args, input=None, container=None, env=None, open_external=True):
         _exec_ctx = get_call_context(args)
         _exec_ctx.extend([exprefnam, *args[1:]])
 
-        if args[1] == SmogConvert.STDIO:
-            inp_mode = subprocess.PIPE
-        else:
-            inp_mode = None
-
-        if args[2] == SmogConvert.STDIO:
-            cap_mode = True
-        else:
-            cap_mode = False
+        cap_mode = args[2] == SmogConvert.STDIO
 
         if container:
             print("external run. drop container", container)
 
-        rc = subprocess.run(
+        rc = procrun(
             args=_exec_ctx,
-            stdin=inp_mode,
             input=input,
             env=_env,
             capture_output=cap_mode,

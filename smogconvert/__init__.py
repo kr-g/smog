@@ -5,6 +5,7 @@ MEDIA_SRC = "MEDIA_SRC"
 FIRST_OPT_ARG = 3
 
 from .adapter import STDIO, ArgsInAdapter, ArgsOutAdapter
+from .convert import procrun
 
 
 def get_argv(args=None):
@@ -25,6 +26,13 @@ def check_argv(args=None, err_ok=False):
 def opt_argv(args=None):
     args = get_argv(args)
     return args[FIRST_OPT_ARG:]
+
+
+def pop_argv(opts, default=None):
+    if opts:
+        if len(opts) > 0:
+            return opts.pop(0)
+    return default
 
 
 def merge_os_env(env=None):
