@@ -53,6 +53,9 @@ for latest ongoing, or upcoming news.
   - thumbnails
   - convert to different pic formats
   - word press integration (?)
+  - pdf watermark and preview 
+    - [pypdf2](https://github.com/py-pdf/PyPDF2)
+    - [pypdf2](https://pypdf2.readthedocs.io/en/latest/)
 - syncronize data from different devices
 - 
 
