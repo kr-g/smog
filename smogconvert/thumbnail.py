@@ -30,9 +30,6 @@ def convert(args=None, container=None):
             input=inp,
         )
 
-        if rc.returncode > 0:
-            raise Exception(rc)
-
     with ArgsOutAdapter(args) as fo:
         fo.write(rc.stdout)
 

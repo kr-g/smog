@@ -35,13 +35,15 @@ def is_predefined(fnam):
         return path
 
 
-def procrun(args, input=None, env=None, capture_output=True):
+def procrun(args, input=None, env=None, capture_output=True, raise_err=True):
     rc = subprocess.run(
         args=args,
         input=input,
         env=env,
         capture_output=capture_output,
     )
+    if raise_err and rc.returncode > 0:
+        raise Exception("failed", rc)
     return rc
 
 
