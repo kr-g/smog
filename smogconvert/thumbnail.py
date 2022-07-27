@@ -25,20 +25,19 @@ def convert(args=None, container=None):
         opts = opt_argv()
         size_ = pop_argv(opts, "64x64>")
 
+        rc = procrun(
+            args=["convert", "-", "-thumbnail", size_, "-"],
+            input=inp,
+        )
+
+        if rc.returncode > 0:
+            raise Exception(rc)
+
         with ArgsOutAdapter(args) as fo:
-
-            rc = procrun(
-                args=["convert", "-", "-thumbnail", size_, "-"],
-                input=inp,
-            )
-
-            if rc.returncode > 0:
-                raise Exception(rc)
-
             fo.write(rc.stdout)
 
-            rc.stdout = None
-            return rc
+        rc.stdout = None
+        return rc
 
 
 if __name__ == "__main__":

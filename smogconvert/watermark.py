@@ -85,38 +85,35 @@ def convert(args=None, container=None):
         font_ = pop_argv(opts, "Courier")
         font_size_ = pop_argv(opts, 64)
 
+        with CtxTempFile() as tmpf:
+
+            fnam = tmpf.mktemp(suffix=".png", prefix="IMG_smog-")
+            tmpf.guard(fnam)
+
+            year = datetime.datetime.now().year
+
+            rc = watermark(fnam, f"(c) {year} by smog", height=font_size_, font=font_)
+            print(rc)
+
+            rc = procrun(
+                args=[
+                    "composite",
+                    "-tile",
+                    fnam,
+                    "-",
+                    "-",
+                ],
+                input=inp,
+            )
+
+        if rc.returncode > 0:
+            raise Exception(rc)
+
         with ArgsOutAdapter(args) as fo:
-
-            with CtxTempFile() as tmpf:
-
-                fnam = tmpf.mktemp(suffix=".png", prefix="IMG_smog-")
-                tmpf.guard(fnam)
-
-                year = datetime.datetime.now().year
-
-                rc = watermark(
-                    fnam, f"(c) {year} by smog", height=font_size_, font=font_
-                )
-                print(rc)
-
-                rc = procrun(
-                    args=[
-                        "composite",
-                        "-tile",
-                        fnam,
-                        "-",
-                        "-",
-                    ],
-                    input=inp,
-                )
-
-            if rc.returncode > 0:
-                raise Exception(rc)
-
             fo.write(rc.stdout)
 
-            rc.stdout = None
-            return rc
+        rc.stdout = None
+        return rc
 
 
 if __name__ == "__main__":
