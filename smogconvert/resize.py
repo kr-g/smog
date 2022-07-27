@@ -12,8 +12,8 @@ from smogconvert import (
 
 def convert(args=None, container=None):
     """
-    imagemagik -thumbnail
-    resizes to 64x64> by default
+    imagemagik -resize
+    resizes to 50% by default
     """
     args = get_argv(args)
     check_argv(args)
@@ -23,12 +23,12 @@ def convert(args=None, container=None):
         inp = fi.read()
 
         opts = opt_argv()
-        size_ = pop_argv(opts, "64x64>")
+        size_ = pop_argv(opts, "50%")
 
         with ArgsOutAdapter(args) as fo:
 
             rc = procrun(
-                args=["convert", "-", "-thumbnail", size_, "-"],
+                args=["convert", "-", "-resize", size_, "-"],
                 input=inp,
             )
 
