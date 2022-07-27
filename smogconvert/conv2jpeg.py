@@ -25,8 +25,8 @@ def convert(args=None, container=None):
 
         byts = outp.getbuffer().tobytes()
 
-        with ArgsOutAdapter(args) as fo:
-            fo.write(byts)
+    with ArgsOutAdapter(args) as fo:
+        fo.write(byts)
 
 
 if __name__ == "__main__":

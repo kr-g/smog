@@ -27,15 +27,15 @@ def convert(args=None, container=None):
             input=inp,
         )
 
-        if rc.returncode > 0:
-            raise Exception(rc)
+    if rc.returncode > 0:
+        raise Exception(rc)
 
-        with ArgsOutAdapter(args) as fo:
+    with ArgsOutAdapter(args) as fo:
 
-            fo.write(rc.stdout)
+        fo.write(rc.stdout)
 
-        rc.stdout = None
-        return rc
+    rc.stdout = None
+    return rc
 
 
 if __name__ == "__main__":
