@@ -22,20 +22,20 @@ def convert(args=None, container=None):
 
         inp = fi.read()
 
+        rc = procrun(
+            args=["convert", "-", "-strip", "-"],
+            input=inp,
+        )
+
+        if rc.returncode > 0:
+            raise Exception(rc)
+
         with ArgsOutAdapter(args) as fo:
-
-            rc = procrun(
-                args=["convert", "-", "-strip", "-"],
-                input=inp,
-            )
-
-            if rc.returncode > 0:
-                raise Exception(rc)
 
             fo.write(rc.stdout)
 
-            rc.stdout = None
-            return rc
+        rc.stdout = None
+        return rc
 
 
 if __name__ == "__main__":
