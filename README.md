@@ -102,6 +102,8 @@ tested on python3, and linux
 - [`python-xmp-toolkit`](https://python-xmp-toolkit.readthedocs.io/en/latest/)  
   - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
 - [`python-dateutil`](https://dateutil.readthedocs.io/en/latest/)
+- [`pypdf2`](https://pypdf2.readthedocs.io/en/latest/index.html)
+- [`reportlab`](https://docs.reportlab.com/)
 - 
 
 __NOTE:__
@@ -177,4 +179,5 @@ refer to each project to find more information
 - [`python-xmp-toolkit`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)  
   - [`Exempi`](https://github.com/freedesktop/exempi)
 - [`python-dateutil`](https://github.com/python-xmp-toolkit/python-xmp-toolkit)
-- 
+- [`pypdf2`](https://github.com/py-pdf/PyPDF2)
+- [`reportlab`](https://docs.reportlab.com/)
