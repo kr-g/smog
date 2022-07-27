@@ -87,13 +87,12 @@ def convert(args=None, container=None):
 
         with CtxTempFile() as tmpf:
 
-            fnam = tmpf.mktemp(suffix=".png", prefix="IMG_smog-")
-            tmpf.guard(fnam)
-
+            fnam = tmpf.mktemp(suffix=".png", prefix="IMG_smog-", guard=True)
             year = datetime.datetime.now().year
 
             rc = watermark(fnam, f"(c) {year} by smog", height=font_size_, font=font_)
-            print(rc)
+            if rc.returncode > 0:
+                raise Exception(rc)
 
             rc = procrun(
                 args=[

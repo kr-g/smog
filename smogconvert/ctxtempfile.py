@@ -21,9 +21,11 @@ class CtxTempFile(object):
     def guard(self, fnam):
         self.files.add(fnam)
 
-    def mktemp(self, suffix=None, prefix=None, with_temp_folder=True):
+    def mktemp(self, suffix=None, prefix=None, with_temp_folder=True, guard=True):
         fd, fnam = tempfile.mkstemp(suffix=suffix, prefix=prefix)
         os.close(fd)
+        if guard:
+            self.guard(fnam)
         if with_temp_folder:
             return fnam
         return os.path.basename(fnam)
