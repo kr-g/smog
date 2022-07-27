@@ -6,6 +6,7 @@ FIRST_OPT_ARG = 3
 
 from .adapter import STDIO, ArgsInAdapter, ArgsOutAdapter
 from .convert import procrun
+from .ctxtempfile import CtxTempFile
 
 
 def get_argv(args=None):

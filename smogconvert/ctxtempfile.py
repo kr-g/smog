@@ -1,5 +1,6 @@
 import sys
 import os
+import tempfile
 
 
 class CtxTempFile(object):
@@ -10,12 +11,22 @@ class CtxTempFile(object):
         fd = open(fnam, mode=mode)
         for m in mode:
             if m in ["a", "+", "w"]:
-                self.files.add(fnam)
+                self.guard(fnam)
                 break
         return fd
 
     def close(self, fd):
         fd.close()
+
+    def guard(self, fnam):
+        self.files.add(fnam)
+
+    def mktemp(self, suffix=None, prefix=None, with_temp_folder=True):
+        fd, fnam = tempfile.mkstemp(suffix=suffix, prefix=prefix)
+        os.close(fd)
+        if with_temp_folder:
+            return fnam
+        return os.path.basename(fnam)
 
     def cleanup(self):
         for fnam in self.files:
