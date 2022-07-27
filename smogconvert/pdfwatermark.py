@@ -19,8 +19,8 @@ from smogconvert import (
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfMerger
 
 from reportlab.pdfgen import canvas
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
+# from reportlab.pdfbase.ttfonts import TTFont
+# from reportlab.pdfbase import pdfmetrics
 from reportlab.lib import colors
 
 
