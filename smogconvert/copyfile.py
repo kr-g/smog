@@ -7,8 +7,9 @@ def convert(args=None, container=None):
     check_argv(args)
 
     with ArgsInAdapter(args) as fi:
-        with ArgsOutAdapter(args) as fo:
-            fo.write(fi.read())
+        inp = fi.read()
+    with ArgsOutAdapter(args) as fo:
+        fo.write(inp)
 
 
 if __name__ == "__main__":
