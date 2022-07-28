@@ -1,5 +1,11 @@
 import time
 from datetime import datetime as DateTime
+import re
+
+try:
+    from .file import FileStat
+except:
+    from file import FileStat
 
 
 DATERANGE = "%d"
@@ -31,3 +37,28 @@ def build_timed_collection_name(templ, first, last):
 
     fst = fst + fmt
     return templ.replace(DATERANGE, fst)
+
+
+def _get_last_folder(fnam):
+    f = FileStat(fnam).read_stat()
+    if f.is_file():
+        fnam = f.dirname()
+    return FileStat(fnam).basename()
+
+
+# build a proposal based on the last folder name
+# strips away date prefix if present
+
+_regex = re.compile(r"(^[0-9. -]+[\s-])(.*)")
+
+
+def _strip_date_prefix(fnam):
+    match = _regex.match(fnam)
+    return match
+
+
+def build_collection_name_proposal(fnam):
+    f = _get_last_folder(fnam)
+    m = _strip_date_prefix(f)
+    if m:
+        return m.group(2)
