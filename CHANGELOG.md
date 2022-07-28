@@ -19,8 +19,10 @@ for open development tasks and limitations.
  - pdf 
    - watermark   
 - `scan` BUG-FIX: raise StopIteration removed when file is renamed in repo folder
-- `check` sub-cmd, check db and repo integrity
-- 
+- `check` sub-cmd
+  - db and repo integrity
+  - source path against db-index path integrity
+-
 
 
 ## version v0.0.3 - 20220725

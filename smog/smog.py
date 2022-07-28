@@ -610,6 +610,31 @@ def check_func(args):
 
         return
 
+    if args.check_db_path:
+
+        print("checking db-index source path against file system")
+        rec_cnt = 0
+        files_not_in_source = 0
+
+        for rec in args.ctx.db.qry_media_stream():
+            for path in rec.paths:
+                rec_cnt += 1
+                f = FileStat(args.ctx.srcdir).join([path.path])
+                f.read_stat()
+                if not f.exists():
+                    eprint("not in source", rec.id, path.id, rec.repopath, "->", f.name)
+                    files_not_in_source += 1
+
+        print(
+            "total scanned:",
+            "index-records",
+            rec_cnt,
+            "errors",
+            files_not_in_source,
+        )
+
+        return
+
     print("what? use --help")
 
 
@@ -1097,6 +1122,13 @@ def main_func(mkcopy=True):
         action="store_true",
         default=False,
         help="check db integrity",
+    )
+    check_xgroup.add_argument(
+        "-db-path",
+        dest="check_db_path",
+        action="store_true",
+        default=False,
+        help="check db-index path against file system source path",
     )
 
     # xmp
