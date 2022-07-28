@@ -21,6 +21,7 @@ for open development tasks and limitations.
 - `scan` BUG-FIX: raise StopIteration removed when file is renamed in repo folder
 - 
 
+
 ## version v0.0.3 - 20220725
 
 - new for `colman`
