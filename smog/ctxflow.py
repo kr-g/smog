@@ -574,6 +574,8 @@ class CtxMoveToProcPath(CtxProcessor):
                 self.ctx.NO_MOVE_FILES_FAILED += 1
                 self.ctx.eprint("move to proc", src.name, dest.name, ex)
 
+            # todo
+            # currently move is not supported
             raise StopIteration()
         else:
             self.ctx.dprint("no move to proc", inp.name, dest_proc)
