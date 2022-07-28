@@ -4,7 +4,7 @@
 
 ## smog
 
-run `smog -h` for:
+run `smog -h` for help
 
     usage: python3 -m smog [options]
     
@@ -46,7 +46,7 @@ run `smog -h` for:
 
 ## smog config
 
-run `smog config -h` for:
+run `smog config -h` for help
 
     usage: python3 -m smog [options] config [-h]
                                             [-db-check | -db-init | -db-migrate]
@@ -60,7 +60,7 @@ run `smog config -h` for:
 
 ## smog scan
 
-run `smog scan -h` for:
+run `smog scan -h` for help
 
     usage: python3 -m smog [options] scan [-h] [-tag HASHTAG] [-cleartags]
                                           [-collection COLLECTION]
@@ -81,7 +81,7 @@ run `smog scan -h` for:
 
 ## smog find
 
-run `smog find -h` for:
+run `smog find -h` for help
 
     usage: python3 -m smog [options] find [-h] [-showhash] [-short] [-show-paths]
                                           [-remove] [-id ID] [-before BEFORE]
@@ -101,7 +101,7 @@ run `smog find -h` for:
 
 ## smog col
 
-run `smog col -h` for:
+run `smog col -h` for help
 
     usage: python3 -m smog [options] col [-h] [-name COLLECTION] [-before BEFORE]
                                          [-limit LIMIT] [-skip SKIP]
@@ -116,7 +116,7 @@ run `smog col -h` for:
 
 ## smog colman
 
-run `smog colman -h` for:
+run `smog colman -h` for help
 
     usage: python3 -m smog [options] colman [-h] [-collection-id COL_ID]
                                             [-collection COL_NAME]
@@ -149,7 +149,7 @@ run `smog colman -h` for:
 
 ## smog tag
 
-run `smog tag -h` for:
+run `smog tag -h` for help
 
     usage: python3 -m smog [options] tag [-h] [-tag HASHTAG]
                                          [-all | -drop | -add-media MEDIA_ID [MEDIA_ID ...]
@@ -168,7 +168,7 @@ run `smog tag -h` for:
 
 ## smog check
 
-run `smog check -h` for:
+run `smog check -h` for help
 
     usage: python3 -m smog [options] check [-h] [-repo | -db | -db-path]
     
@@ -181,7 +181,7 @@ run `smog check -h` for:
 
 ## smog xmp
 
-run `smog xmp -h` for:
+run `smog xmp -h` for help
 
     usage: python3 -m smog [options] xmp [-h] [-types] [-list XMP_FILE]
                                          [-xml | -tags]
@@ -200,7 +200,7 @@ run `smog xmp -h` for:
 
 ## smog hash
 
-run `smog hash -h` for:
+run `smog hash -h` for help
 
     usage: python3 -m smog [options] hash [-h] FILE [FILE ...]
     
