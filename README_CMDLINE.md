@@ -11,17 +11,17 @@ run `smog -h` for:
     simple media organizer
     
     positional arguments:
-      {config,scan,hash,find,col,colman,tag,check,xmp}
+      {config,scan,find,col,colman,tag,check,xmp,hash}
                             sub-command --help
         config              config --help
         scan                scan --help
-        hash                hash --help
         find                find --help
         col                 col --help
         colman              colman --help
         tag                 tag --help
         check               check --help
         xmp                 xmp --help
+        hash                hash --help
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -177,6 +177,25 @@ run `smog check -h` for:
       -repo       check repo integrity
       -db         check db integrity
       -db-path    check db-index path against file system source path
+
+
+## smog xmp
+
+run `smog xmp -h` for:
+
+    usage: python3 -m smog [options] xmp [-h] [-types] [-list XMP_FILE]
+                                         [-xml | -tags]
+    
+    optional arguments:
+      -h, --help      show this help message and exit
+    
+    known files:
+      -types          list known xmp file extensions
+    
+    xmp meta:
+      -list XMP_FILE  xmp file to inspect
+      -xml            list xmp info as xml
+      -tags           list xmp info as simple tag list
 
 
 ## smog hash

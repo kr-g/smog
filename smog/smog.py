@@ -822,14 +822,6 @@ def main_func(mkcopy=True):
         help="file or folder to scan",
     )
 
-    # hash
-
-    hash_parser = subparsers.add_parser("hash", help="hash --help")
-    hash_parser.set_defaults(func=hash_func)
-    hash_parser.add_argument(
-        "hash_file", metavar="FILE", type=str, nargs="+", help="calculate file hash"
-    )
-
     # find
 
     find_parser = subparsers.add_parser("find", help="find --help")
@@ -1169,6 +1161,14 @@ def main_func(mkcopy=True):
         action="store_true",
         help="list xmp info as simple tag list",
         default=False,
+    )
+
+    # hash
+
+    hash_parser = subparsers.add_parser("hash", help="hash --help")
+    hash_parser.set_defaults(func=hash_func)
+    hash_parser.add_argument(
+        "hash_file", metavar="FILE", type=str, nargs="+", help="calculate file hash"
     )
 
     #

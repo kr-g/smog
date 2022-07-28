@@ -1,4 +1,6 @@
+import sys
 import os
+import re
 import subprocess
 
 # create markdown of cmd-line
@@ -25,19 +27,25 @@ pr(
     "",
 )
 
-for idx, cmd in enumerate(
-    [
-        "",
-        "config",
-        "scan",
-        "find",
-        "col",
-        "colman",
-        "tag",
-        "check",
-        "hash",
-    ]
-):
+
+args = ["python3", "-m", "smog", "-h"]
+rc = subprocess.run(args, capture_output=True)
+if rc.returncode:
+    raise Exception(rc)
+
+s = rc.stdout.decode()
+
+_regex = r"{(.*)}"
+matches = re.finditer(_regex, s, re.MULTILINE)
+
+scancmd = [""]
+
+for m in matches:
+    scancmd.extend(m.group(1).split(","))
+
+print("found", scancmd)
+
+for idx, cmd in enumerate(scancmd):
 
     args = ["python3", "-m", "smog", cmd, "-h"]
     args = list(filter(lambda x: len(x), args))
