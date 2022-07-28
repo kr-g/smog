@@ -19,7 +19,6 @@ for open development tasks and limitations.
  - pdf 
    - watermark   
 - `scan` BUG-FIX: raise StopIteration removed when file is renamed in repo folder
-- `scan` BUG-open: copy to repo again after rename
 - 
 
 ## version v0.0.3 - 20220725
