@@ -342,9 +342,14 @@ class CtxOrganizeRepoPath(CtxProcessor):
                 # todo refactor ?
                 c.FILE_HASH_IDENTICAL = True
             else:
-                dest_fnam = make_unique_filename(dest_repo.name, extname="OBJ")
-                self.ctx.NO_COPY_FILES_RENAMED += 1
-                self.ctx.print("file renamed", inp.name, dest_fnam)
+                if c.DB_REC:
+                    # file exists already in db, nothing to do
+                    c.REPO_COPY = False
+                    c.REPO_DEST_FNAM = c.DB_REC.repopath  # todo check this
+                else:
+                    dest_fnam = make_unique_filename(dest_repo.name, extname="OBJ")
+                    self.ctx.NO_COPY_FILES_RENAMED += 1
+                    self.ctx.print("file renamed", inp.name, dest_fnam)
 
         c.REPO_DEST_FNAM = dest_fnam
 
@@ -628,9 +633,10 @@ def build_scan_flow(pipe):
     pipe.add(CtxListFileTimeMeth())
 
     pipe.add(CtxFileHash())
+    pipe.add(CtxDB_HashLoopup())
+
     pipe.add(CtxOrganizeRepoPath())
 
-    pipe.add(CtxDB_HashLoopup())
     pipe.add(CtxDB_upsert())
     pipe.add(CtxDB_gps())
     pipe.add(CtxDB_Hashtag())
