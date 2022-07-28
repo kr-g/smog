@@ -518,7 +518,7 @@ def hashtag_func(args):
     print("what? use --help")
 
 
-#
+# xmp
 
 
 def xmp_func(args):
@@ -553,9 +553,75 @@ def xmp_func(args):
         print(json.dumps(xmp_c, indent=4))
 
 
+# check
+
+
+def check_func(args):
+    if args.check_repo:
+
+        print("checking repo content against db-index")
+        files_cnt = 0
+        folders_cnt = 0
+        files_not_in_idx = 0
+
+        for _, folders, files in FileStat(args.ctx.repodir).walk():
+            files_cnt += len(files)
+            folders_cnt += len(folders)
+            for f in files:
+                fnam = args.ctx.norm_repo_path(f.name)
+                rec = args.ctx.db.qry_media_repo(fnam)
+                if rec is None:
+                    eprint("not in db-index", f.name)
+                    files_not_in_idx += 1
+
+        print(
+            "total scanned:",
+            "folders",
+            folders_cnt,
+            "files",
+            files_cnt,
+            "errors",
+            files_not_in_idx,
+        )
+
+        return
+
+    if args.check_db:
+
+        print("checking db-index again repo content")
+        rec_cnt = 0
+        files_not_in_repo = 0
+
+        for rec in args.ctx.db.qry_media_stream():
+            rec_cnt += 1
+            f = FileStat(args.ctx.repodir).join([rec.repopath])
+            f.read_stat()
+            if not f.exists():
+                eprint("not in repo", rec.id, rec.repopath)
+                files_not_in_repo += 1
+
+        print(
+            "total scanned:",
+            "index-records",
+            rec_cnt,
+            "errors",
+            files_not_in_repo,
+        )
+
+        return
+
+    print("what? use --help")
+
+
+#
+
+
 def getarg(nam, defval=None):
     global args
     return args.__dict__.get(nam, defval)
+
+
+#
 
 
 def main_func(mkcopy=True):
@@ -1010,6 +1076,27 @@ def main_func(mkcopy=True):
         nargs="+",
         type=str,
         help="remove hashtag from media",
+    )
+
+    # check
+
+    check_parser = subparsers.add_parser("check", help="check --help")
+    check_parser.set_defaults(func=check_func)
+
+    check_xgroup = check_parser.add_mutually_exclusive_group()
+    check_xgroup.add_argument(
+        "-repo",
+        dest="check_repo",
+        action="store_true",
+        default=False,
+        help="check repo integrity",
+    )
+    check_xgroup.add_argument(
+        "-db",
+        dest="check_db",
+        action="store_true",
+        default=False,
+        help="check db integrity",
     )
 
     # xmp

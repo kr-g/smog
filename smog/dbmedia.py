@@ -120,6 +120,7 @@ class MediaDB(object):
         hashtag=None,
         collection=None,
         collectionid=None,
+        last_as_first_order=True,
     ):
 
         qry = self.session.query(Media)
@@ -127,7 +128,10 @@ class MediaDB(object):
         if timestamp:
             qry = qry.where(Media.timestamp <= timestamp)
 
-        qry = qry.order_by(desc(Media.timestamp))
+        if last_as_first_order:
+            qry = qry.order_by(desc(Media.timestamp))
+        else:
+            qry = qry.order_by(asc(Media.timestamp))
 
         if hashtag:
             if type(hashtag) is not list:
