@@ -339,7 +339,6 @@ class CtxOrganizeRepoPath(CtxProcessor):
                 dest_fnam = make_unique_filename(dest_repo.name, extname="OBJ")
                 self.ctx.NO_COPY_FILES_RENAMED += 1
                 self.ctx.print("file renamed", inp.name, dest_fnam)
-                raise StopIteration()
 
         c.REPO_DEST_FNAM = dest_fnam
 
