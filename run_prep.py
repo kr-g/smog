@@ -19,13 +19,9 @@ def pr(*args):
     _doc += "\n"
 
 
-pr(
-    "",
-)
+pr("")
 pr("# all `smog` cmd-line options")
-pr(
-    "",
-)
+pr("")
 
 
 args = ["python3", "-m", "smog", "-h"]
@@ -57,28 +53,16 @@ for idx, cmd in enumerate(scancmd):
     cmd = " ".join(args[2:-1])
     cmd_ = cmd.replace(" ", "_").replace("-", "")
 
-    pr(
-        "",
-    )
+    pr("")
     pr(f"## {cmd}")
-    pr(
-        "",
-    )
-    pr(
-        f"run `{cmd} -h` for:",
-    )
-    pr(
-        "",
-    )
+    pr("")
+    pr(f"run `{cmd} -h` for:")
+    pr("")
     lines = rc.stdout.decode().splitlines()
     for l in lines:
-        pr(
-            " " * 4 + l,
-        )
+        pr(" " * 4 + l)
 
-    pr(
-        "",
-    )
+    pr("")
 
     with open("README_CMDLINE.md", "w") as f:
         f.write(_doc)
