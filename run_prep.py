@@ -19,7 +19,7 @@ pr( "", )
 pr("# all `smog` cmd-line options")
 pr( "", )
 
-for idx, cmd in enumerate(["","check","scan","hash","find","col","colman","tag","check",]):
+for idx, cmd in enumerate(["","config","scan","find","col","colman","tag","check","hash",]):
     
     args = ["python3","-m","smog",cmd,"-h"]
     args = list(filter( lambda x : len(x), args ))

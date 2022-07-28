@@ -44,17 +44,18 @@ run `smog -h` for:
     for more information refer to https://github.com/kr-g/smog
 
 
-## smog check
+## smog config
 
-run `smog check -h` for:
+run `smog config -h` for:
 
-    usage: python3 -m smog [options] check [-h] [-repo | -db | -db-path]
+    usage: python3 -m smog [options] config [-h]
+                                            [-db-check | -db-init | -db-migrate]
     
     optional arguments:
-      -h, --help  show this help message and exit
-      -repo       check repo integrity
-      -db         check db integrity
-      -db-path    check db-index path against file system source path
+      -h, --help            show this help message and exit
+      -db-check             check database revision
+      -db-init              create a new database
+      -db-migrate, -db-mig  migrate the database to the lastest version
 
 
 ## smog scan
@@ -76,19 +77,6 @@ run `smog scan -h` for:
                             processing
       -collection COLLECTION, -col COLLECTION
                             add media to collection
-
-
-## smog hash
-
-run `smog hash -h` for:
-
-    usage: python3 -m smog [options] hash [-h] FILE [FILE ...]
-    
-    positional arguments:
-      FILE        calculate file hash
-    
-    optional arguments:
-      -h, --help  show this help message and exit
 
 
 ## smog find
@@ -189,4 +177,17 @@ run `smog check -h` for:
       -repo       check repo integrity
       -db         check db integrity
       -db-path    check db-index path against file system source path
+
+
+## smog hash
+
+run `smog hash -h` for:
+
+    usage: python3 -m smog [options] hash [-h] FILE [FILE ...]
+    
+    positional arguments:
+      FILE        calculate file hash
+    
+    optional arguments:
+      -h, --help  show this help message and exit
 
