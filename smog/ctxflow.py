@@ -310,6 +310,16 @@ class CtxListFileTimeMeth(CtxProcessor):
         return c, err
 
 
+class CtxFileHash(CtxProcessor):
+    def process(self, c, err):
+        inp = c.inp
+
+        c.FILE_HASH = inp.hash()
+        c.FILE_HASH_IDENTICAL = False
+
+        return c, err
+
+
 class CtxOrganizeRepoPath(CtxProcessor):
     def process(self, c, err):
         inp = c.inp
@@ -324,10 +334,6 @@ class CtxOrganizeRepoPath(CtxProcessor):
         dest_fnam = dest_repo.name
 
         c.REPO_COPY = True
-
-        c.FILE_HASH = inp.hash()
-        # todo refactor ?
-        c.FILE_HASH_IDENTICAL = False
 
         if dest_repo.exists():
             if dest_repo.hash() == c.FILE_HASH:
@@ -621,6 +627,7 @@ def build_scan_flow(pipe):
     pipe.add(CtxListFileNameTimeMeth())
     pipe.add(CtxListFileTimeMeth())
 
+    pipe.add(CtxFileHash())
     pipe.add(CtxOrganizeRepoPath())
 
     pipe.add(CtxDB_HashLoopup())
