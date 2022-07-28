@@ -78,6 +78,8 @@ or for a sub-cmd
 
     phyton3 -m smog *sub-cmd* --help
 
+all cmd-line options under [CMD-LINE](README_CMDLINE.md)
+
 
 # additional reference documentation
 
