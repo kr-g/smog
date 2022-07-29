@@ -12,3 +12,6 @@ pyvenv.cfg
 
 **/*.db
 
+venv/
+.idea/
+
