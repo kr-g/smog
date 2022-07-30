@@ -3,4 +3,4 @@ alembic==1.8.0
 python-xmp-toolkit==2.0.1
 python-dateutil==2.8.2
 PyPDF2==2.8.1
-reportlab==3.5.34
+reportlab==3.6.11
