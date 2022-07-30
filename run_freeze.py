@@ -31,7 +31,7 @@ class Package(object):
         )
 
 
-def load_requirements_versions():
+def load_installed_versions():
     packs = {}
 
     proc = subprocess.Popen(
@@ -51,6 +51,11 @@ def load_requirements_versions():
         p = Package(line)
         packs[p.package] = p
 
+    return packs
+
+
+def load_requirements_versions_cleared():
+
     requirements = load_requirements()
     print("loaded", requirements)
 
@@ -67,6 +72,11 @@ def load_requirements_versions():
     req_cleared = list(map(lambda x: clr(x), requirements))
 
     print("cleared", req_cleared)
+
+    return req_cleared
+
+
+def bump_versions(req_cleared, packs):
 
     new_req = []
     for p in req_cleared:
@@ -91,7 +101,9 @@ def save_requirements(new_requirements):
 
 
 def bump_requirements():
-    req_vers = load_requirements_versions()
+    packs = load_installed_versions()
+    req_cleared = load_requirements_versions_cleared()
+    req_vers = bump_versions(req_cleared, packs)
     save_requirements(req_vers)
 
 
