@@ -18,12 +18,12 @@ def pr(*args):
 
     _doc += "\n"
 
+
 def create_autodoc():
 
     pr("")
     pr("# all `smog` cmd-line options")
     pr("")
-
 
     args = ["python3", "-m", "smog", "-h"]
     rc = subprocess.run(args, capture_output=True)
@@ -67,6 +67,7 @@ def create_autodoc():
 
         with open("README_CMDLINE.md", "w") as f:
             f.write(_doc)
+
 
 if __name__ == "__main__":
     create_autodoc()

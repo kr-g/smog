@@ -52,7 +52,7 @@ def load_requirements_versions():
         packs[p.package] = p
 
     requirements = load_requirements()
-    print("loaded", requirements )
+    print("loaded", requirements)
 
     def clr(x):
         p1 = x.find("==")
@@ -66,7 +66,7 @@ def load_requirements_versions():
 
     req_cleared = list(map(lambda x: clr(x), requirements))
 
-    print("cleared", req_cleared )
+    print("cleared", req_cleared)
 
     new_req = []
     for p in req_cleared:
@@ -78,10 +78,10 @@ def load_requirements_versions():
             new_req.append(f"{pack.package}=={pack.version}")
             debug and print(new_req[-1:])
 
-    print("bumbed", new_req )
-    
+    print("bumbed", new_req)
+
     new_requirements = "\n".join(new_req)
-    
+
     return new_requirements
 
 
