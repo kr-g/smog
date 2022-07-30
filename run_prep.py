@@ -59,8 +59,8 @@ for idx, cmd in enumerate(scancmd):
     pr(f"run `{cmd} -h` for help")
     pr("")
     lines = rc.stdout.decode().splitlines()
-    for l in lines:
-        pr(" " * 4 + l)
+    for line in lines:
+        pr(" " * 4 + line)
 
     pr("")
 
