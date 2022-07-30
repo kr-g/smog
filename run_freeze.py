@@ -76,7 +76,12 @@ def load_requirements_versions_cleared():
     return req_cleared
 
 
-def bump_versions(req_cleared, packs):
+def bump_versions(req_cleared, packs, strong=False):
+
+    if strong:
+        cmp = "=="
+    else:
+        cmp = ">="
 
     new_req = []
     for p in req_cleared:
@@ -85,7 +90,7 @@ def bump_versions(req_cleared, packs):
             new_req.append(f"{pack.package}")
             debug and print(new_req[-1:], "from editable", file=sys.stderr)
         else:
-            new_req.append(f"{pack.package}=={pack.version}")
+            new_req.append(f"{pack.package}{cmp}{pack.version}")
             debug and print(new_req[-1:])
 
     print("bumbed", new_req)
@@ -100,10 +105,10 @@ def save_requirements(new_requirements):
         f.write(new_requirements)
 
 
-def bump_requirements():
+def bump_requirements(strong=False):
     packs = load_installed_versions()
     req_cleared = load_requirements_versions_cleared()
-    req_vers = bump_versions(req_cleared, packs)
+    req_vers = bump_versions(req_cleared, packs, strong=strong)
     save_requirements(req_vers)
 
 
