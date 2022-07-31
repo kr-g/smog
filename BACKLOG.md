@@ -57,6 +57,7 @@ for latest ongoing, or upcoming news.
     - [pypdf2](https://github.com/py-pdf/PyPDF2)
     - [pypdf2](https://pypdf2.readthedocs.io/en/latest/)
 - syncronize data from different devices
+- diff-tool blocks main screen 
 - 
 
 
