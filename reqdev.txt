@@ -1,0 +1,5 @@
+setuptools>46
+twine
+wheel
+black
+flake8

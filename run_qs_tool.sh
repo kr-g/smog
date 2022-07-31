@@ -1,8 +1,8 @@
 #!/bin/bash
 
 
-black . --exclude venv
-flake8 --config flake8.cfg --exclude venv
+black . --exclude .venv
+flake8 --config flake8.cfg --exclude .venv
 python3 -m unittest -v
 
 

@@ -239,12 +239,12 @@ def find_func(args):
             print_rec(args, rec)
             return
         eprint("not found", args.find_id)
-        sys.exit(1)
+        return 1
 
     _limit = args.find_limit
     if _limit <= 0:
         eprint("limit must be a positive number > 0")
-        sys.exit(1)
+        return 1
 
     _skip = args.find_skip
     if _skip < 0:
@@ -287,7 +287,7 @@ def collection_func(args):
     _limit = args.col_limit
     if _limit <= 0:
         eprint("limit must be a positive number > 0")
-        sys.exit(1)
+        return 1
 
     _skip = args.col_skip
     if _skip < 0:
@@ -1189,7 +1189,7 @@ def main_func(mkcopy=True):
 
     if args.base.name == args.dest_repo.name:
         print_err("in place processing not supported")
-        sys.exit(1)
+        return 1
 
     args.proc_dir = FileStat(args.proc_dir)
     is_folder_or_die(args.proc_dir)
@@ -1210,7 +1210,7 @@ def main_func(mkcopy=True):
     if dbdir.exists():
         if not dbdir.is_dir():
             print_err("db folder parameter is not a folder", dbdir.name)
-            sys.exit(1)
+            return 1
     else:
         dprint("create db folder", dbdir.name)
         dbdir.makedirs(is_file=False)
@@ -1233,12 +1233,12 @@ def main_func(mkcopy=True):
             eprint(
                 "database not latest revision. backup and upgrade with '-db-migrate'"
             )
-            sys.exit(1)
+            return 1
 
     if needtocreate:
         print_err("database not found. run \n\t")
         print("smog config -db-init")
-        sys.exit(1)
+        return 1
 
     db = MediaDB(dbconf)
 
@@ -1247,7 +1247,7 @@ def main_func(mkcopy=True):
         for ht in hashtag:
             if ht.find("#") >= 0:
                 print_err("hashtag contains '#'", ht)
-                sys.exit(1)
+                return 1
 
     args.ctx = Context(
         args.base.name,
