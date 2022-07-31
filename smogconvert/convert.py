@@ -6,7 +6,10 @@ import importlib
 import smogconvert as SmogConvert
 from smogconvert.ctxenv import CtxEnv
 
+from smog.file import FileStat
+
 SMOGCONV_FILE = SmogConvert.__file__
+SMOGCONV_DIR = FileStat(SmogConvert.__file__).dirname()
 SMOGCONV_NAME = SmogConvert.__name__
 
 PYTHON = sys.executable
@@ -19,7 +22,8 @@ def is_python_ctx(args):
 
 def normalize_args(args):
     if is_python_ctx(args):
-        args[0] = args[0][:-3]
+        # strip away ".py" ending
+        args[0], _ = FileStat(args[0]).splitext()
     return args
 
 
@@ -28,11 +32,11 @@ def get_call_context(args):
 
 
 def is_predefined(fnam):
-    path = os.path.join(os.path.dirname(SMOGCONV_FILE), fnam)
-    if os.path.exists(path):
-        if os.path.isdir(path):
-            raise Exception("is directory", path)
-        return path
+    path = FileStat(SMOGCONV_DIR).join([fnam])
+    if path.exists():
+        if path.is_dir():
+            raise Exception("is directory", path.name)
+        return path.name
 
 
 def procrun(args, input=None, env=None, capture_output=True, raise_err=True):
@@ -100,3 +104,5 @@ if __name__ == "__main__":
         )
         print(rc)
         print("---")
+    nargs = normalize_args(sys.argv)
+    print(nargs)
