@@ -1,4 +1,5 @@
 from setuputil import *
+import setuptools
 
 #
 
