@@ -104,14 +104,20 @@ tested on python3, and linux
 - [`python-xmp-toolkit`](https://python-xmp-toolkit.readthedocs.io/en/latest/)  
   - [`Exempi`](https://libopenraw.freedesktop.org/exempi/)
 - [`python-dateutil`](https://dateutil.readthedocs.io/en/latest/)
+- []()
 - [`pypdf2`](https://pypdf2.readthedocs.io/en/latest/index.html)
 - [`reportlab`](https://docs.reportlab.com/)
 - 
 
 __NOTE:__
-on linux `Exempi` is mostlikely already installed. 
+
+1. on linux `Exempi` is mostlikely already installed. 
 otherwise download binaries from Exempi site or build local 
 from source package 
+
+2. image-magik must be installed manually.
+`smogconvert` based tools calls `convert` under the hood.
+make sure that `convert` is in the PATH.
 
 
 `smog` itself can be installed with
